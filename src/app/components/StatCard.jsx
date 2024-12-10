@@ -1,21 +1,11 @@
-"use client";
-
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
-interface StatCardProps {
-  title: string;
-  value: string;
-  color: string;
-  percentage: number;
-  icon: string;
-}
-
-const StatCard = ({ title, value, color, percentage, icon }: StatCardProps) => {
+const StatCard = ({ title, value, color, percentage, icon }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [currentPercentage, setCurrentPercentage] = useState(0);
-  const cardRef = useRef<HTMLDivElement | null>(null);
+  const cardRef = useRef(null);
 
   useEffect(() => {
     const currentCardRef = cardRef.current;
@@ -68,7 +58,6 @@ const StatCard = ({ title, value, color, percentage, icon }: StatCardProps) => {
       <div className="relative w-32 h-32">
         <CircularProgressbar
           value={currentPercentage}
-          
           styles={buildStyles({
             pathColor: color,
             textColor: color,

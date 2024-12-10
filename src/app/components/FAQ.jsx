@@ -1,24 +1,18 @@
-"use client";
-
 import React, { useState } from "react";
-import styles from "./FAQ.module.css";
+import styles from "./FAQ.module.css"; // Make sure the styles are properly defined in this file
 import faqContent from "../../public/Strings/en_strings.json"; // Import the JSON file
-// Defining the FAQ type
-type FAQItem = {
-  question: string;
-  answer: string;
-};
 
-const FAQ_QA: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+const FAQ_QA = () => {
+  const [searchTerm, setSearchTerm] = useState(""); // State for search input
+  const [expandedIndex, setExpandedIndex] = useState(null); // State to track expanded FAQ index
 
-  // Filtered FAQs based on search term
-  const filteredFAQs = faqContent.FAQ_ITEMS.filter((faq: FAQItem) =>
+  // Filter FAQs based on the search term
+  const filteredFAQs = faqContent.FAQ_ITEMS.filter((faq) =>
     faq.question.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleToggle = (index: number) => {
+  // Handle toggling the expanded FAQ
+  const handleToggle = (index) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
@@ -57,8 +51,7 @@ const FAQ_QA: React.FC = () => {
   );
 };
 
-
-const FAQ: React.FC = () => {
+const FAQ = () => {
   return (
     <div className="flex flex-col md:flex-row bg-gray-200">
       {/* Left Column */}

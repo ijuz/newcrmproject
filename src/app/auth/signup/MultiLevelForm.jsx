@@ -1,23 +1,7 @@
-"use client";
-
 import React, { useState } from "react";
 
-type Step = {
-  number: number;
-  label: string;
-  color: string;
-};
-
-interface StepIndicatorProps {
-  currentStep: number;
-  setStep: (step: number) => void;
-}
-
-const StepIndicator: React.FC<StepIndicatorProps> = ({
-  currentStep,
-  setStep,
-}) => {
-  const steps: Step[] = [
+const StepIndicator = ({ currentStep, setStep }) => {
+  const steps = [
     { number: 1, label: "Company Info", color: "blue" },
     { number: 2, label: "Technical Info", color: "orange" },
     { number: 3, label: "User Info", color: "green" },
@@ -29,7 +13,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
         {steps.map((step) => (
           <div
             key={step.number}
-            className={`w-1/3 text-center cursor-pointer`}
+            className="w-1/3 text-center cursor-pointer"
             onClick={() => setStep(step.number)}
           >
             <div
@@ -67,11 +51,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
   );
 };
 
-interface CompanyInfoProps {
-  onNext: () => void;
-}
-
-const CompanyInfo: React.FC<CompanyInfoProps> = ({ onNext }) => {
+const CompanyInfo = ({ onNext }) => {
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Company Info</h2>
@@ -149,12 +129,11 @@ const CompanyInfo: React.FC<CompanyInfoProps> = ({ onNext }) => {
   );
 };
 
-
-const TechnicalInfo: React.FC<{ onNext: () => void }> = ({ onNext }) => {
-  const [ips, setIps] = useState<string[]>([]);
-  const [codex, setCodex] = useState<string[]>([]);
-  const [currentIp, setCurrentIp] = useState<string>("");
-  const [currentCodex, setCurrentCodex] = useState<string>("");
+const TechnicalInfo = ({ onNext }) => {
+  const [ips, setIps] = useState([]);
+  const [codex, setCodex] = useState([]);
+  const [currentIp, setCurrentIp] = useState("");
+  const [currentCodex, setCurrentCodex] = useState("");
 
   const handleAddIp = () => {
     if (currentIp && !ips.includes(currentIp)) {
@@ -170,15 +149,15 @@ const TechnicalInfo: React.FC<{ onNext: () => void }> = ({ onNext }) => {
     }
   };
 
-  const handleRemoveIp = (ipToRemove: string) => {
+  const handleRemoveIp = (ipToRemove) => {
     setIps(ips.filter((ip) => ip !== ipToRemove));
   };
 
-  const handleRemoveCodex = (codexToRemove: string) => {
+  const handleRemoveCodex = (codexToRemove) => {
     setCodex(codex.filter((c) => c !== codexToRemove));
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent, type: "ip" | "codex") => {
+  const handleKeyDown = (e, type) => {
     if (e.key === "," || e.key === "Enter") {
       e.preventDefault();
       if (type === "ip" && currentIp) {
@@ -306,7 +285,7 @@ const TechnicalInfo: React.FC<{ onNext: () => void }> = ({ onNext }) => {
       </div>
       <button
         onClick={onNext}
-        className="mt-6 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
+        className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
         Next
       </button>
@@ -314,82 +293,51 @@ const TechnicalInfo: React.FC<{ onNext: () => void }> = ({ onNext }) => {
   );
 };
 
-interface UserInfoProps {
-  onSubmit: () => void;
-}
-
-const UserInfo: React.FC<UserInfoProps> = ({ onSubmit }) => {
+const UserInfo = ({ onNext }) => {
   return (
     <div className="max-w-2xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">User Info</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block mb-2">First Name</label>
+          <label className="block mb-2">Full Name</label>
           <input
             type="text"
             className="w-full border rounded p-2"
-            placeholder="First name"
+            placeholder="Your full name"
             required
           />
         </div>
         <div>
-          <label className="block mb-2">Last Name</label>
-          <input
-            type="text"
-            className="w-full border rounded p-2"
-            placeholder="Last name"
-            required
-          />
-        </div>
-        <div>
-          <label className="block mb-2">Email</label>
+          <label className="block mb-2">Email Address</label>
           <input
             type="email"
             className="w-full border rounded p-2"
-            placeholder="Email"
+            placeholder="Your email address"
             required
           />
         </div>
         <div>
-          <label className="block mb-2">Mobile Number</label>
+          <label className="block mb-2">Phone Number</label>
           <input
             type="tel"
             className="w-full border rounded p-2"
-            placeholder="Mobile"
+            placeholder="Your phone number"
             required
           />
         </div>
         <div>
-          <label className="block mb-2">User Name</label>
+          <label className="block mb-2">Username</label>
           <input
             type="text"
             className="w-full border rounded p-2"
-            placeholder="Username"
-            required
-          />
-        </div>
-        <div>
-          <label className="block mb-2">Password</label>
-          <input
-            type="password"
-            className="w-full border rounded p-2"
-            placeholder="Password"
-            required
-          />
-        </div>
-        <div>
-          <label className="block mb-2">Confirm Password</label>
-          <input
-            type="password"
-            className="w-full border rounded p-2"
-            placeholder="Confirm"
+            placeholder="Your username"
             required
           />
         </div>
       </div>
       <button
-        onClick={onSubmit}
-        className="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        onClick={onNext}
+        className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
         Submit
       </button>
@@ -397,18 +345,22 @@ const UserInfo: React.FC<UserInfoProps> = ({ onSubmit }) => {
   );
 };
 
-const MultiStepForm: React.FC = () => {
-  const [step, setStep] = useState(1);
+const MultiStepForm = () => {
+  const [currentStep, setCurrentStep] = useState(1);
 
-  const nextStep = () => setStep(step + 1);
-  const handleSubmit = () => console.log("Form submitted");
+  const handleNext = () => {
+    if (currentStep < 3) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
 
   return (
-    <div className="container mx-auto px-4">
-      <StepIndicator currentStep={step} setStep={setStep} />
-      {step === 1 && <CompanyInfo onNext={nextStep} />}
-      {step === 2 && <TechnicalInfo onNext={nextStep} />}
-      {step === 3 && <UserInfo onSubmit={handleSubmit} />}
+    <div className="max-w-4xl mx-auto p-8">
+      <StepIndicator currentStep={currentStep} setStep={setCurrentStep} />
+
+      {currentStep === 1 && <CompanyInfo onNext={handleNext} />}
+      {currentStep === 2 && <TechnicalInfo onNext={handleNext} />}
+      {currentStep === 3 && <UserInfo onNext={handleNext} />}
     </div>
   );
 };

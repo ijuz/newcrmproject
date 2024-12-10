@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import axiosInstance from "../modules/admin/utils/axiosinstance";
 
-interface FreeTestPopupProps {
-  onClose: () => void; // Function to close the popup
-}
+const SUCCESS_MESSAGE = "Your free test request has been submitted successfully!";
+const ERROR_MESSAGE = "Failed to submit your request. Please try again later.";
 
-const FreeTestPopup: React.FC<FreeTestPopupProps> = ({ onClose }) => {
+const FreeTestPopup = ({ onClose }) => {
   const [formData, setFormData] = useState({
     name: "",
     companyName: "",
@@ -17,19 +16,19 @@ const FreeTestPopup: React.FC<FreeTestPopupProps> = ({ onClose }) => {
   const [statusMessage, setStatusMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  // Update form data state
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  // Handle input changes
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true); // Start loading
     setStatusMessage(""); // Clear previous messages
     try {
       const response = await axiosInstance.post("/v3/api/inquiries", formData);
-      setStatusMessage("Your free test request has been submitted successfully!");
+      setStatusMessage(SUCCESS_MESSAGE);
       setFormData({
         name: "",
         companyName: "",
@@ -39,7 +38,8 @@ const FreeTestPopup: React.FC<FreeTestPopupProps> = ({ onClose }) => {
         type: "freetest"
       });
     } catch (error) {
-      setStatusMessage("Failed to submit your request. Please try again later.");
+      const errorMsg = error.response?.data?.message || ERROR_MESSAGE;
+      setStatusMessage(errorMsg);
       console.error(error);
     } finally {
       setIsLoading(false); // Stop loading
@@ -53,6 +53,7 @@ const FreeTestPopup: React.FC<FreeTestPopupProps> = ({ onClose }) => {
         <button
           onClick={onClose}
           className="absolute top-2 right-2 p-2 rounded-full hover:bg-orange-200"
+          aria-label="Close"
         >
           X
         </button>
@@ -98,7 +99,7 @@ const FreeTestPopup: React.FC<FreeTestPopupProps> = ({ onClose }) => {
                 required
               />
               <textarea
-                name="notes" // Fixed the name attribute here
+                name="notes"
                 value={formData.notes}
                 onChange={handleChange}
                 placeholder="Note"
@@ -130,7 +131,7 @@ const FreeTestPopup: React.FC<FreeTestPopupProps> = ({ onClose }) => {
         </div>
 
         {/* Image Section */}
-        <div className="w-1/2 bg-white rounded-r-lg flex items-center justify-center">
+        <div className="w-1/2 bg-white rounded-r-lg flex items-center justify-center sm:w-full">
           <img
             src="/images/3.svg"
             alt="Communication illustration"

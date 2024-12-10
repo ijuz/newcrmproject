@@ -1,29 +1,25 @@
 import React, { useState } from "react";
 import axiosInstance from "../modules/admin/utils/axiosinstance";
 
-interface EnquiryPopupProps {
-  onClose: () => void; // Function to close the popup
-}
-
-const EnquiryPopup: React.FC<EnquiryPopupProps> = ({ onClose }) => {
+const EnquiryPopup = ({ onClose }) => {
   const [formData, setFormData] = useState({
     name: "",
     companyName: "",
     contactNumber: "",
     email: "",
     notes: "",
-    type:"inquiry"
+    type: "inquiry"
   });
   const [statusMessage, setStatusMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false); // Loading state
 
   // Update form data state
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true); // Start loading
     setStatusMessage(""); // Clear any previous messages
@@ -119,9 +115,7 @@ const EnquiryPopup: React.FC<EnquiryPopupProps> = ({ onClose }) => {
             <button
               type="submit"
               disabled={isLoading}
-              className={`mt-6 w-full bg-blue-400 text-white py-2 px-4 rounded hover:bg-blue-500 transition duration-200 ${
-                isLoading ? "opacity-50 cursor-not-allowed" : ""
-              }`}
+              className={`mt-6 w-full bg-blue-400 text-white py-2 px-4 rounded hover:bg-blue-500 transition duration-200 ${isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               {isLoading ? "Submitting..." : "Submit"}
             </button>

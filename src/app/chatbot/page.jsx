@@ -1,7 +1,3 @@
-
-
-"use client"
-
 import React, { useState, useEffect, useRef } from "react";
 import { X, Send, MessageSquare, Sparkles } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
@@ -221,22 +217,13 @@ const Chatbot = () => {
                 }
 
                 @keyframes glow {
-                    0%, 100% { fill: #333; transform: scale(1); }
-                    50% { fill: #4A90E2; transform: scale(1.2); }
+                    0%, 100% { fill: #fff; }
+                    50% { fill: #FFD700; }
                 }
 
                 @keyframes smile {
-                    0%, 100% { d: "M75 110 Q100 130 125 110"; }
-                    50% { d: "M75 110 Q100 135 125 110"; }
-                }
-
-                @keyframes bounce {
                     0%, 100% { transform: scale(1); }
                     50% { transform: scale(1.1); }
-                }
-
-                .chat-button:hover {
-                    animation: bounce 0.5s ease-in-out;
                 }
             `}</style>
         </div>

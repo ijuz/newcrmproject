@@ -101,28 +101,24 @@ const CurrencyTicker = () => {
   const totalWidth = tickerData.length * cardWidth;
 
   return (
-    <div className="relative w-full overflow-hidden " ref={containerRef}>
+    <div className="relative w-full overflow-hidden" ref={containerRef}>
       <style>
         {`
           @keyframes smoothScroll {
             0% { transform: translateX(0); }
             100% { transform: translateX(-${totalWidth}px); }
           }
-          
           .ticker-content {
             animation: smoothScroll ${tickerData.length * 8}s linear infinite;
             will-change: transform;
             display: flex;
           }
-          
           .ticker-container:hover .ticker-content {
             animation-play-state: paused;
           }
-          
           .rate-card {
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           }
-          
           .rate-card:hover {
             transform: translateY(-4px) scale(1.02);
             box-shadow: 0 12px 24px -8px rgba(255, 153, 0, 0.15);
@@ -136,7 +132,7 @@ const CurrencyTicker = () => {
             <div key={`clone-${cloneIndex}`} className="flex">
               {tickerData.map((data, index) => (
                 <RateCard 
-                  key={`${cloneIndex}-${data._id || index}`} 
+                  key={`${cloneIndex}-${data._id}-${index}`} 
                   data={data} 
                 />
               ))}

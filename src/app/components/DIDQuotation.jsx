@@ -1,9 +1,7 @@
-"use client";
-import React, { FormEvent, useState } from "react";
-import axiosInstance from "../modules/admin/utils/axiosinstance";
-// adjust path to your axiosInstance
+import React, { useState } from "react";
+import axiosInstance from "../modules/admin/utils/axiosinstance"; // adjust path to your axiosInstance
 
-const CustomizedQuotesForm: React.FC = () => {
+const CustomizedQuotesForm = () => {
   // State to manage form inputs
   const [formData, setFormData] = useState({
     name: "",
@@ -16,19 +14,19 @@ const CustomizedQuotesForm: React.FC = () => {
     contactNumber: "",
     timeZone: "",
     noOfDID: "",
-    type:"did"
+    type: "did"
   });
   const [isLoading, setIsLoading] = useState(false); // loading state
   const [isSubmitted, setIsSubmitted] = useState(false); // submission success state
 
   // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   // Define the form submission handler
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>): Promise<void> => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     setIsSubmitted(false);

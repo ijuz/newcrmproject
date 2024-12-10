@@ -1,16 +1,8 @@
-"use client";
-
 import React from "react";
-import Image from "next/image"; // Import the Image component from Next.js
 import styles from "./VoiceOfferings.module.css";
 
-interface Offering {
-  icon?: string;
-  subtitle?: string;
-}
-
-const VoiceOfferings: React.FC = () => {
-  const offerings: Offering[] = [
+const VoiceOfferings = () => {
+  const offerings = [
     {
       icon: "/services/QuickSettings.png",
       subtitle: "Quick Setup",
@@ -44,13 +36,12 @@ const VoiceOfferings: React.FC = () => {
           {offerings.map((offering, index) => (
             <div key={index} className={styles.offeringItem}>
               {offering.icon && (
-                <Image
+                <img
                   src={offering.icon}
-                  alt={offering.subtitle || `Offering ${index + 1}`} // Fallback alt text if subtitle is not available
+                  alt={`Offering ${index + 1} - ${offering.subtitle}`} // Fixed alt text interpolation
                   className={styles.offeringIcon}
                   width={122} // Adjust width as needed
                   height={122} // Adjust height as needed
-                  layout="intrinsic" // Maintain aspect ratio of the image
                 />
               )}
               {offering.subtitle && (

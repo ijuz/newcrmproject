@@ -1,7 +1,7 @@
 import React from "react";
-import Image from "next/image"; // Import the Image component from Next.js
 
-const Footer: React.FC = () => {
+
+const Footer = () => {
   return (
     <footer className="bg-[#323F3F] text-gray-300 py-12 px-6">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -81,7 +81,7 @@ const Footer: React.FC = () => {
           </h3>
           <ul className="space-y-3">
             <li className="flex items-center gap-2">
-              <Image
+              <img
                 src="/social-media/Facebook.png"
                 alt="Facebook"
                 className="w-5 h-5"
@@ -93,7 +93,7 @@ const Footer: React.FC = () => {
               </a>
             </li>
             <li className="flex items-center gap-2">
-              <Image
+              <img
                 src="/social-media/Linkedin.png"
                 alt="LinkedIn"
                 className="w-5 h-5"
@@ -105,7 +105,7 @@ const Footer: React.FC = () => {
               </a>
             </li>
             <li className="flex items-center gap-2">
-              <Image
+              <img
                 src="/social-media/Whatsapp.png"
                 alt="WhatsApp"
                 className="w-5 h-5"
@@ -117,7 +117,7 @@ const Footer: React.FC = () => {
               </a>
             </li>
             <li className="flex items-center gap-2">
-              <Image
+              <img
                 src="/social-media/skype.png"
                 alt="Skype"
                 className="w-5 h-5"
@@ -129,7 +129,7 @@ const Footer: React.FC = () => {
               </a>
             </li>
             <li className="flex items-center gap-2">
-              <Image
+              <img
                 src="/social-media/Telegram.png"
                 alt="Telegram"
                 className="w-5 h-5"

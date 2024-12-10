@@ -1,9 +1,8 @@
 import React from "react";
-import Image from "next/image"; // Import the Image component from Next.js
 import styles from "./Services.module.css";
 import servicesContent from "../../public/Strings/en_strings.json"; // Import the JSON file
 
-const Services: React.FC = () => {
+const Services = () => {
   return (
     <div className={styles.servicesBody}>
       {/* Section 1 */}
@@ -12,7 +11,7 @@ const Services: React.FC = () => {
 
         <div className={styles.content}>
           <div className={styles.illustration}>
-            <Image
+            <img
               src={servicesContent["SERVICES_SECTION-1_IMAGE_SRC"]}
               alt={servicesContent["SERVICES_SECTION-1_IMAGE_ALT"]}
               className={styles.illustrationImage}
@@ -45,7 +44,7 @@ const Services: React.FC = () => {
           </div>
 
           <div className={styles.illustration}>
-            <Image
+            <img
               src={servicesContent["SERVICES_SECTION-2_IMAGE_SRC"]}
               alt={servicesContent["SERVICES_SECTION-2_IMAGE_ALT"]}
               className={styles.illustrationImage}
@@ -59,9 +58,9 @@ const Services: React.FC = () => {
       {/* Section 3 */}
       <section className={styles.services}>
         <div className={styles.content}>
-          <div className={styles.illustration} >
-            <Image
-            style={{height:"300px"}}
+          <div className={styles.illustration}>
+            <img
+              style={{ height: "300px" }}
               src={servicesContent["SERVICES_SECTION-3_IMAGE_SRC"]}
               alt={servicesContent["SERVICES_SECTION-3_IMAGE_ALT"]}
               className={styles.illustrationImage}
@@ -70,7 +69,7 @@ const Services: React.FC = () => {
             />
           </div>
 
-          <div className={styles.textContent} style={{marginTop: "2em"}}>
+          <div className={styles.textContent} style={{ marginTop: "2em" }}>
             <h3 className={styles.serviceTitle}>
               {servicesContent["SERVICES_SECTION-3_TITLE"]}
             </h3>

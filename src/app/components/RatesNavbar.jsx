@@ -1,4 +1,3 @@
-"use client"
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -25,8 +24,8 @@ const getCustomerIdFromToken = () => {
   return "Not signed in";
 };
 
-const RatesNavbar: React.FC = () => {
-  const [customerId, setCustomerId] = useState<string>("");
+const RatesNavbar = () => {
+  const [customerId, setCustomerId] = useState("");
 
   useEffect(() => {
     const id = getCustomerIdFromToken();
