@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./FAQ.module.css"; // Make sure the styles are properly defined in this file
-import faqContent from "../../public/Strings/en_strings.json"; // Import the JSON file
+import faqContent from "../../Strings/en_strings.json"
 
 const FAQ_QA = () => {
   const [searchTerm, setSearchTerm] = useState(""); // State for search input

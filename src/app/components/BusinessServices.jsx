@@ -1,6 +1,6 @@
 import React from "react";
 import { Check } from "lucide-react";
-import { useHistory } from "react-router-dom"; // Import useHistory for navigation
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 
 const BusinessServices = () => {
   const services = [
@@ -12,7 +12,7 @@ const BusinessServices = () => {
     "Account manager",
   ];
 
-  const history = useHistory(); // Initialize useHistory hook
+  const navigate = useNavigate(); // Initialize useNavigate hook
 
   return (
     <div className="max-w-6xl mx-auto p-8 flex flex-col md:flex-row items-center justify-between gap-8">
@@ -36,13 +36,13 @@ const BusinessServices = () => {
         {/* Buttons */}
         <div className="flex items-center">
           <button
-            onClick={() => history.push("/modules/auth/Base/login")} // Use history.push for navigation
+            onClick={() => navigate("/modules/auth/Base/login")} // Use navigate for navigation
             className="px-6 py-3 bg-blue-400 text-white rounded-md hover:bg-blue-500 transition-colors"
           >
             FREE DEMO
           </button>
           <button
-            onClick={() => history.push("/pricing")} // Use history.push for navigation
+            onClick={() => navigate("/pricing")} // Use navigate for navigation
             className="px-6 ml-6 py-3 bg-orange-400 text-white rounded-md hover:bg-orange-500 transition-colors"
           >
             RATES

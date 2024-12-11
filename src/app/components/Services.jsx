@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./Services.module.css";
-import servicesContent from "../../public/Strings/en_strings.json"; // Import the JSON file
+import servicesContent from "../../Strings/en_strings.json"; // Import the JSON file
 
 const Services = () => {
   return (
