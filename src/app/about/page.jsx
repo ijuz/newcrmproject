@@ -1,6 +1,6 @@
 import React from "react";
-import "./About.css"; // Use regular CSS import instead of CSS modules
-import aboutContent from "../../public/Strings/en_strings.json"; // Import the JSON file
+import "./About.module.css"; // Use regular CSS import instead of CSS modules
+import aboutContent from "../../Strings/en_strings.json"; // Import the JSON file
 import CustomizedQuotesForm from "../components/DIDQuotation";
 import Footer from "../components/Footer";
 import Header from "../components/Header";

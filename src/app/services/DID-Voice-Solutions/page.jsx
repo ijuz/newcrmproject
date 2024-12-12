@@ -1,8 +1,8 @@
 import React from "react";
-import CustomizedQuotesForm from "../components/DIDQuotation";
-import didVoiceSolutionsContent from "../../../public/Strings/en_strings.json"; // Import the JSON file
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+import CustomizedQuotesForm from "../../components/DIDQuotation";
+import didVoiceSolutionsContent from "../../../Strings/en_strings.json"; // Import the JSON file
+import Footer from "../../components/Footer";
+import Header from "../../components/Header";
 
 const DID_Voice_Solutions = () => {
   return (

@@ -1,8 +1,8 @@
 import React from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import CustomizedQuotesForm from "../components/DIDQuotation";
-import cliVoiceTerminationContent from "../../../public/Strings/en_strings.json"; // Import the JSON file
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import CustomizedQuotesForm from "../../components/DIDQuotation";
+import cliVoiceTerminationContent from "../../../Strings/en_strings.json"; // Import the JSON file
 
 const CLI_Voice_Termination = () => {
   return (

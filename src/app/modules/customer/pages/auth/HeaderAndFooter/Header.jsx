@@ -1,10 +1,8 @@
-"use client";
-
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
-const Header: React.FC = () => {
+const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,11 +15,11 @@ const Header: React.FC = () => {
     setMenuOpen((prev) => !prev);
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
-  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearchSubmit = (e) => {
     e.preventDefault();
     // Handle search submit logic (e.g., redirect or fetch search results)
     console.log("Search query:", searchQuery);

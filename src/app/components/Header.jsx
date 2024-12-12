@@ -102,7 +102,7 @@ const Header = () => {
               </div>
             )}
           </div>
-          <a href="/contacts" className={navItemClasses}>
+          <a href="/contact" className={navItemClasses}>
             <span>Contact</span>
           </a>
           <a href="/pricing" className={navItemClasses}>

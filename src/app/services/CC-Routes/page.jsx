@@ -1,13 +1,14 @@
 import React from "react";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
-import CustomizedQuotesForm from "../components/DIDQuotation";
-import ccRoutesContent from "../../../public/Strings/en_strings.json"; // Import the JSON file
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import CustomizedQuotesForm from "../../components/DIDQuotation";
+import ccRoutesContent from "../../../Strings/en_strings.json"; // Import the JSON file
 
 const CC_Routes = () => {
   return (
     <>
       <Header />
+      
       <div>
         {/* Banner Image */}
         <div className="w-full mt-16">
