@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../admin/utils/axiosinstance";
+import axios from "axios";
 
 // Step Indicator Component
 const StepIndicator = ({ currentStep, setStep }) => {
+
+  
   const steps = [
     { number: 1, label: "Company Info", color: "blue" },
     { number: 2, label: "Technical Info", color: "orange" },
@@ -293,9 +296,31 @@ const UserInfo = ({ onSubmit, formData, setFormData }) => {
           <input
             type="text"
             className="w-full border rounded p-2"
-            placeholder="Username"
-            value={formData.userUsername}
-            onChange={(e) => setFormData({ ...formData, userUsername: e.target.value })}
+            placeholder="User Name"
+            value={formData.username}
+            onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+            required
+          />
+        </div>
+        <div>
+          <label className="block mb-2">Email</label>
+          <input
+            type="text"
+            className="w-full border rounded p-2"
+            placeholder="User Email"
+            value={formData.userEmail}
+            onChange={(e) => setFormData({ ...formData, userEmail: e.target.value })}
+            required
+          />
+        </div>
+        <div>
+          <label className="block mb-2">Phone</label>
+          <input
+            type="text"
+            className="w-full border rounded p-2"
+            placeholder="User Mobile"
+            value={formData.userMobile}
+            onChange={(e) => setFormData({ ...formData, userMobile: e.target.value })}
             required
           />
         </div>
@@ -305,19 +330,8 @@ const UserInfo = ({ onSubmit, formData, setFormData }) => {
             type="password"
             className="w-full border rounded p-2"
             placeholder="Password"
-            value={formData.userPassword}
-            onChange={(e) => setFormData({ ...formData, userPassword: e.target.value })}
-            required
-          />
-        </div>
-        <div>
-          <label className="block mb-2">Confirm Password</label>
-          <input
-            type="password"
-            className="w-full border rounded p-2"
-            placeholder="Confirm password"
-            value={formData.userConfirmPassword}
-            onChange={(e) => setFormData({ ...formData, userConfirmPassword: e.target.value })}
+            value={formData.password}
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             required
           />
         </div>
@@ -334,6 +348,8 @@ const UserInfo = ({ onSubmit, formData, setFormData }) => {
 
 // Main App Component
 const FormStep = ({setData}) => {
+
+  const navigate = useNavigate()
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     companyName: "",
@@ -349,9 +365,10 @@ const FormStep = ({setData}) => {
     codex: "",
     userFirstname: "",
     userLastname: "",
-    userUsername: "",
-    userPassword: "",
-    userConfirmPassword: "",
+    username: "",
+    password: "",
+    userMobile: "",
+    userEmail:""
   });
 
   const handleNextStep = async () => {
@@ -362,14 +379,15 @@ const FormStep = ({setData}) => {
     alert("Form submitted successfully!");
     try {
       console.log("Submitting form with data:", formData); 
-      const response = await axiosInstance.post(`/v3/api/customers`, formData, {
+      const response = await axios.post(`http://localhost:5000/v3/api/customers`, formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
   
       console.log("Form submitted successfully:", );
-      // router.push("/modules/auth/Base/login");
+      console.log(response);
+      navigate('/signIn')
     } catch (error) {
       console.error("Error submitting form:", error);
     }  };
