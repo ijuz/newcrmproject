@@ -1,6 +1,4 @@
-"use client"; // Ensure this is at the very top
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
 // Sample data
 const sampleData = {
@@ -39,12 +37,11 @@ const DataRow = ({ item, onClick }) => {
 };
 
 const FollowUp = () => {
-  const router = useRouter(); // Initialize useRouter
   const [activeTab, setActiveTab] = useState('calls');
 
   const handleRowClick = () => {
     console.log('Row clicked'); // Debugging log
-    router.push(`/modules/admin/Support/FollowUp/detail`);
+    // Handle row click (navigate to a different view or perform another action)
   };
 
   const renderTabContent = () => {
@@ -52,7 +49,7 @@ const FollowUp = () => {
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr className="bg-gray-200 text-gray-700">
-            <th className="py-2 border-b"onClick={handleRowClick}>Customer ID</th>
+            <th className="py-2 border-b" onClick={handleRowClick}>Customer ID</th>
             <th className="py-2 border-b">Time</th>
             <th className="py-2 border-b">Date</th>
             <th className="py-2 border-b">Status</th>
@@ -78,9 +75,7 @@ const FollowUp = () => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`flex-1 text-center py-2 border-b-2 transition duration-300 ${
-              activeTab === tab ? 'border-blue-600 text-blue-600 font-semibold' : 'border-transparent text-gray-700'
-            }`}
+            className={`flex-1 text-center py-2 border-b-2 transition duration-300 ${activeTab === tab ? 'border-blue-600 text-blue-600 font-semibold' : 'border-transparent text-gray-700'}`}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
           </button>
