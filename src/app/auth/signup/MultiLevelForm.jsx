@@ -134,7 +134,6 @@ const TechnicalInfo = ({ onNext }) => {
   const [codex, setCodex] = useState([]);
   const [currentIp, setCurrentIp] = useState("");
   const [currentCodex, setCurrentCodex] = useState("");
-
   const handleAddIp = () => {
     if (currentIp && !ips.includes(currentIp)) {
       setIps([...ips, currentIp]);

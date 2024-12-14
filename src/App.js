@@ -8,6 +8,8 @@ import CLI_Voice_Termination from "./app/services/CLI-Voice-Termination/page";
 import DID_Voice_Solutions from "./app/services/DID-Voice-Solutions/page";
 import VoIPRates from "./app/pricing/page";
 import FAQPage from "./app/faq/page";
+import SignUpPage from "./app/modules/auth/signup/page";
+import SignInPage from "./app/auth/login/page";
 
 function App() {
   return (
@@ -20,6 +22,8 @@ function App() {
         <Route path="/services/DID-Voice-Solutions" element={<DID_Voice_Solutions />} />
         <Route path="/pricing" element={<VoIPRates />} />
         <Route path="/faq" element={<FAQPage />} />
+        <Route path="/signUp" element={<SignUpPage />} />
+        <Route path="/signIn" element={<SignInPage />} />
       </Routes>
   );
 }

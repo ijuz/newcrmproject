@@ -161,13 +161,13 @@ const Header = () => {
           </>
         ) : (
           <>
-            <a href="https://www.cloudqlobe.com/modules/auth/Base/Signup">
+            <a href="signUp">
               <button className={`${buttonBaseClasses} bg-green-600 hover:bg-green-700`}>
                 <UserPlus size={18} />
                 <span>SIGN UP</span>
               </button>
             </a>
-            <a href="https://www.cloudqlobe.com/modules/auth/Base/login">
+            <a href="signIn">
               <button className={`${buttonBaseClasses} bg-orange-400 hover:bg-orange-500`}>
                 <LogIn size={18} />
                 <span>LOGIN</span>
@@ -181,3 +181,6 @@ const Header = () => {
 };
 
 export default Header;
+
+// https://www.cloudqlobe.com/modules/auth/Base/Signup
+// https://www.cloudqlobe.com/modules/auth/Base/login

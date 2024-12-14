@@ -333,7 +333,7 @@ const UserInfo = ({ onSubmit, formData, setFormData }) => {
 };
 
 // Main App Component
-const FormStep = () => {
+const FormStep = ({setData}) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     companyName: "",
@@ -354,14 +354,25 @@ const FormStep = () => {
     userConfirmPassword: "",
   });
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     setCurrentStep(currentStep + 1);
   };
 
-  const handleSubmit = () => {
-    console.log("Form Submitted", formData);
+  const handleSubmit = async () => {
     alert("Form submitted successfully!");
-  };
+    try {
+      console.log("Submitting form with data:", formData); 
+      const response = await axiosInstance.post(`/v3/api/customers`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      console.log("Form submitted successfully:", );
+      // router.push("/modules/auth/Base/login");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }  };
 
   return (
     <div className="p-8">

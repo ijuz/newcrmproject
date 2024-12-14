@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import MultiStepForm from "./MultiLevelForm";
 
 const SignUpPage = () => {
+const [Data, setData] = useState()
+
+console.log(Data);
+
   return (
     <div className="flex flex-col md:flex-row bg-[#F7F5F4] p-8 rounded-lg shadow-md max-w-6xl mx-auto mt-24 mb-8">
       {/* Left Column */}
@@ -20,7 +24,7 @@ const SignUpPage = () => {
 
       {/* Right Column */}
       <div className="md:w-1/2 mt-10">
-        <MultiStepForm />
+        <MultiStepForm setData={setData}/>
       </div>
     </div>
   );
