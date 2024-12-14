@@ -9,7 +9,7 @@ import DID_Voice_Solutions from "./app/services/DID-Voice-Solutions/page";
 import VoIPRates from "./app/pricing/page";
 import FAQPage from "./app/faq/page";
 import SignUpPage from "./app/modules/auth/signup/page";
-import SignInPage from "./app/auth/login/page";
+import SignInPage from "./app/modules/auth/Base/login/page"
 
 function App() {
   return (
