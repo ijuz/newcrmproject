@@ -53,14 +53,11 @@ const VoIPRatesTable = () => {
   }, [debouncedSearch]);
 
   // Determine the data to display (either API data or preset data)
-  const displayData = usingPresetData
-    ? PRESET_DATA.slice((currentPage - 1) * pageSize, currentPage * pageSize)
-    : rates;
 
   return (
     <div className={styles.container}>
       {/* Use RateTable component to display the table */}
-      <RateTable loading={loading} error={error} data={displayData} />
+      <RateTable/>
     </div>
   );
 };
