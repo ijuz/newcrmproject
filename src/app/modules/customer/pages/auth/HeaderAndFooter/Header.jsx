@@ -1,6 +1,5 @@
-import Link from "next/link";
 import React, { useState } from "react";
-import Image from "next/image";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -27,8 +26,8 @@ const Header = () => {
 
   return (
     <nav className="flex items-center justify-between p-4 bg-[#323F3F] shadow-md fixed top-0 left-0 right-0 z-50 w-full">
-      <Link href="/" className="block">
-        <Image
+      <Link to="/" className="block">
+        <img
           src="/images/logo.png"
           alt="CloudGlobe"
           width={32} // Specify the width of the image
@@ -40,10 +39,10 @@ const Header = () => {
       <div className="flex items-center space-x-6 ml-4">
         {/* Navigation Links */}
         <div className="hidden md:flex items-center space-x-6">
-          <Link href="/" className="text-white hover:text-orange-500">
+          <Link to="/" className="text-white hover:text-orange-500">
             Home
           </Link>
-          <Link href="/about" className="text-white hover:text-orange-500">
+          <Link to="/about" className="text-white hover:text-orange-500">
             About
           </Link>
           <div className="relative">
@@ -70,19 +69,19 @@ const Header = () => {
             {isDropdownOpen && (
               <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                 <Link
-                  href="/services/CC-Routes"
+                  to="/services/CC-Routes"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
                   CC Routes
                 </Link>
                 <Link
-                  href="/services/CLI-Voice-Termination"
+                  to="/services/CLI-Voice-Termination"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
                   CLI Voice Termination
                 </Link>
                 <Link
-                  href="/services/DID-Voice-Solutions"
+                  to="/services/DID-Voice-Solutions"
                   className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                 >
                   DID Voice Solutions
@@ -90,13 +89,13 @@ const Header = () => {
               </div>
             )}
           </div>
-          <Link href="/contacts" className="text-white hover:text-orange-500">
+          <Link to="/contacts" className="text-white hover:text-orange-500">
             Contact
           </Link>
-          <Link href="/pricing" className="text-white hover:text-orange-500">
+          <Link to="/pricing" className="text-white hover:text-orange-500">
             Rates
           </Link>
-          <Link href="/faq" className="text-white hover:text-orange-500">
+          <Link to="/faq" className="text-white hover:text-orange-500">
             FAQ
           </Link>
         </div>
@@ -144,13 +143,13 @@ const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden absolute top-16 left-0 w-full bg-[#323F3F] shadow-lg z-10">
           <Link
-            href="/"
+            to="/"
             className="block px-4 py-2 text-white hover:bg-orange-500"
           >
             Home
           </Link>
           <Link
-            href="/about"
+            to="/about"
             className="block px-4 py-2 text-white hover:bg-orange-500"
           >
             About
@@ -179,19 +178,19 @@ const Header = () => {
             {isDropdownOpen && (
               <div className="pl-4">
                 <Link
-                  href="/services/CC-Routes"
+                  to="/services/CC-Routes"
                   className="block px-4 py-2 text-gray-200 hover:bg-orange-500"
                 >
                   CC Routes
                 </Link>
                 <Link
-                  href="/services/CLI-Voice-Termination"
+                  to="/services/CLI-Voice-Termination"
                   className="block px-4 py-2 text-gray-200 hover:bg-orange-500"
                 >
                   CLI Voice Termination
                 </Link>
                 <Link
-                  href="/services/DID-Voice-Solutions"
+                  to="/services/DID-Voice-Solutions"
                   className="block px-4 py-2 text-gray-200 hover:bg-orange-500"
                 >
                   DID Voice Solutions
@@ -200,29 +199,29 @@ const Header = () => {
             )}
           </div>
           <Link
-            href="/contacts"
+            to="/contacts"
             className="block px-4 py-2 text-white hover:bg-orange-500"
           >
             Contact
           </Link>
           <Link
-            href="/pricing"
+            to="/pricing"
             className="block px-4 py-2 text-white hover:bg-orange-500"
           >
             Rates
           </Link>
           <Link
-            href="/faq"
+            to="/faq"
             className="block px-4 py-2 text-white hover:bg-orange-500"
           >
             FAQ
           </Link>
-          <Link href="/auth/signup">
+          <Link to="/auth/signup">
             <button className="w-full px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-md">
               SIGN UP
             </button>
           </Link>
-          <Link href="/auth/login">
+          <Link to="/auth/login">
             <button className="w-full px-4 py-2 text-white bg-orange-400 hover:bg-gray-500 rounded-md">
               LOGIN
             </button>
@@ -232,12 +231,12 @@ const Header = () => {
 
       {/* Sign Up and Login buttons (for larger screens) */}
       <div className="hidden md:flex items-center space-x-2">
-        <Link href="/auth/signup">
+        <Link to="/auth/signup">
           <button className="px-4 py-2 text-white bg-green-600 hover:bg-green-700 rounded-md">
             SIGN UP
           </button>
         </Link>
-        <Link href="/auth/login">
+        <Link to="/auth/login">
           <button className="px-4 py-2 text-white bg-orange-400 hover:bg-orange-500 rounded-md">
             LOGIN
           </button>
