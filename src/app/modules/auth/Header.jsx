@@ -1,6 +1,4 @@
-"use client";
-
-import Link from "next/link";
+import {Link} from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { 
@@ -11,7 +9,7 @@ import {
   LogIn
 } from "lucide-react";
 
-const Header: React.FC = () => {
+const Header  = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isMenuOpen, setMenuOpen] = useState(false);
   const [isLanguageDropdownOpen, setLanguageDropdownOpen] = useState(false);
@@ -25,16 +23,16 @@ const Header: React.FC = () => {
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const toggleLanguageDropdown = () => setLanguageDropdownOpen((prev) => !prev);
 
-  const handleClickOutside = (event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setDropdownOpen(false);
     }
-    if (languageRef.current && !languageRef.current.contains(event.target as Node)) {
+    if (languageRef.current && !languageRef.current.contains(event.target )) {
       setLanguageDropdownOpen(false);
     }
   };
 
-  const handleLanguageChange = (language: string) => {
+  const handleLanguageChange = (language) => {
     setSelectedLanguage(language);
     setLanguageDropdownOpen(false);
   };

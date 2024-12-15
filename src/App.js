@@ -10,6 +10,7 @@ import VoIPRates from "./app/pricing/page";
 import FAQPage from "./app/faq/page";
 import SignUpPage from "./app/modules/auth/signup/page";
 import SignInPage from "./app/auth/login/page";
+import ForgotPassword from './app/modules/customer/pages/forgotPassword/EnterPassword/page.jsx';
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/signUp" element={<SignUpPage />} />
         <Route path="/signIn" element={<SignInPage />} />
+        <Route path="/Forgotpass" element={<ForgotPassword/>}/>
       </Routes>
   );
 }

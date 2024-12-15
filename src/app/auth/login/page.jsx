@@ -53,7 +53,7 @@ const SignInPage = () => {
           </div>
         </form>
         <div className="mt-4">
-          <a href="#" className="text-blue-500 hover:underline">
+          <a href="/Forgotpass" className="text-blue-500 hover:underline">
             Forgot your password?
           </a>
         </div>
