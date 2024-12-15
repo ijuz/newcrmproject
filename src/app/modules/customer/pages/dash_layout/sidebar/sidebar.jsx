@@ -22,14 +22,14 @@ const menuItems = [
     id: "home", 
     icon: Home, 
     label: "Home", 
-    path: `${BASE_PATH}/home`,
+    path: `/Home_page`,
     color: "emerald"
   },
   { 
     id: "profile", 
     icon: User, 
     label: "Profile", 
-    path: `${BASE_PATH}/profile-page`,
+    path: `/Profile_page`,
     color: "rose"
   },
   {
@@ -38,31 +38,31 @@ const menuItems = [
     label: "Rates",
     color: "blue",
     submenu: [
-      { id: "ccRates", label: "CC Rates", icon: LineChart, path: `${BASE_PATH}/rates_page/Rates` },
-      { id: "myRates", label: "My Rates", icon: PieChart, path: `${BASE_PATH}/myRates` },
-      { id: "privateRates", label: "Private Rates", icon: TrendingUp, path: `${BASE_PATH}/rates_page/PrivateRates` },
-      { id: "cliRates", label: "CLI Rates", icon: Monitor, path: `${BASE_PATH}/cliRates` },
+      { id: "ccRates", label: "CC Rates", icon: LineChart, path: `/CCRates_page` },
+      { id: "myRates", label: "My Rates", icon: PieChart, path: `/MyRates_page` },
+      { id: "privateRates", label: "Private Rates", icon: TrendingUp, path: `/PrivateRate_page` },
+      { id: "cliRates", label: "CLI Rates", icon: Monitor, path: `/CliRates_page` },
     ],
   },
   { 
     id: "payments", 
     icon: Wallet, 
     label: "Payments", 
-    path: `${BASE_PATH}/payments_page`,
+    path: `/Payment_page`,
     color: "amber"
   },
   { 
     id: "trouble", 
     icon: LifeBuoy, 
     label: "Support", 
-    path: `${BASE_PATH}/trouble_page`,
+    path: `/Support_page`,
     color: "purple"
   },
   { 
     id: "settings", 
     icon: Settings, 
     label: "Settings", 
-    path: `${BASE_PATH}/settings`,
+    path: `/settings_page`,
     color: "slate"
   },
 ];

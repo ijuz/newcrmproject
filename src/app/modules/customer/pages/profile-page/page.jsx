@@ -7,7 +7,8 @@ import {
   Hash, Edit, ExternalLink 
 } from 'lucide-react';
 import DashboardLayout from '../dash_layout/page';
-import axiosInstance from '@/app/modules/admin/v2/utils/axiosinstance';
+import axiosInstance from '../../../admin/v2/utils/axiosinstance.js';
+import axios from 'axios';
 
 const ProfileCard = ({ title, description, icon: Icon, children, accentColor }) => (
   <motion.div
@@ -70,7 +71,7 @@ const ProfilePage = () => {
         if (token) {
           const decoded = jwtDecode(token);
           const customerId = decoded.id;
-          const response = await axiosInstance.get(`v3/api/customers/${customerId}`);
+          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
           setProfileData(response.data);
           setEditableIps(response.data.switchIps);
         }

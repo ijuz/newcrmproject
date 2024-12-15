@@ -6,6 +6,7 @@ import {
   UserPlus,
   LogIn
 } from "lucide-react";
+import {Link} from 'react-router-dom'
 
 const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -145,12 +146,12 @@ const Header = () => {
       <div className="flex items-center space-x-3" style={{ marginRight: "1em" }}>
         {isLoggedIn ? (
           <>
-            <a href="https://www.cloudqlobe.com/modules/customer/pages/home">
+            <Link to="/Home_page">
               <button className={`${buttonBaseClasses} bg-blue-600 hover:bg-blue-700`}>
                 <LayoutDashboard size={18} />
                 <span>Dashboard</span>
               </button>
-            </a>
+            </Link>
             <button
               onClick={handleLogout}
               className={`${buttonBaseClasses} bg-red-600 hover:bg-red-700`}
@@ -161,18 +162,18 @@ const Header = () => {
           </>
         ) : (
           <>
-            <a href="https://www.cloudqlobe.com/modules/auth/Base/Signup">
+            <Link to="/signUp">
               <button className={`${buttonBaseClasses} bg-green-600 hover:bg-green-700`}>
                 <UserPlus size={18} />
                 <span>SIGN UP</span>
               </button>
-            </a>
-            <a href="https://www.cloudqlobe.com/modules/auth/Base/login">
+            </Link>
+            <Link to="/signIn">
               <button className={`${buttonBaseClasses} bg-orange-400 hover:bg-orange-500`}>
                 <LogIn size={18} />
                 <span>LOGIN</span>
               </button>
-            </a>
+            </Link>
           </>
         )}
       </div>

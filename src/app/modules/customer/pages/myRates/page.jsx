@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode'; // Import jwt-decode
-import axiosInstance from '@/app/modules/admin/utils/axiosinstance';
 import DashboardLayout from '../dash_layout/page';
+import axios from 'axios';
 
 const MyRatesPage = () => {
   const [search, setSearch] = useState('');
@@ -22,7 +22,7 @@ const MyRatesPage = () => {
       const customerId = token ? jwtDecode(token).id : null; // Adjust this field according to your token's structure
       if (customerId) {
         try {
-          const response = await axiosInstance.get(`v3/api/customers/${customerId}`);
+          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
           setCustomerData(response.data);
         } catch (error) {
           console.error('Error fetching customer data:', error);
@@ -37,7 +37,7 @@ const MyRatesPage = () => {
     const fetchTests = async () => {
       if (customerData) {
         try {
-          const response = await axiosInstance.get(`v3/api/tests`); // Adjust the endpoint to fetch tests
+          const response = await axios.get(`http://localhost:5000/v3/api/tests`); // Adjust the endpoint to fetch tests
           const allTests = response.data;
 
           const filteredTests = allTests.filter(test => test.customerId === customerData._id);
@@ -56,7 +56,7 @@ const MyRatesPage = () => {
       if (customerData && customerData.myRatesId.length) {
         try {
           const rateFetchPromises = customerData.myRatesId.map(async (rateId) => {
-            const ratesResponse = await axiosInstance.get(`v3/api/rates/${rateId}`);
+            const ratesResponse = await axios.get(`http://localhost:5000/v3/api/rates/${rateId}`);
             return ratesResponse.data;
           });
           const ratesDataArray = await Promise.all(rateFetchPromises);
@@ -84,7 +84,7 @@ const MyRatesPage = () => {
         const testStatus = correspondingTest ? correspondingTest.testStatus : rate.status; // Use rate status if no test found
         const testReason = 'Requested'; // Or set a different reason as needed
 
-        return axiosInstance.post(`v3/api/tests`, {
+        return axios.post(`http://localhost:5000/v3/api/tests`, {
           rateId: rate._id,
           customerId: customerData._id,
           rateCustomerId: `${customerData._id}hi${rate._id}`,
@@ -120,8 +120,8 @@ const MyRatesPage = () => {
     };
   });
 
-  const filteredData = combinedData.filter(item =>
-    item.country.toLowerCase().includes(search.toLowerCase()) &&
+  const filteredData = combinedData?.filter(item =>
+    item.country?.toLowerCase().includes(search.toLowerCase()) &&
     (statusFilter === 'all' || item.testStatus === statusFilter)
   );
 

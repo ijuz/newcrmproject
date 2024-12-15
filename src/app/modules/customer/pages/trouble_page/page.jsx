@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Ticket, Plus, Loader2, Building2 } from "lucide-react";
-import axiosInstance from "../utils/axiosinstance";
+import { jwtDecode } from "jwt-decode";
 import DashboardLayout from "../dash_layout/page";
+import axios from "axios";
+
 
 // Tab Button component for selecting different views
 const TabButton = ({ active, children, onClick, color }) => {
@@ -112,6 +114,7 @@ const FollowUp = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
+      // eslint-disable-next-line no-undef
       const decodedToken = jwtDecode(token);
       setCustomerId(decodedToken.customerId);
       setCompanyName(decodedToken.companyName || "");
@@ -123,7 +126,7 @@ const FollowUp = () => {
       if (!customerId) return;
 
       try {
-        const followUpsResponse = await axiosInstance.get("v3/api/followups");
+        const followUpsResponse = await axios.get("http://localhost:5000/v3/api/followups");
         const filteredData = followUpsResponse.data.filter(
           (item) =>
             item.followupCategory === "General" && item.companyId === customerId
@@ -135,7 +138,7 @@ const FollowUp = () => {
         ];
         const customers = {};
         for (const id of customerIds) {
-          const response = await axiosInstance.get(`v3/api/customers/${id}`);
+          const response = await axios.get(`http://localhost:5000/v3/api/customers/${id}`);
           customers[id] = response.data;
         }
         setCustomerData(customers);
