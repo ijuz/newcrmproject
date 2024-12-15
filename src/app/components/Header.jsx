@@ -182,5 +182,3 @@ const Header = () => {
 
 export default Header;
 
-// https://www.cloudqlobe.com/modules/auth/Base/Signup
-// https://www.cloudqlobe.com/modules/auth/Base/login

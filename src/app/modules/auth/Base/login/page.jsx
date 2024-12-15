@@ -1,7 +1,7 @@
 import React from 'react';
-import Header from '../../Header';
+import Header from '../../../../components/Header';
 import Footer from '../../Footer';
-import SignInPage from '../../login/SignInPage'; // Make sure this path is correct
+import SignInPage from '../../login/page';
 
 const LoginFrame = () => {
   return (

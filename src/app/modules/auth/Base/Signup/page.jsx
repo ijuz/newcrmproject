@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from '../../Header';
 import Footer from '../../Footer';
-import SignUpPage from '../../signup/SignUpPage'; // Ensure the path is correct
+import SignUpPage from "../../signup/page";
 
 const SignUpFrame = () => {
   return (

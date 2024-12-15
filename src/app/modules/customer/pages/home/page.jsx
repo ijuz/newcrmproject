@@ -32,9 +32,10 @@ import {
   Trophy
 } from 'lucide-react';
 import DashboardLayout from '../dash_layout/page';
-import Ticker from '@/app/components/Ticker';
-import axiosInstance from '@/app/modules/admin/utils/axiosinstance';
+import Ticker from '../../../../components/Ticker';
+// import axiosInstance from '@/app/modules/admin/utils/axiosinstance';
 import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
 const Dashboard = () => {
   const [selectedCard, setSelectedCard] = useState(0);
@@ -43,7 +44,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTickerData = async () => {
       try {
-        const response = await axiosInstance.get('/v3/api/clirates');
+        const response = await axios.get('http://localhost:5000/v3/api/clirates');
         setTickerData(response.data);
       } catch (error) {
         console.error("Error fetching ticker data:", error);
@@ -70,7 +71,7 @@ const Dashboard = () => {
         if (token) {
           const decoded = jwtDecode(token);
           const customerId = decoded.id;
-          const response = await axiosInstance.get(`v3/api/customers/${customerId}`);
+          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
           setProfileData(response.data);
         }
       } catch (error) {
