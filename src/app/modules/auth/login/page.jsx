@@ -9,7 +9,7 @@ const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false); // New state for showing password
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false); // New loading state
-  const history = useNavigate();
+  const navigate = useNavigate();
 
   // Check if the user is already authenticated
   useEffect(() => {
@@ -25,7 +25,7 @@ const SignInPage = () => {
           console.log(decoded.id);
           // If the user exists in the database, redirect to the dashboard
           if (response.data) {
-            history.push("/modules/customer/pages/home");
+            navigate("/modules/customer/pages/home");
           }
         } catch (error) {
           console.error("User not authenticated or token is invalid", error);
@@ -34,7 +34,7 @@ const SignInPage = () => {
     };
     
     checkAuthentication();
-  }, [history]);
+  }, [navigate]);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -48,12 +48,13 @@ const SignInPage = () => {
       });
 
       const data = response.data;
-
+ console.log(data);
+ 
       // Store the JWT token
       localStorage.setItem("token", data.token);
 
       // Redirect to dashboard
-      // history.push("/modules/customer/pages/home");
+     navigate("/dash-board");
     } catch (err) {
       // Handle error response
       // setError(err.response?.data?.error || "Login failed. Please try again.");
