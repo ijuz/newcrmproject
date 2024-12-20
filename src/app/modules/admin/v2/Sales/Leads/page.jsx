@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../utils/axiosinstance';
 import Layout from '../../layout/page';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -10,7 +10,7 @@ const CustomersPage = () => {
   const [search, setSearch] = useState('');
   const [leadStatusFilter, setLeadStatusFilter] = useState(''); // To store selected filter
   const [activeTab, setActiveTab] = useState('leadDetails');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -32,9 +32,9 @@ const CustomersPage = () => {
 
   const handleSearch = (event) => setSearch(event.target.value);
 
-  const handleRowClick = (customerId) => history.push(`/modules/admin/v2/Sales/Leads/${customerId}`);
+  const handleRowClick = (customerId) => navigate(`/modules/admin/v2/Sales/Leads/${customerId}`);
 
-  const handleAddLead = () => history.push('/modules/admin/v2/Sales/Leads/AddLead');
+  const handleAddLead = () => navigate('/modules/admin/v2/Sales/Leads/AddLead');
 
   const handleLeadStatusFilter = (status) => setLeadStatusFilter(status); // Filter handler
 

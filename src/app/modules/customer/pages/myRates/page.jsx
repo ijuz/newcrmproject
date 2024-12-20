@@ -7,6 +7,8 @@ const MyRatesPage = () => {
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('countryCode'); // Default sort option
   const [myRatesData, setMyRatesData] = useState([]); // Initialize myRatesData as empty
+  // console.log(myRatesData,"myRatesData");
+  
   const [customerData, setCustomerData] = useState(null); // Initialize customerData as null
   const [testsData, setTestsData] = useState([]); // State to store tests data
   const [statusFilter, setStatusFilter] = useState('all'); // Status filter
@@ -41,6 +43,8 @@ const MyRatesPage = () => {
           const allTests = response.data;
 
           const filteredTests = allTests.filter(test => test.customerId === customerData._id);
+          // console.log(filteredTests,"filteredTests");
+          
           setTestsData(filteredTests);
         } catch (error) {
           console.error('Error fetching tests:', error);
@@ -56,10 +60,18 @@ const MyRatesPage = () => {
       if (customerData && customerData.myRatesId.length) {
         try {
           const rateFetchPromises = customerData.myRatesId.map(async (rateId) => {
+
+            
             const ratesResponse = await axios.get(`http://localhost:5000/v3/api/rates/${rateId}`);
+            // console.log(ratesResponse,"rateFetchPromises");
             return ratesResponse.data;
           });
+      
+
+
           const ratesDataArray = await Promise.all(rateFetchPromises);
+          // console.log(ratesDataArray,"ratesDataArray");
+          
           setMyRatesData(ratesDataArray.flat());
         } catch (error) {
           console.error('Error fetching rates:', error);
@@ -112,18 +124,24 @@ const MyRatesPage = () => {
 
   // Combine rates and tests data
   const combinedData = myRatesData.map(rate => {
-    const test = testsData.find(test => test.rateCustomerId === `${customerData._id}hi${rate._id}`);
+    const test = testsData.find(test => test.rateCustomerId === `${customerData._id}${rate._id}`);
     return {
       ...rate,
       testStatus: test ? test.testStatus : rate.status, // Use rate status if no test found
       testReason: test ? test.testReason : 'N/A',
     };
   });
+  // console.log(combinedData,"combinedData");
 
-  const filteredData = combinedData?.filter(item =>
+
+  const filteredData = combinedData.filter(item =>
     item.country?.toLowerCase().includes(search.toLowerCase()) &&
     (statusFilter === 'all' || item.testStatus === statusFilter)
   );
+  
+  console.log(filteredData,"filteredData");
+
+
 
   const sortedData = filteredData.sort((a, b) => {
     if (sort === 'countryName') {
@@ -132,7 +150,10 @@ const MyRatesPage = () => {
     return a.countryCode.localeCompare(b.countryCode); // Default sort by country code
   });
 
+
   const displayedData = sortedData;
+  // console.log( displayedData,"displayedData");
+  
 
   return (
     <DashboardLayout>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom'; // For routing
+import { useNavigate } from 'react-router-dom'; // For routing
 import Layout from '../../layout/page';
 import axiosInstance from '../../utils/axiosinstance';
 
@@ -9,7 +9,7 @@ const CustomersPage = () => {
   const [sort, setSort] = useState('customerId');
   const [search, setSearch] = useState('');
   const [activeTab, setActiveTab] = useState('leadDetails'); // Active Tab
-  const history = useHistory(); // Use useHistory instead of useRouter
+  const navigate = useNavigate(); // Use useHistory instead of useRouter
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -31,9 +31,9 @@ const CustomersPage = () => {
 
   const handleSearch = (event) => setSearch(event.target.value);
 
-  const handleRowClick = (customerId) => history.push(`/modules/admin/v2/Sales/Customers/${customerId}`);
+  const handleRowClick = (customerId) => navigate(`/modules/admin/v2/Sales/Customers/${customerId}`);
 
-  const handleAddLead = () => history.push('/modules/admin/Leads/AddLead');
+  const handleAddLead = () => navigate('/modules/admin/Leads/AddLead');
 
   const filteredAndSortedCustomers = customers
     .filter(customer =>
@@ -80,6 +80,7 @@ const CustomersPage = () => {
                 className="flex-grow bg-white text-gray-800 border border-gray-300 px-4 py-2 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               <button
+                // eslint-disable-next-line no-unused-expressions
                 onClick={() => { handleSearch }} // Update this to your search function
                 className="bg-orange-500 text-white px-8 py-2 rounded-r-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
               >
