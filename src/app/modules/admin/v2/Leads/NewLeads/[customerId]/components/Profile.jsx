@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from '../../../../utils/axiosinstance';
 import Layout from '../../../../layout/page';
+import axios from 'axios'
 import { User, Mail, Phone, Globe, MapPin, Calendar, Flag, RefreshCw, Briefcase, Users, Link, FileText } from 'lucide-react';
 
 const ProfileTab = ({ customerId }) => {
@@ -15,7 +16,7 @@ const ProfileTab = ({ customerId }) => {
   useEffect(() => {
     const fetchLeadData = async () => {
       try {
-        const response = await axiosInstance.get(`v3/api/customers/${customerId}`);
+        const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
         setLeadData(response.data);
       } catch (error) {
         console.error("Error fetching lead details:", error);
