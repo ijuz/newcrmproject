@@ -5,7 +5,9 @@ import axios from "axios";
 // import jwtDecode from "jwt-decode";
 import { jwtDecode } from "jwt-decode";
 
-const PrivateRates = () => {
+const PrivateRates = ({customerId}) => {
+  // console.log(customerId,"customerId");
+  
   const [normalRatesData, setNormalRatesData] = useState([]);
   const [selectedRates, setSelectedRates] = useState([]);
   const [customerData, setCustomerData] = useState(null);
@@ -15,24 +17,16 @@ const PrivateRates = () => {
   const [showSelectColumn, setShowSelectColumn] = useState(false);
   const [showOnlySelected, setShowOnlySelected] = useState(false);
 
-  // Extract customer ID from the token
-  const getCustomerIdFromToken = () => {
-    const token = localStorage.getItem("token");
-    if (!token) return null;
-    const decoded = jwtDecode(token);
-    return decoded.id;
-  };
 
   useEffect(() => {
     const fetchCustomerAndRates = async () => {
       setLoading(true);
       try {
-        const customerId = getCustomerIdFromToken();
         if (customerId) {
-          const customerResponse = await axios.get(`/v3/api/customers/${customerId}`);
+          const customerResponse = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
           setCustomerData(customerResponse.data);
 
-          const ratesResponse = await axios.get(`/v3/api/rates`);
+          const ratesResponse = await axios.get(`http://localhost:5000/v3/api/rates`);
           setNormalRatesData(ratesResponse.data);
         }
       } catch (error) {
@@ -45,6 +39,15 @@ const PrivateRates = () => {
     fetchCustomerAndRates();
   }, []);
 
+
+    // Extract customer ID from the token
+    const getCustomerIdFromToken = () => {
+      const token = localStorage.getItem("token");
+      if (!token) return null;
+      const decoded = jwtDecode(token);
+      return decoded.id;
+    };
+  
   // Handle adding selected rates to My Rates
   const handleAddSelectedToMyRates = async () => {
     const customerId = getCustomerIdFromToken();
@@ -55,7 +58,7 @@ const PrivateRates = () => {
 
     const selectedRateIds = selectedRates.map((rate) => rate._id);
     try {
-      const response = await axios.put(`/v3/api/customers/updatemyrate/${customerId}`, {
+      const response = await axios.put(`http://localhost:5000/v3/api/customers/updatemyrate/${customerId}`, {
         myRatesId: selectedRateIds,
       });
       console.log("Selected rates successfully added to My Rates:", response.data);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axiosInstance from "../../../../utils/axiosinstance";
+import axios from 'axios'
 
 const CartTab = ({ customerId }) => {
   const [cartItems, setCartItems] = useState([]);
@@ -8,7 +8,7 @@ const CartTab = ({ customerId }) => {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const response = await axiosInstance.get(`/v3/api/customers/${customerId}/cart`);
+        const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}/cart`);
         setCartItems(response.data);
       } catch (error) {
         console.error("Error fetching cart items:", error);

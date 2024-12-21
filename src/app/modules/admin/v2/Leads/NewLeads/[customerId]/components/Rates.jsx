@@ -23,7 +23,7 @@ const MyRatesPage = () => {
         const customerId = decodedToken ? decodedToken.id : null;
 
         if (customerId) {
-          const response = await axios.get(`/v3/api/customers/${customerId}`);
+          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
           setCustomerData(response.data);
         }
       } catch (error) {
@@ -39,7 +39,7 @@ const MyRatesPage = () => {
     const fetchTests = async () => {
       if (customerData) {
         try {
-          const response = await axios.get(`/v3/api/tests`);
+          const response = await axios.get(`http://localhost:5000/v3/api/tests`);
           const allTests = response.data;
 
           const filteredTests = allTests.filter((test) => test.customerId === customerData._id);
@@ -59,7 +59,7 @@ const MyRatesPage = () => {
       if (customerData?.myRatesId?.length>0) {
         try {
           const rateFetchPromises = customerData?.myRatesId?.map(async (rateId) => {
-            const response = await axios.get(`/v3/api/rates/${rateId}`);
+            const response = await axios.get(`http://localhost:5000/v3/api/rates/${rateId}`);
             return response.data.rate;
           });
           const ratesDataArray = await Promise.all(rateFetchPromises);
@@ -90,7 +90,7 @@ const MyRatesPage = () => {
 
         const testReason = correspondingTest?.testReason || "Requested";
 
-        return axios.post(`/v3/api/tests`, {
+        return axios.post(`http://localhost:5000/v3/api/tests`, {
           rateId: rate._id,
           customerId: customerData._id,
           rateCustomerId: `${customerData._id}hi${rate._id}`,

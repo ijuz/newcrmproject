@@ -152,7 +152,7 @@ const Dashboard = () => {
     <DashboardLayout>
       <div className="min-h-screen w-full">
         <div className="flex flex-col bg-white items-center space-y-8 px-4 py-4 mx-auto" style={{ width: "80em" }}>
-          <div className="flex bg-gray-200 rounded-lg shadow-lg p-6 gap-6">
+          <div className="flex bg-gray-200 rounded-lg shadow-lg p-6 gap-6" style={{height:"100%", "width":"100%"}}>
             {/* Welcome Section */}
             <div className="w-1/3 flex flex-col justify-center">
               <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
@@ -206,7 +206,7 @@ const Dashboard = () => {
 
           <div className="relative rounded-lg">
             {/* Ticker Section */}
-            <div className="relative w-full">
+            <div className="relative w-[82rem]">
               <div className="mt-4 mb-4"> <Ticker /> </div>
             </div>
           </div>

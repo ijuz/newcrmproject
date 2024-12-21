@@ -23,7 +23,7 @@ console.log(Data);
       </div>
 
       {/* Right Column */}
-      <div className="md:w-1/2 mt-10">
+      <div className="md:w-1/2 mt-10" style={{marginLeft:"50%", marginTop:"-49%"}}>
         <MultiStepForm setData={setData}/>
       </div>
     </div>

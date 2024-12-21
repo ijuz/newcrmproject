@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axiosInstance from "../../../../utils/axiosinstance";
+import axios from 'axios'
 
 const SupportTab = ({ customerId }) => {
   const [supportRequests, setSupportRequests] = useState([]);
@@ -8,7 +9,7 @@ const SupportTab = ({ customerId }) => {
   useEffect(() => {
     const fetchSupportRequests = async () => {
       try {
-        const response = await axiosInstance.get(`/v3/api/customers/${customerId}/support`);
+        const response = await  axios.get(`http://localhost:5000/v3/api/customers/${customerId}/support`);
         setSupportRequests(response.data);
       } catch (error) {
         console.error("Error fetching support requests:", error);
