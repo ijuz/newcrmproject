@@ -7,7 +7,7 @@ import { User, Mail, Phone, Globe, MapPin, Calendar, Flag, RefreshCw, Briefcase,
 const ProfileTab = ({ customerId }) => {
   const [leadData, setLeadData] = useState(null);
   const [newStatus, setNewStatus] = useState("");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
