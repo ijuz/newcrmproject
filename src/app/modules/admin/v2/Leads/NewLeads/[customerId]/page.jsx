@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import { 
   User, 
   ShoppingCart, 
@@ -14,6 +15,8 @@ import SupportTab from "./components/Support";
 import FollowUpTab from "./components/Followups";
 
 const LeadDetails = () => {
+  const { customerId } = useParams();
+  console.log(customerId)
   const [activeTab, setActiveTab] = useState("profile");
 
   const tabs = [
@@ -78,7 +81,7 @@ const LeadDetails = () => {
           </div>
 
           <div className="border-2">
-            {activeTab === "profile" && <ProfileTab />}
+            {activeTab === "profile" && <ProfileTab  customerId={customerId} />}
             {activeTab === "cart" && <CartTab />}
             {activeTab === "payments" && <PaymentsTab />}
             {activeTab === "support" && <SupportTab />}
