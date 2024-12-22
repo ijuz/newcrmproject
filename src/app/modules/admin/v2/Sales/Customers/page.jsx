@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // For routing
 import Layout from '../../layout/page';
-import axiosInstance from '../../utils/axiosinstance';
+import axios from 'axios';
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -15,8 +15,8 @@ const CustomersPage = () => {
     const fetchCustomers = async () => {
       setLoading(true);
       try {
-        const response = await axiosInstance.get('v3/api/customers');
-        const filteredCustomers = response.data.filter(customer => customer.customerType === 'Customer');
+        const response = await axios.get('http://localhost:5000/v3/api/customers');
+        const filteredCustomers = response.data.filter(customer => customer.customerType === 'CustomerLead');
         setCustomers(filteredCustomers);
       } catch (error) {
         console.error('Error fetching customers:', error);
@@ -33,7 +33,7 @@ const CustomersPage = () => {
 
   const handleRowClick = (customerId) => navigate(`/modules/admin/v2/Sales/Customers/${customerId}`);
 
-  const handleAddLead = () => navigate('/modules/admin/Leads/AddLead');
+  
 
   const filteredAndSortedCustomers = customers
     .filter(customer =>

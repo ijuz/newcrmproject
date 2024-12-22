@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../layout/page';
-import axiosInstance from '../../../utils/axiosinstance';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const CarriersPage = () => {
   const [carriers, setCarriers] = useState([]);
@@ -13,7 +13,7 @@ const CarriersPage = () => {
   useEffect(() => {
     const fetchCarriers = async () => {
       try {
-        const response = await axiosInstance.get('v3/api/customers/');
+        const response = await axios.get('http://localhost:5000/v3/api/customers');
         const data = await response.data;
         setCarriers(data);
       } catch (error) {

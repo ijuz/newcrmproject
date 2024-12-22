@@ -36,6 +36,8 @@ import Carriers from '../src/app/modules/admin/v2/Carriers/Carriers/page'
 import CFollowups from '../src/app/modules/admin/v2/Carriers/Followups/page'
 import CnewLeads from '../src/app/modules/admin/v2/Leads/NewLeads/[customerId]/page.jsx'
 import AddLead from '../src/app/modules/admin/v2/Leads/NewLeads/AddLead/page'
+import LeadDetails from "./app/modules/admin/v2/Carriers/Leads/[customerId]/page.jsx";
+import SaleLead from "./app/modules/admin/v2/Sales/Leads/[customerId]/page.jsx";
 function App() {
   return (
       <Routes>
@@ -75,6 +77,9 @@ function App() {
         <Route path="/carrier_folloup" element={<CFollowups/>}/>
         <Route path="/NewLeads/:customerId" element={<CnewLeads/>}/>
         <Route path="/Addlead" element={<AddLead/>}/>
+        <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
+        <Route path="/SaleLead/:customerId" element={<SaleLead/>}/>
+
       </Routes>
   );
 }
