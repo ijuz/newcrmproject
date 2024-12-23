@@ -30,7 +30,7 @@ const CustomersPage = () => {
           "http://localhost:5000/v3/api/customers"
         );
         const filteredCustomers = response.data.filter(
-          (customer) => customer.customerType === "CarrierLead"
+          (customer) => customer.customerType === "CustomerLead"
         );
         setCustomers(filteredCustomers);
       } catch (error) {

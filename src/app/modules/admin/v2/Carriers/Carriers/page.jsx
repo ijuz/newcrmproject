@@ -25,7 +25,7 @@ const CarriersPage = () => {
   }, []);
 
   const filteredCarriers = carriers
-    .filter(carrier => carrier.customerType === 'carrier')
+    .filter(carrier => carrier.customerType === 'Carrier')
     .filter(carrier =>
       carrier.userFirstname.toLowerCase().includes(search.toLowerCase()) ||
       carrier.companyName.toLowerCase().includes(search.toLowerCase())

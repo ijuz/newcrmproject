@@ -391,7 +391,7 @@ const ProfileTab = () => {
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
     
     <div
-      onClick={() => handleConversion("CarrierLead")}
+      onClick={() => handleConversion("Carrier")}
       className="cursor-pointer flex flex-col items-center bg-green-100 border border-green-300 rounded-lg p-4 hover:shadow-lg transition"
     >
       <div className="text-green-500">
@@ -402,7 +402,7 @@ const ProfileTab = () => {
         Assign this lead as a carrier lead for business development opportunities.
       </p>
       <button
-        onClick={() => handleConversion("CarrierLead")}
+        onClick={() => handleConversion("Carrier")}
         className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
       >
         Convert Now
