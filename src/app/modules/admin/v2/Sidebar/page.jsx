@@ -121,9 +121,8 @@ const Topbar = () => {
           Settings
         </a>
         <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Profile</a>
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Account</a>
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Preferences</a>
+          <a href="/admin/settings_page" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">User Management</a>
+          <a href="/customermanagement" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CRM Managemnt</a>
         </div>
       </div>
     </nav>

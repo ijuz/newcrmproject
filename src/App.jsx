@@ -15,7 +15,6 @@ import ProfilePage from "./app/modules/customer/pages/profile-page/page.jsx";
 import PaymentsPage from "./app/modules/customer/pages/payments_page/page.jsx";
 import HomePage from "./pages/Home.jsx";
 import FollowUp from "./app/modules/customer/pages/trouble_page/page.jsx";
-import SettingsPage from "./app/modules/customer/pages/settings/page.jsx";
 import NormalRatesPage from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
 import MyRates from './app/modules/customer/pages/myRates/page.jsx'
 import PrivateRates from './app/modules/customer/pages/rates_page/PrivateRates/page.jsx'
@@ -38,6 +37,8 @@ import CnewLeads from '../src/app/modules/admin/v2/Leads/NewLeads/[customerId]/p
 import AddLead from '../src/app/modules/admin/v2/Leads/NewLeads/AddLead/page'
 import LeadDetails from "./app/modules/admin/v2/Carriers/Leads/[customerId]/page.jsx";
 import SaleLead from "./app/modules/admin/v2/Sales/Leads/[customerId]/page.jsx";
+import CustomersPage from "./app/modules/admin/v2/CustomerManagement/page.jsx";
+import SettingsPage from "./app/modules/admin/v2/Settings/page.jsx";
 function App() {
   return (
       <Routes>
@@ -56,7 +57,7 @@ function App() {
         <Route path="/Payment_page" element={<PaymentsPage/>}/>
         <Route path="/Home_page" element={<HomePage/>}/>
         <Route path="/Support_page" element={<FollowUp/>}/>
-        <Route path="/settings_page" element={<SettingsPage/>}/>
+        <Route path="/admin/settings_page" element={<SettingsPage/>}/>
         <Route path="/CCRates_page" element={<NormalRatesPage/>}/>
         <Route path="/MyRates_page" element={<MyRates/>}/>
         <Route path="/PrivateRate_page" element={<PrivateRates/>}/>
@@ -79,7 +80,7 @@ function App() {
         <Route path="/Addlead" element={<AddLead/>}/>
         <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
         <Route path="/SaleLead/:customerId" element={<SaleLead/>}/>
-
+        <Route path="/customermanagement" element={<CustomersPage/>}/>
       </Routes>
   );
 }

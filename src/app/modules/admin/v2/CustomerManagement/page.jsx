@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosinstance';
 import Layout from '../layout/page';
+import axios from 'axios';
 
 const CustomersPage = () => {
   const [customers, setCustomers] = useState([]);
@@ -10,13 +11,13 @@ const CustomersPage = () => {
   const [search, setSearch] = useState('');
   const [leadStatusFilter, setLeadStatusFilter] = useState('');
   const [addedByFilter, setAddedByFilter] = useState('');
-  const history = useHistory();
+  const history = useNavigate()
 
   useEffect(() => {
     const fetchCustomers = async () => {
       setLoading(true);
       try {
-        const response = await axiosInstance.get('v3/api/customers');
+        const response = await axios.get('http://localhost:5000/v3/api/customers');
         setCustomers(response.data || []);
       } catch (error) {
         console.error('Error fetching customers:', error);
@@ -31,7 +32,7 @@ const CustomersPage = () => {
 
   const handleSearch = (event) => setSearch(event.target.value);
 
-  const handleRowClick = (customerId) => history.push(`/modules/admin/v2/Leads/NewLeads/${customerId}`);
+  // const handleRowClick = (customerId) => history.push(`/modules/admin/v2/Leads/NewLeads/${customerId}`);
 
   const handleAddLead = () => history.push('/modules/admin/v2/Leads/NewLeads/AddLead');
 
@@ -68,32 +69,56 @@ const CustomersPage = () => {
   };
 
   const filteredAndSortedCustomers = customers
-    .filter(customer => {
-      const leadStatusMatch = leadStatusFilter === '' || customer.leadStatus === leadStatusFilter;
-      const addedBy = customer.futureUseOne ? customer.futureUseOne.toLowerCase() : 'self registered';
-      const searchMatch = Object.values(customer).some(value =>
-        Array.isArray(value)
-          ? value.join(', ').toLowerCase().includes(search.toLowerCase())
-          : value?.toString().toLowerCase().includes(search.toLowerCase())
-      ) || addedBy.includes(search.toLowerCase());
+  .filter(customer => {
+    // Check if the lead status matches the filter
+    const leadStatusMatch =
+      leadStatusFilter === '' || customer.leadStatus === leadStatusFilter;
 
-      return leadStatusMatch && searchMatch;
-    })
-    .sort((a, b) => {
-      const aValue = a[sort] || '';
-      const bValue = b[sort] || '';
-      if (sort === 'futureUseOne') {
-        const aSortValue = aValue || 'Self Registered';
-        const bSortValue = bValue || 'Self Registered';
-        return aSortValue.localeCompare(bSortValue);
+    // Safely determine the 'addedBy' value (default: 'self registered')
+    const addedBy = customer.futureUseOne
+      ? String(customer.futureUseOne).toLowerCase()
+      : 'self registered';
+
+    // Check if the search term matches any customer property or 'addedBy'
+    const searchMatch = Object.values(customer).some(value => {
+      if (Array.isArray(value)) {
+        return value
+          .map(item => String(item).toLowerCase())
+          .join(', ')
+          .includes(search.toLowerCase());
       }
-      if (typeof aValue === 'string') {
-        return aValue.localeCompare(bValue);
-      } else if (Array.isArray(aValue)) {
-        return aValue.join(', ').localeCompare(bValue.join(', '));
-      }
-      return 0;
-    });
+      return String(value || '').toLowerCase().includes(search.toLowerCase());
+    }) || addedBy.includes(search.toLowerCase());
+
+    return leadStatusMatch && searchMatch;
+  })
+  .sort((a, b) => {
+    const aValue = a[sort] || '';
+    const bValue = b[sort] || '';
+
+    // Handle sorting for 'futureUseOne'
+    if (sort === 'futureUseOne') {
+      const aSortValue = String(aValue || 'self registered').toLowerCase();
+      const bSortValue = String(bValue || 'self registered').toLowerCase();
+      return aSortValue.localeCompare(bSortValue);
+    }
+
+    // Handle sorting for strings
+    if (typeof aValue === 'string' && typeof bValue === 'string') {
+      return aValue.localeCompare(bValue);
+    }
+
+    // Handle sorting for arrays
+    if (Array.isArray(aValue) && Array.isArray(bValue)) {
+      const aJoined = aValue.map(item => String(item)).join(', ');
+      const bJoined = bValue.map(item => String(item)).join(', ');
+      return aJoined.localeCompare(bJoined);
+    }
+
+    return 0; // Default case: return no sorting
+  });
+
+
 
   return (
     <Layout>
