@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import '../Dashboard/dashboard.css';
+import { useNavigate } from "react-router-dom";
 import {
   ChartBarSquareIcon,
   ClipboardDocumentListIcon,
@@ -10,12 +11,13 @@ import {
   EnvelopeIcon,
   Cog6ToothIcon,
   UserIcon,
+  DocumentCurrencyBangladeshiIcon,
 
 } from "@heroicons/react/24/outline";
 
 
 const Topbar = () => {
-
+const navigate = useNavigate()
   return (
     <header className="w-full p-4 bg-white shadow-xl border-b-4 border-gray-300 flex items-center justify-between">
     <nav className="flex space-x-8 items-left">
@@ -71,18 +73,39 @@ const Topbar = () => {
 
 
 {/* Rates Dropdown */}
-      <div className="relative group">
-        <a href="#" className="flex items-center text-gray-600 hover:text-indigo-600 text-base">
-          <CurrencyDollarIcon className="w-8 h-8 mr-3 text-yellow-500" />
-          Rates
-        </a>
-        <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CC Rates</a>
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CLI Rates</a>
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Special Rates</a>
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Private Rates</a>
-        </div>
+<div className="relative group">
+  <a href="#" className="flex items-center text-gray-600 hover:text-indigo-600 text-base">
+    <DocumentCurrencyBangladeshiIcon className="w-8 h-8 mr-3 text-yellow-500" />
+    Accounts
+  </a>
+  <div className="dropdown absolute left-0 mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10 group-hover:block">
+    {/* Rates Dropdown */}
+    <div className="relative group">
+      <a
+        href="#"
+        onClick={() => navigate('/rates')} // Navigate to Rates page
+        className="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+      >
+        Rates
+      </a>
+      <div className="absolute right-0 mt-0 bg-white border border-orange-500 shadow-lg rounded-lg w-56 hidden group-hover:block">
+        <a href="/admin/ccrates" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CC Rates</a>
+        <a href="/admin/clirates" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CLI Rates</a>
+        <a href="/admin/privaterates" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Special Rates</a>
+        <a href="/admin/specialrates" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Targeted  Rates</a>
       </div>
+    </div>
+    {/* Other Menu Items */}
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Recharge</a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Requests</a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Email</a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
+  </div>
+</div>
+
+
 
       {/* Support Dropdown */}
       <div className="relative group">
@@ -122,7 +145,7 @@ const Topbar = () => {
         </a>
         <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
           <a href="/admin/settings_page" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">User Management</a>
-          <a href="/customermanagement" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CRM Managemnt</a>
+          <a href="/customermanagement" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CRM Management</a>
         </div>
       </div>
     </nav>

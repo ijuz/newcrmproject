@@ -39,6 +39,12 @@ import LeadDetails from "./app/modules/admin/v2/Carriers/Leads/[customerId]/page
 import SaleLead from "./app/modules/admin/v2/Sales/Leads/[customerId]/page.jsx";
 import CustomersPage from "./app/modules/admin/v2/CustomerManagement/page.jsx";
 import SettingsPage from "./app/modules/admin/v2/Settings/page.jsx";
+import RatesPage from "./app/modules/admin/v2/Rates/CCRates/page.jsx";
+import AdminCli from "./app/modules/admin/v2/Rates/CLIRates/page.jsx";
+import AdminPrivateRates from "./app/modules/admin/v2/Rates/PrivateRates/page.jsx";
+import AdminSpecialRates from "./app/modules/admin/v2/Rates/SpecialRates/page.jsx";
+
+
 function App() {
   return (
       <Routes>
@@ -81,6 +87,11 @@ function App() {
         <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
         <Route path="/SaleLead/:customerId" element={<SaleLead/>}/>
         <Route path="/customermanagement" element={<CustomersPage/>}/>
+        <Route path="/admin/ccrates" element={<RatesPage/>}/>
+        <Route path="/admin/clirates" element={<AdminCli/>}/>
+        <Route path="/admin/privaterates" element={<AdminPrivateRates/>}/>
+        <Route path="/admin/specialrates" element={<AdminSpecialRates/>}/>
+
       </Routes>
   );
 }

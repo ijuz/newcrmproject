@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../utils/axiosinstance';
 import Layout from '../../layout/page';
+import axios from 'axios';
 
 const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
   const [newLead, setNewLead] = useState(initialData || {
@@ -52,7 +53,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     // If "Add to Ticker" is selected, update the cct API with this rate's ID
     if (leadData.addToTicker) {
       try {
-        await axiosInstance.post('/v3/api/cct', {
+        await axios.post('https://backend.cloudqlobe.com/v3/api/cct', {
           rateids: [leadData._id],
         });
         console.log("Added to ticker");
@@ -186,7 +187,7 @@ const RatesPage = () => {
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const response = await axiosInstance.get('v3/api/rates');
+        const response = await axios.get('https://backend.cloudqlobe.com/v3/api/rates');
         setRateData(response.data);
       } catch (error) {
         console.error('Error fetching rates:', error);
