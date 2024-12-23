@@ -43,6 +43,12 @@ import RatesPage from "./app/modules/admin/v2/Rates/CCRates/page.jsx";
 import AdminCli from "./app/modules/admin/v2/Rates/CLIRates/page.jsx";
 import AdminPrivateRates from "./app/modules/admin/v2/Rates/PrivateRates/page.jsx";
 import AdminSpecialRates from "./app/modules/admin/v2/Rates/SpecialRates/page.jsx";
+import TroubleTickets from "./app/modules/admin/v2/Support/TroubleTickets/page.jsx";
+import AdminFollowUp from "./app/modules/admin/v2/Support/FollowUps/page.jsx";
+import TestingPage from "./app/modules/admin/v2/Support/Testing/page.jsx";
+import Admintask from "./app/modules/admin/v2/Support/Tasks/page.jsx";
+import PageUnderDevelopment from "./app/modules/admin/v2/Support/Messages/page.jsx";
+import InternalAssistence from "./app/modules/admin/v2/Support/InternalAssistance/page.jsx";
 
 
 function App() {
@@ -91,7 +97,12 @@ function App() {
         <Route path="/admin/clirates" element={<AdminCli/>}/>
         <Route path="/admin/privaterates" element={<AdminPrivateRates/>}/>
         <Route path="/admin/specialrates" element={<AdminSpecialRates/>}/>
-
+        <Route path="/admin/support/troubleTickets" element={<TroubleTickets/>}/>
+        <Route path="/admin/support/followups" element={<AdminFollowUp/>}/>
+        <Route path="/admin/support/testing" element={<TestingPage/>}/>
+        <Route path="/admin/support/task" element={<Admintask/>}/>
+        <Route path="/admin/support/messages" element={<PageUnderDevelopment/>}/>
+        <Route path="/admin/support/internalassistence" element={<InternalAssistence/>}/>
       </Routes>
   );
 }

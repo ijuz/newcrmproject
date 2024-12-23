@@ -114,12 +114,12 @@ const navigate = useNavigate()
           Support
         </a>
         <div className="dropdown absolute left-0 hidden mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
-          <a href="#" className="block px-6 py-3 text-gray-600 ">Trouble Ticket</a>
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Testing</a>
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Tasks</a>
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
+          <a href="/admin/support/troubleTickets" className="block px-6 py-3 text-gray-600 ">Trouble Ticket</a>
+          <a href="/admin/support/testing" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Testing</a>
+          <a href="/admin/support/followups" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
+          <a href="/admin/support/task" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Tasks</a>
+          <a href="/admin/support/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
+          <a href="/admin/support/internalassistence" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
         </div>
       </div>
 
