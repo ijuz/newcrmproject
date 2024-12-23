@@ -115,7 +115,7 @@ const CustomersPage = () => {
       return aJoined.localeCompare(bJoined);
     }
 
-    return 0; // Default case: return no sorting
+    return 0; 
   });
 
 
