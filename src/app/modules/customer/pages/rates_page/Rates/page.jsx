@@ -54,8 +54,9 @@ const NormalRatesPage = () => {
       console.error("Customer ID not found in token");
       return;
     }
-
+    console.log(id,'my id')
     const selectedRateIds = selectedRates.map((rate) => rate._id);
+    console.log(selectedRateIds)
     try {
       const response = await axios.put(
         `http://localhost:5000/v3/api/customers/updatemyrate/${id}`,

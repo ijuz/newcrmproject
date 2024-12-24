@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { jwtDecode } from 'jwt-decode'; // Import jwt-decode
+import {jwtDecode} from 'jwt-decode'; // Import jwt-decode
 import DashboardLayout from '../dash_layout/page';
 import axios from 'axios';
 
@@ -7,8 +7,6 @@ const MyRatesPage = () => {
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('countryCode'); // Default sort option
   const [myRatesData, setMyRatesData] = useState([]); // Initialize myRatesData as empty
-  // console.log(myRatesData,"myRatesData");
-  
   const [customerData, setCustomerData] = useState(null); // Initialize customerData as null
   const [testsData, setTestsData] = useState([]); // State to store tests data
   const [statusFilter, setStatusFilter] = useState('all'); // Status filter
@@ -20,8 +18,9 @@ const MyRatesPage = () => {
   // Fetch customer details
   useEffect(() => {
     const fetchCustomerData = async () => {
-      const token = localStorage.getItem('token'); // Adjust according to where you store your token
-      const customerId = token ? jwtDecode(token).id : null; // Adjust this field according to your token's structure
+      const token = localStorage.getItem('token');
+      const customerId = token ? jwtDecode(token).id : null; // Decode token to get customer ID
+
       if (customerId) {
         try {
           const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
@@ -39,12 +38,10 @@ const MyRatesPage = () => {
     const fetchTests = async () => {
       if (customerData) {
         try {
-          const response = await axios.get(`http://localhost:5000/v3/api/tests`); // Adjust the endpoint to fetch tests
+          const response = await axios.get(`http://localhost:5000/v3/api/tests`);
           const allTests = response.data;
 
           const filteredTests = allTests.filter(test => test.customerId === customerData._id);
-          // console.log(filteredTests,"filteredTests");
-          
           setTestsData(filteredTests);
         } catch (error) {
           console.error('Error fetching tests:', error);
@@ -60,18 +57,11 @@ const MyRatesPage = () => {
       if (customerData && customerData.myRatesId.length) {
         try {
           const rateFetchPromises = customerData.myRatesId.map(async (rateId) => {
-
-            
             const ratesResponse = await axios.get(`http://localhost:5000/v3/api/rates/${rateId}`);
-            // console.log(ratesResponse,"rateFetchPromises");
             return ratesResponse.data;
           });
-      
-
 
           const ratesDataArray = await Promise.all(rateFetchPromises);
-          // console.log(ratesDataArray,"ratesDataArray");
-          
           setMyRatesData(ratesDataArray.flat());
         } catch (error) {
           console.error('Error fetching rates:', error);
@@ -83,8 +73,8 @@ const MyRatesPage = () => {
 
   // Loading state handling
   useEffect(() => {
-    setLoading(!myRatesData.length && !testsData.length); // Set loading based on data presence
-    setDataNotFound(myRatesData.length === 0 && testsData.length === 0); // If no rates or tests found
+    setLoading(!myRatesData.length && !testsData.length);
+    setDataNotFound(myRatesData.length === 0 && testsData.length === 0);
   }, [myRatesData, testsData]);
 
   // Handle "Request Test" for selected items
@@ -93,8 +83,8 @@ const MyRatesPage = () => {
       const requestPromises = selectedRates.map(async (rate) => {
         const correspondingTest = testsData.find(test => test.rateCustomerId === `${customerData._id}hi${rate._id}`);
 
-        const testStatus = correspondingTest ? correspondingTest.testStatus : rate.status; // Use rate status if no test found
-        const testReason = 'Requested'; // Or set a different reason as needed
+        const testStatus = correspondingTest ? correspondingTest.testStatus : rate.status;
+        const testReason = 'Requested';
 
         return axios.post(`http://localhost:5000/v3/api/tests`, {
           rateId: rate._id,
@@ -107,7 +97,7 @@ const MyRatesPage = () => {
 
       await Promise.all(requestPromises);
       alert('Tests Requested Successfully');
-      window.location.reload(); // Reload the page to reflect changes
+      window.location.reload();
     } catch (error) {
       console.error('Error requesting tests:', error);
     }
@@ -123,38 +113,34 @@ const MyRatesPage = () => {
   };
 
   // Combine rates and tests data
-  const combinedData = myRatesData.map(rate => {
-    const test = testsData.find(test => test.rateCustomerId === `${customerData._id}${rate._id}`);
+  const combinedData = myRatesData.map((data) => {
+    const rate = data.rate
+    const test = testsData.find((test) => test.rateCustomerId === `${customerData?._id}${rate._id}`);
     return {
       ...rate,
-      testStatus: test ? test.testStatus : rate.status, // Use rate status if no test found
-      testReason: test ? test.testReason : 'N/A',
+      testStatus: test ? test.testStatus : rate.status,
+      testReason: test ? test.testReason : "N/A",
     };
   });
-  // console.log(combinedData,"combinedData");
-
+  
+  
 
   const filteredData = combinedData.filter(item =>
     item.country?.toLowerCase().includes(search.toLowerCase()) &&
     (statusFilter === 'all' || item.testStatus === statusFilter)
   );
-  
-  console.log(filteredData,"filteredData");
-
 
 
   const sortedData = filteredData.sort((a, b) => {
     if (sort === 'countryName') {
       return a.country.localeCompare(b.country);
     }
-    return a.countryCode.localeCompare(b.countryCode); // Default sort by country code
+    return a.countryCode.localeCompare(b.countryCode);
   });
-
-
-  const displayedData = sortedData;
-  // console.log( displayedData,"displayedData");
   
 
+  const displayedData = sortedData
+  console.log(displayedData)
   return (
     <DashboardLayout>
       <div className="p-6 text-gray-800">
@@ -175,7 +161,6 @@ const MyRatesPage = () => {
 
         {/* Title Bar with Search and Sort */}
         <div className="mt-8 flex items-center justify-between space-x-4">
-          {/* Search Bar Section */}
           <div className="relative w-1/2 flex items-center">
             <input
               type="text"
@@ -184,14 +169,8 @@ const MyRatesPage = () => {
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-white text-gray-800 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring focus:ring-blue-500"
             />
-            <button
-              className="ml-2 bg-orange text-white px-4 py-2 rounded-lg hover:bg-[#f0c14b] transition"
-            >
-              Search
-            </button>
           </div>
 
-          {/* Status Filter Dropdown */}
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
@@ -202,7 +181,6 @@ const MyRatesPage = () => {
             <option value="No Test Requested">No Test Requested</option>
           </select>
 
-          {/* Show "Select Rates" button to enable checkboxes */}
           {!showCheckboxes && (
             <button
               className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -213,7 +191,6 @@ const MyRatesPage = () => {
           )}
         </div>
 
-        {/* Loading State or No Data Found */}
         {loading ? (
           <p>Loading rates...</p>
         ) : dataNotFound ? (
@@ -232,7 +209,8 @@ const MyRatesPage = () => {
               </tr>
             </thead>
             <tbody>
-              {displayedData.map((rate) => (
+              {displayedData.map((rate) =>{ 
+                return(
                 <tr key={rate._id} className="text-gray-700">
                   {showCheckboxes && (
                     <td className="border border-gray-300 px-4 py-2">
@@ -247,19 +225,28 @@ const MyRatesPage = () => {
                   <td className="border border-gray-300 px-4 py-2">{rate.qualityDescription}</td>
                   <td className="border border-gray-300 px-4 py-2">{rate.rate}</td>
                   <td className="border border-gray-300 px-4 py-2">{rate.profile}</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <span
-                      className={`inline-block px-2 py-1 rounded-full text-white ${
-                        rate.testStatus === 'Test Requested' ? 'bg-yellow-400' : 'bg-green-500'
-                      }`}
-                    >
-                      {rate.testStatus}
-                    </span>
-                  </td>
+                  <td className="border border-gray-300 px-4 py-2">{rate.testStatus}</td>
                 </tr>
-              ))}
+              )})}
             </tbody>
           </table>
+        )}
+
+        {showCheckboxes && (
+          <div className="mt-6 flex justify-end space-x-4">
+            <button
+              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              onClick={() => setShowCheckboxes(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onClick={handleRequestTest}
+            >
+              Request Test
+            </button>
+          </div>
         )}
       </div>
     </DashboardLayout>
