@@ -49,7 +49,7 @@ import TestingPage from "./app/modules/admin/v2/Support/Testing/page.jsx";
 import Admintask from "./app/modules/admin/v2/Support/Tasks/page.jsx";
 import PageUnderDevelopment from "./app/modules/admin/v2/Support/Messages/page.jsx";
 import InternalAssistence from "./app/modules/admin/v2/Support/InternalAssistance/page.jsx";
-
+import CSettingsPage from '../src/app/modules/customer/pages/settings/page'
 
 function App() {
   return (
@@ -93,6 +93,7 @@ function App() {
         <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
         <Route path="/SaleLead/:customerId" element={<SaleLead/>}/>
         <Route path="/customermanagement" element={<CustomersPage/>}/>
+        <Route path="/settings_page" element={<CSettingsPage/>}/>
         <Route path="/admin/ccrates" element={<RatesPage/>}/>
         <Route path="/admin/clirates" element={<AdminCli/>}/>
         <Route path="/admin/privaterates" element={<AdminPrivateRates/>}/>
