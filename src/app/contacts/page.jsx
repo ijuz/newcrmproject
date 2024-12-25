@@ -171,6 +171,7 @@ const ContactForm = () => {
             </div>
           </div>
         </div>
+        <CustomizedQuotesForm/>
       </div>
 
       <Footer />
