@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { motion } from "framer-motion";
+import {jwtDecode} from "jwt-decode";
+import axios from "axios";
 import {
   Home,
   User,
@@ -15,9 +17,9 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const BASE_PATH = "/modules/customer/pages";
 
-const menuItems = [
+
+const getMenuItems =(customerType)=> [
   { 
     id: "home", 
     icon: Home, 
@@ -40,10 +42,20 @@ const menuItems = [
     submenu: [
       { id: "ccRates", label: "CC Rates", icon: LineChart, path: `/CCRates_page` },
       { id: "myRates", label: "My Rates", icon: PieChart, path: `/MyRates_page` },
-      { id: "privateRates", label: "Private Rates", icon: TrendingUp, path: `/PrivateRate_page` },
-      { id: "cliRates", label: "CLI Rates", icon: Monitor, path: `/CliRates_page` },
+      ...(customerType === "CarrierLead" || customerType === "Customer"
+        ? [
+            {
+              id: "privateRates",
+              label: "Private Rates",
+              icon: TrendingUp,
+              path: `/PrivateRate_page`,
+            },
+          ]
+        : []),
+      { id: "cliRates", label: "CLI Rates", icon: Monitor, path: `/cliRates` },
     ],
   },
+
   { 
     id: "payments", 
     icon: Wallet, 
@@ -70,6 +82,7 @@ const menuItems = [
 const Navbar = () => {
   const [activeItem, setActiveItem] = useState("home");
   const [isDropdownOpen, setIsDropdownOpen] = useState(null);
+  const [profileData, setProfileData] = useState(null);
 
   const getBackgroundColor = (color, isActive) => {
     const colors = {
@@ -94,6 +107,30 @@ const Navbar = () => {
     };
     return colors[color];
   };
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (token) {
+          const decoded = jwtDecode(token);
+          const customerId = decoded.id;
+          console.log("Customer ID:", customerId);
+  
+          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
+  
+          // Set profile data directly from Axios response
+          setProfileData(response.data);
+        }
+      } catch (error) {
+        console.error("Error fetching profile data", error);
+      }
+    };
+  
+    fetchProfileData();
+  }, []);
+  const menuItems = getMenuItems(profileData?.customerType);
+
+
 
   return (
     <div className="fixed top-16 left-0 w-full bg-white shadow-lg z-50 p-4">
