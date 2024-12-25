@@ -1,5 +1,5 @@
 import React from "react";
-import "./About.module.css"; // Use regular CSS import instead of CSS modules
+import styles from "./About.module.css"; // Use regular CSS import instead of CSS modules
 import aboutContent from "../../Strings/en_strings.json"; // Import the JSON file
 import CustomizedQuotesForm from "../components/DIDQuotation";
 import Footer from "../components/Footer";
@@ -22,23 +22,23 @@ const About = () => {
           />
         </div>
 
-        <div className="servicesBody">
+        <div className={styles.servicesBody}>
           {/* Section 1 */}
-          <section className="services">
-            <div className="content">
-              <div className="illustration">
+          <section className={styles.services}>
+            <div className={styles.content}>
+              <div className={styles.illustration}>
                 <img
                   style={{ height: "400px", width: "800px" }}
                   src={aboutContent["ABOUT_SECTION_1_IMAGE_SRC"]}
                   alt={aboutContent["ABOUT_SECTION_1_IMAGE_ALT"]}
-                  className="illustrationImage"
+                  className={styles.illustrationImage}
                   width={700}
                   height={500}
                 />
               </div>
 
-              <div className="textContent">
-                <p className="serviceDescription">
+              <div className={styles.textContent}>
+                <p className={styles.serviceDescription}>
                   {aboutContent["ABOUT_SECTION_1_DESCRIPTION"]}
                 </p>
               </div>
@@ -46,19 +46,20 @@ const About = () => {
           </section>
 
           {/* Section 2 */}
-          <section className="services" style={{ paddingBottom: "3em" }}>
-            <div className="content">
-              <div className="textContent">
-                <p className="serviceDescription">
+          <section className={styles.services} style={{ paddingBottom: "3em" }}>
+            <div className={styles.content}>
+              <div className={styles.textContent}>
+                <p className={styles.serviceDescription}>
                   {aboutContent["ABOUT_SECTION_2_DESCRIPTION"]}
                 </p>
               </div>
 
-              <div className="illustration">
+              <div className={styles.illustration}>
                 <img
+                  style={{ width: "450px" }}
                   src={aboutContent["ABOUT_SECTION_2_IMAGE_SRC"]}
                   alt={aboutContent["ABOUT_SECTION_2_IMAGE_ALT"]}
-                  className="illustrationImage"
+                  className={styles.illustrationImage}
                   width={500}
                   height={300}
                 />
@@ -67,21 +68,21 @@ const About = () => {
           </section>
 
           {/* Section 3 */}
-          <section className="services">
-            <div className="content">
-              <div className="illustration">
+          <section className={styles.services} style={{ paddingBottom: "3em" }}>
+            <div className={styles.content}>
+              <div className={styles.illustration}>
                 <img
                   style={{ width: "450px" }}
                   src={aboutContent["ABOUT_SECTION_3_IMAGE_SRC"]}
                   alt={aboutContent["ABOUT_SECTION_3_IMAGE_ALT"]}
-                  className="illustrationImage"
+                  className={styles.illustrationImage}
                   width={500}
                   height={300}
                 />
               </div>
 
-              <div className="textContent">
-                <p className="serviceDescription">
+              <div className={styles.textContent}>
+                <p className={styles.serviceDescription}>
                   {aboutContent["ABOUT_SECTION_3_DESCRIPTION"]}
                 </p>
               </div>
