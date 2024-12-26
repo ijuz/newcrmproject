@@ -152,7 +152,7 @@ const Dashboard = () => {
     <DashboardLayout>
       <div className="min-h-screen w-full">
         <div className="flex flex-col bg-white items-center space-y-8 px-4 py-4 mx-auto" style={{ width: "80em" }}>
-          <div className="flex bg-gray-200 rounded-lg shadow-lg p-6 gap-6" style={{height:"100%", "width":"100%"}}>
+          <div className="flex bg-gray-200 rounded-lg shadow-lg p-6 gap-6" style={{height:"16rem", "width":"84rem"}}>
             {/* Welcome Section */}
             <div className="w-1/3 flex flex-col justify-center">
               <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4">
@@ -212,7 +212,7 @@ const Dashboard = () => {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 " style={{width:"83rem"}}>
             {stats.map((stat, index) => {
               const Icon = stat.icon;
               const backgroundColors = [
