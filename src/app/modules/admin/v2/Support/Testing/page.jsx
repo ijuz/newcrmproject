@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../utils/axiosinstance"; // Adjust the import to match your project structure
 import DashboardLayout from "../../layout/page"; // Adjust the import to match your project structure
+import axios from "axios";
 
 const TestingPage = () => {
   const [testsData, setTestsData] = useState([]);
@@ -15,7 +16,7 @@ const TestingPage = () => {
   useEffect(() => {
     const fetchCustomersData = async () => {
       try {
-        const response = await axiosInstance.get("v3/api/customers");
+        const response = await axios.get("http://localhost:5000/v3/api/customers");
         setCustomersData(response.data);
       } catch (error) {
         console.error("Error fetching customer data:", error);
@@ -28,7 +29,7 @@ const TestingPage = () => {
   useEffect(() => {
     const fetchTestsData = async () => {
       try {
-        const response = await axiosInstance.get("v3/api/tests");
+        const response = await axios.get("http://localhost:5000/v3/api/tests");
         setTestsData(response.data);
       } catch (error) {
         console.error("Error fetching tests data:", error);
@@ -41,7 +42,7 @@ const TestingPage = () => {
   useEffect(() => {
     const fetchRatesData = async () => {
       try {
-        const response = await axiosInstance.get("v3/api/rates");
+        const response = await axios.get("http://localhost:5000/v3/api/rates");
         setRatesData(response.data);
       } catch (error) {
         console.error("Error fetching rates data:", error);

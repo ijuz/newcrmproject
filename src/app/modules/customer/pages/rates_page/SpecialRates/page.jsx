@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { PlusIcon, FunnelIcon } from "@heroicons/react/24/outline"; // FunnelIcon for filter
 import { motion } from "framer-motion"; // for animation
-import axiosInstance from "./utils/axiosinstance"; // Replace with the correct path for axiosInstance
 import { jwtDecode } from "jwt-decode";
-import DashboardLayout from "./DashboardLayout"; // Replace with the correct path for DashboardLayout
+import DashboardLayout from "../../dash_layout/page"; // Replace with the correct path for DashboardLayout
+import axios from "axios";
 
 const NormalRatesPage = () => {
   const [search, setSearch] = useState("");
@@ -32,13 +32,13 @@ const NormalRatesPage = () => {
         const customerId = getCustomerIdFromToken();
         if (customerId) {
           // Fetch customer details
-          const customerResponse = await axiosInstance.get(
-            `/v3/api/customers/${customerId}`
+          const customerResponse = await axios.get(
+            `http://localhost:5000/v3/api/customers/${customerId}`
           );
           setCustomerData(customerResponse.data);
 
           // Fetch rates
-          const ratesResponse = await axiosInstance("v3/api/rates");
+          const ratesResponse = await axios.get("http://localhost:5000/v3/api/rates");
           const specialRates = ratesResponse.data.filter((rate) => rate.category === "specialrate");
           setNormalRatesData(specialRates);
         }
@@ -63,8 +63,8 @@ const NormalRatesPage = () => {
     const selectedRateIds = selectedRates.map((rate) => rate._id);
 
     try {
-      const response = await axiosInstance.put(
-        `v3/api/customers/updatemyrate/${id}`,
+      const response = await axios.put(
+        `http://localhost:5000/v3/api/customers/updatemyrate/${id}`,
         {
           myRatesId: selectedRateIds,
         }

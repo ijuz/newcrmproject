@@ -1,255 +1,168 @@
 import React, { useState, useRef, useEffect } from "react";
+import '../Dashboard/dashboard.css';
+import { useNavigate } from "react-router-dom";
 import {
-  Users,
-  ClipboardList,
-  User,
-  Settings,
-  DollarSign,
-  ChevronDown,
-  Menu,
-  X,
-  ShoppingBag,
-  Truck,
-  MessageSquare,
-  LogOut,
-  Hexagon,
-  LayoutDashboard,
-} from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useHistory } from "react-router-dom"; // Assuming React Router is used
+  ChartBarSquareIcon,
+  ClipboardDocumentListIcon,
+  ChartBarIcon,
+  UserGroupIcon,
+  CurrencyDollarIcon,
+  LifebuoyIcon,
+  EnvelopeIcon,
+  Cog6ToothIcon,
+  UserIcon,
+  DocumentCurrencyBangladeshiIcon,
+
+} from "@heroicons/react/24/outline";
+
 
 const Topbar = () => {
-  const [openMenu, setOpenMenu] = useState(null); // Track the currently open menu
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const dropdownRef = useRef(null);
-  const history = useHistory();
-
-  const toggleMenu = (menu) => {
-    setOpenMenu((prev) => (prev === menu ? null : menu));
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("admin");
-    history.push("https://www.cloudqlobe.com");
-  };
-
-  const handleClickOutside = (event) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setOpenMenu(null); // Close all menus when clicking outside
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const BASE_URL = "/modules/admin/v2";
-
-  const menuItems = [
-    {
-      name: "Leads",
-      icon: Users,
-      color: "#10B981",
-      subItems: [
-        { name: "New Leads", href: `${BASE_URL}/Leads/NewLeads` },
-        { name: "Followup", href: `${BASE_URL}/Leads/Followups` },
-      ],
-    },
-    {
-      name: "Sales",
-      icon: ShoppingBag,
-      color: "#F59E0B",
-      subItems: [
-        { name: "Leads", href: `${BASE_URL}/Sales/Leads` },
-        { name: "Customers", href: `${BASE_URL}/Sales/Customers` },
-        { name: "Followups", href: `${BASE_URL}/Sales/Followups` },
-        { name: "Emails", href: `${BASE_URL}/Sales/Emails` },
-        { name: "Reports", href: `${BASE_URL}/Sales/Reports` },
-        { name: "Messages", href: `${BASE_URL}/Sales/Messages` },
-        { name: "Internal Assistance", href: `${BASE_URL}/Sales/InternalAssistance` },
-      ],
-    },
-    {
-      name: "Carriers",
-      icon: Truck,
-      color: "#6366F1",
-      subItems: [
-        { name: "Leads", href: `${BASE_URL}/Carriers/Leads` },
-        { name: "Carriers", href: `${BASE_URL}/Carriers/Carriers` },
-        { name: "Followups", href: `${BASE_URL}/Carriers/Followups` },
-        { name: "Email", href: `${BASE_URL}/Carriers/Email` },
-        { name: "Reports", href: `${BASE_URL}/Carriers/Reports` },
-        { name: "Messages", href: `${BASE_URL}/Carriers/Messages` },
-        { name: "Internal Assistance", href: `${BASE_URL}/Carriers/InternalAssistance` },
-      ],
-    },
-    {
-      name: "Rates",
-      icon: DollarSign,
-      color: "#EC4899",
-      subItems: [
-        { name: "CC Rates", href: `${BASE_URL}/Rates/CCRates` },
-        { name: "Special Rates", href: `${BASE_URL}/Rates/SpecialRates` },
-        { name: "Cli Rates", href: `${BASE_URL}/Rates/CLIRates` },
-        { name: "Private Rates", href: `${BASE_URL}/Rates/PrivateRates` },
-      ],
-    },
-    {
-      name: "Support",
-      icon: User,
-      color: "#8B5CF6",
-      subItems: [
-        { name: "Trouble Tickets", href: `${BASE_URL}/Support/TroubleTickets` },
-        { name: "Followups", href: `${BASE_URL}/Support/FollowUps` },
-        { name: "Testing", href: `${BASE_URL}/Support/Testing` },
-        { name: "Tasks", href: `${BASE_URL}/Support/Tasks` },
-        { name: "Messages", href: `${BASE_URL}/Support/Messages` },
-        { name: "Internal Assistance", href: `${BASE_URL}/Support/InternalAssistance` },
-      ],
-    },
-    {
-      name: "Communication",
-      icon: MessageSquare,
-      color: "#EF4444",
-      subItems: [
-        { name: "Enquiries", href: `${BASE_URL}/Communication/Enquiries` },
-        { name: "DID Number", href: `${BASE_URL}/Communication/DIDEnquiries` },
-        { name: "Emails", href: `${BASE_URL}/Communication/EmailDashboard` },
-        { name: "Chat Panel", href: `${BASE_URL}/Communication/ChatBot` },
-      ],
-    },
-    {
-      name: "Settings",
-      icon: Settings,
-      color: "#3B82F6",
-      subItems: [
-        { name: "User Management", href: `${BASE_URL}/Settings` },
-        { name: "CRM Management", href: `${BASE_URL}/CustomerManagement` },
-      ],
-    },
-  ];
-
+const navigate = useNavigate()
   return (
-    <div className="bg-white shadow-lg" ref={dropdownRef}>
-      {/* Desktop Navigation */}
-      <div className="hidden lg:block">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-20">
-            <div
-              className="flex-shrink-0 mr-2 cursor-pointer"
-              onClick={() => history.push("/modules/admin/v2/Dashboard")}
-            >
-              <LayoutDashboard className="h-8 w-8 text-indigo-500" />
-            </div>
-
-            <nav className="flex space-x-4">
-              {menuItems.map((item) => (
-                <div key={item.name} className="relative group">
-                  <button
-                    onClick={() => toggleMenu(item.name)}
-                    className="flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >
-                    <item.icon className="h-5 w-5 mr-4" style={{ color: item.color }} />
-                    <span>{item.name}</span>
-                    <ChevronDown className="ml-2 h-4 w-4" />
-                  </button>
-
-                  <AnimatePresence>
-                    {openMenu === item.name && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute z-10 left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5"
-                      >
-                        <div className="py-1">
-                          {item.subItems.map((subItem) => (
-                            <Link
-                              key={subItem.name}
-                              to={subItem.href}
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            >
-                              {subItem.name}
-                            </Link>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              ))}
-            </nav>
-            <button
-              onClick={handleLogout}
-              className="flex items-center px-3 py-2 text-sm font-medium text-red-600 bg-gray-100 rounded-md hover:bg-gray-200"
-            >
-              <LogOut className="h-5 w-5 mr-2" />
-              Logout
-            </button>
-          </div>
+    <header className="w-full p-4 bg-white shadow-xl border-b-4 border-gray-300 flex items-center justify-between">
+    <nav className="flex space-x-8 items-left">
+      <div>
+        <ChartBarSquareIcon className="w-10 h-10 text-yellow-600 mr-14" />
+      </div>
+      
+      {/* Leads Dropdown */}
+      <div className="relative group">
+        <a href="#" className="flex items-center text-gray-600 hover:text-indigo-600 text-base">
+          <ClipboardDocumentListIcon className="w-8 h-8 mr-3 text-indigo-500" />
+          Leads
+        </a>
+        <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
+          <a href="/newLeads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">New Leads</a>
+          <a href="/notification" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Notifications</a>
         </div>
       </div>
 
-      {/* Mobile Navigation */}
-      <div className="lg:hidden">
-        <div className="px-4 flex items-center justify-between h-16">
-          <div className="flex-shrink-0">
-            <Hexagon className="h-8 w-8 text-indigo-500" />
-          </div>
-
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-          >
-            {isMobileMenuOpen ? (
-              <X className="block h-6 w-6" />
-            ) : (
-              <Menu className="block h-6 w-6" />
-            )}
-          </button>
+      {/* Sales Dropdown */}
+      <div className="relative group">
+        <a href="#" className="flex items-center text-gray-600 hover:text-indigo-600 text-base">
+          <ChartBarIcon className="w-8 h-8 mr-3 text-blue-500" />
+          Sales
+        </a>
+        <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
+          <a href="/sales_leads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Leads</a>
+          <a href="/sales_customer" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Customers</a>
+          <a href="/sales_followups" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
+          <a href="/sales_email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
+          <a href="/sales_Report" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
+          <a href="/sales_message" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
+          <a href="/sales_Assitance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
         </div>
+      </div>
 
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="space-y-2 px-2 pt-2 pb-3 sm:px-3"
-            >
-              {menuItems.map((item) => (
-                <div key={item.name}>
-                  <button
-                    onClick={() => toggleMenu(item.name)}
-                    className="w-full text-left text-gray-700 hover:bg-gray-200 px-3 py-2 text-base font-medium rounded-md"
-                  >
-                    <item.icon className="h-5 w-5 mr-4" style={{ color: item.color }} />
-                    <span>{item.name}</span>
-                  </button>
+      {/* Carriers Dropdown */}
+      <div className="relative group">
+        <a href="#" className="flex items-center text-gray-600 hover:text-indigo-600 text-base">
+          <UserGroupIcon className="w-8 h-8 mr-3 text-green-500" />
+          Carriers
+        </a>
+        <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
+          <a href="/carrier_Leads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Leads</a>
+          <a href="/carrier_carrier" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Carriers</a>
+          <a href="/carrier_folloup" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
+          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Email</a>
+          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
+          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
+          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
+        </div>
+      </div>
 
-                  {openMenu === item.name && (
-                    <div className="pl-8 mt-2 space-y-2">
-                      {item.subItems.map((subItem) => (
-                        <Link
-                          key={subItem.name}
-                          to={subItem.href}
-                          className="block text-gray-700 px-3 py-2 rounded-md text-base"
-                        >
-                          {subItem.name}
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
+
+{/* Rates Dropdown */}
+<div className="relative group">
+  <a href="#" className="flex items-center text-gray-600 hover:text-indigo-600 text-base">
+    <DocumentCurrencyBangladeshiIcon className="w-8 h-8 mr-3 text-yellow-500" />
+    Accounts
+  </a>
+  <div className="dropdown absolute left-0 mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10 group-hover:block">
+    {/* Rates Dropdown */}
+    <div className="relative group">
+      <a
+        href="#"
+        onClick={() => navigate('/rates')} // Navigate to Rates page
+        className="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+      >
+        Rates
+      </a>
+      <div className="absolute right-0 mt-0 bg-white border border-orange-500 shadow-lg rounded-lg w-56 hidden group-hover:block">
+        <a href="/admin/ccrates" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CC Rates</a>
+        <a href="/admin/clirates" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CLI Rates</a>
+        <a href="/admin/privaterates" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Special Rates</a>
+        <a href="/admin/specialrates" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Targeted  Rates</a>
       </div>
     </div>
+    {/* Other Menu Items */}
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Recharge</a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Requests</a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Email</a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
+  </div>
+</div>
+
+
+
+      {/* Support Dropdown */}
+      <div className="relative group">
+        <a href="#" className="flex items-center text-gray-600 hover:text-indigo-600 text-base">
+          <LifebuoyIcon className="w-8 h-8 mr-3 text-red-500" />
+          Support
+        </a>
+        <div className="dropdown absolute left-0 hidden mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
+          <a href="/admin/support/troubleTickets" className="block px-6 py-3 text-gray-600 ">Trouble Ticket</a>
+          <a href="/admin/support/testing" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Testing</a>
+          <a href="/admin/support/followups" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
+          <a href="/admin/support/task" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Tasks</a>
+          <a href="/admin/support/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
+          <a href="/admin/support/internalassistence" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
+        </div>
+      </div>
+
+      {/* Communications Dropdown */}
+      <div className="relative group">
+        <a href="#" className="flex items-center text-gray-600 hover:text-indigo-600 text-base">
+          <EnvelopeIcon className="w-8 h-8 mr-3 text-purple-500" />
+          Communications
+        </a>
+        <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
+          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Enquires</a>
+          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">DID Numbers</a>
+          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
+          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Chat Panel</a>
+        </div>
+      </div>
+
+      {/* Settings Dropdown */}
+      <div className="relative group">
+        <a href="#" className="flex items-center text-gray-600 hover:text-indigo-600 text-base">
+          <Cog6ToothIcon className="w-8 h-8 mr-3 text-gray-500" />
+          Settings
+        </a>
+        <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
+          <a href="/admin/settings_page" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">User Management</a>
+          <a href="/customermanagement" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CRM Management</a>
+        </div>
+      </div>
+    </nav>
+
+    <div className="relative group">
+      <button className="flex items-center bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-gray-700 text-sm">
+        <UserIcon className="w-5 h-5 mr-2" />
+        <span className="text-sm">SUPER ADMIN</span>
+      </button>
+
+      {/* Dropdown Menu */}
+      <div className="dropdown absolute right-0 hidden group-hover:block mt-2 bg-white border border-gray-200 shadow-lg rounded-lg w-48 z-10">
+        <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">ACCOUNT</a>
+        <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">LOGOUT</a>
+      </div>
+    </div>
+  </header>
   );
 };
 

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { PlusIcon, FunnelIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
-import axiosInstance from "./utils/axiosinstance";
+// import axiosInstance from "../../../../admin/utils/axiosinstance.js";
 import { jwtDecode } from "jwt-decode";
-import DashboardLayout from "./DashboardLayout";
+import DashboardLayout from "../../dash_layout/page";
+import axios from "axios";
+
 
 const NormalRatesPage = () => {
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -14,7 +16,7 @@ const NormalRatesPage = () => {
   const [customerData, setCustomerData] = useState(null);
   const [showSelectColumn, setShowSelectColumn] = useState(false);
   const [showOnlySelected, setShowOnlySelected] = useState(false);
-
+ 
   const getCustomerIdFromToken = () => {
     const token = localStorage.getItem("token");
     if (!token) return null;
@@ -28,12 +30,12 @@ const NormalRatesPage = () => {
       try {
         const customerId = getCustomerIdFromToken();
         if (customerId) {
-          const customerResponse = await axiosInstance.get(
-            `/v3/api/customers/${customerId}`
+          const customerResponse = await axios.get(
+            `http://localhost:5000/v3/api/customers/${customerId}`
           );
           setCustomerData(customerResponse.data);
 
-          const ratesResponse = await axiosInstance("v3/api/rates");
+          const ratesResponse = await axios.get("http://localhost:5000/v3/api/rates");
           setNormalRatesData(ratesResponse.data);
         }
       } catch (error) {
@@ -52,11 +54,12 @@ const NormalRatesPage = () => {
       console.error("Customer ID not found in token");
       return;
     }
-
+    console.log(id,'my id')
     const selectedRateIds = selectedRates.map((rate) => rate._id);
+    console.log(selectedRateIds)
     try {
-      const response = await axiosInstance.put(
-        `v3/api/customers/updatemyrate/${id}`,
+      const response = await axios.put(
+        `http://localhost:5000/v3/api/customers/updatemyrate/${id}`,
         {
           myRatesId: selectedRateIds,
         }

@@ -11,7 +11,7 @@ const CountryRatesTable = ({ isVisible }) => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await fetch("https://cloudqlobe-server.onrender.com/v3/api/rates");
+      const response = await fetch("http://localhost:5000/v3/api/rates");
       if (!response.ok) throw new Error("Failed to fetch data");
       const fetchedData = await response.json();
       setData(fetchedData.filter((rate) => rate.category === "specialrate"));
@@ -125,7 +125,7 @@ const FloatingButton = () => {
   return (
     <div className="fixed right-5 top-1/3">
       <button
-        className="w-16 h-16 rounded-full bg-orange-500 text-white shadow-lg hover:bg-orange-600"
+        className="flex justify-center items-center w-16 h-16 rounded-full bg-orange-500 text-white shadow-lg hover:bg-orange-600"
         onClick={() => setIsCardOpen(!isCardOpen)}
       >
         <DollarSign className="w-8 h-8" />

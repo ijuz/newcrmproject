@@ -1,11 +1,10 @@
-"use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "react-router-dom";
 import styles from "../components/RateTable.module.css";
-
+import {Link} from 'react-router-dom'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Ticker from "../components/TickerCli";
-import { faDollarSign } from "@fortawesome/free-solid-svg-icons"; 
+import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 import {
   faChartLine,
   faStar,
@@ -15,42 +14,42 @@ import {
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import styles2 from "../components/RatesNavbar.module.css";
+import axios from "axios";
 
-type RateTableProps = {
-  className?: string;
-};
-
-const RateTable: React.FC<RateTableProps> = ({ className }) => {
-  const router = useRouter();
-  const [rates, setRates] = useState<Rate[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [filteredRates, setFilteredRates] = useState<Rate[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const [selectedCountry, setSelectedCountry] = useState<string>("All");
+const RateTable = ({ className }) => {
+  const navigate = useNavigate();
+  const [rates, setRates] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [filteredRates, setFilteredRates] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedCountry, setSelectedCountry] = useState("All");
   const rowsPerPage = 7;
-  const [customerId, setCustomerId] = useState<string>("");
-  const [countryOptions, setCountryOptions] = useState<string[]>([]);
-  const [selectingRates, setSelectingRates] = useState<boolean>(false);
-  const [selectedRates, setSelectedRates] = useState<{ [key: string]: boolean }>({});
+  const [customerId, setCustomerId] = useState("");
+  const [countryOptions, setCountryOptions] = useState([]);
+  const [selectingRates, setSelectingRates] = useState(false);
+  const [selectedRates, setSelectedRates] = useState({});
 
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const response = await fetch("https://cloudqlobe-server.onrender.com/v3/api/clirates");
+        const response = await axios.get("http://localhost:5000/v3/api/clirates");
         if (!response.ok) throw new Error("Failed to fetch rates");
         const data = await response.json();
         setRates(data);
         setFilteredRates(data);
 
-        const uniqueCountries = Array.from(new Set(data.map((rate: Rate) => rate.country)));
+        const uniqueCountries = Array.from(new Set(data.map((rate) => rate.country)));
         setCountryOptions(["All", ...uniqueCountries]);
       } catch (err) {
-        setError("Error fetching rates.");
+        // setError("Error fetching rates.");
+        console.log(err);
+        
       } finally {
         setLoading(false);
       }
     };
+
     const id = getCustomerIdFromToken();
     setCustomerId(id);
     fetchRates();
@@ -75,34 +74,33 @@ const RateTable: React.FC<RateTableProps> = ({ className }) => {
   const totalPages = Math.ceil(filteredRates.length / rowsPerPage);
 
   const handleFilter = () => {
-    // Filter by selected country
-    const countryFilteredRates = selectedCountry === "All"
-      ? rates
-      : rates.filter(rate => rate.country === selectedCountry);
+    const countryFilteredRates =
+      selectedCountry === "All"
+        ? rates
+        : rates.filter((rate) => rate.country === selectedCountry);
 
-    // Filter by selected checkboxes
     const selectedRatesFilter = Object.keys(selectedRates)
-      .filter(id => selectedRates[id])
-      .map(id => countryFilteredRates.find(rate => rate._id === id))
-      .filter(Boolean) as Rate[];
+      .filter((id) => selectedRates[id])
+      .map((id) => countryFilteredRates.find((rate) => rate._id === id))
+      .filter(Boolean);
 
     setFilteredRates(selectedRatesFilter.length ? selectedRatesFilter : countryFilteredRates);
-    setCurrentPage(1); // Reset to page 1 when applying filter
+    setCurrentPage(1);
   };
 
-  const toggleRateSelection = (id: string) => {
-    setSelectedRates(prev => ({ ...prev, [id]: !prev[id] }));
+  const toggleRateSelection = (id) => {
+    setSelectedRates((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   const handleSelectRatesClick = () => {
-    setSelectingRates(prev => !prev);
+    setSelectingRates((prev) => !prev);
   };
 
   const navigateToRatesPage = () => {
-    router.push('/modules/customer/pages/rates_page/Rates');
+    navigate('/modules/customer/pages/rates_page/Rates');
   };
 
-  const paginate = (pageNumber: number) => {
+  const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
@@ -111,18 +109,20 @@ const RateTable: React.FC<RateTableProps> = ({ className }) => {
       <header className={styles2.header}>
         <nav className={styles2.navbar}>
           <div className={styles2.navbarLeft}>
-            <div className={styles2.navbarItem} onClick={() =>router.push('/pricing')}>
+            <div className={styles2.navbarItem} onClick={() => navigate('/pricing')}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faChartLine} size="lg" />
               </div>
               <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ''}`}>CC Rates</div>
             </div>
-            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
+
+           <Link to="/SpecilaRate_page"><div className={styles2.navbarItem} >
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faStar} size="lg" />
               </div>
               <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ''}`}>Special Rates</div>
-            </div>
+            </div></Link>
+
             <div className={styles2.navbarItem} onClick={handleSelectRatesClick}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faCheckCircle} size="lg" />
@@ -191,82 +191,54 @@ const RateTable: React.FC<RateTableProps> = ({ className }) => {
         </div>
       </div>
 
-      <div className={`${styles.tableContainer} ${className}`} style={{ marginTop: "0" }}>
+      <div className={`${styles.tableContainer} ${className}`}>
         {loading ? (
-          <div className={styles.loading}>Loading...</div>
+          <div>Loading rates...</div>
         ) : (
-          <table className={styles.rateTable}>
-          <thead>
-            <tr>
-              {selectingRates && <th>Select</th>}
-              {/* <th>Country Code</th> */}
-              <th >Country</th> {/* Adjust width as needed */}
-              <th >Quality Description</th> 
-              <th style={{width:"15%"}}>RTP</th>
-               <th>ASR</th>
-               <th>ACD</th>
-               {/* <th>Billing Cycle</th> */}
-              <th>Rate ($)</th>
-              <th>Status</th>
-              
-             
-             
-              
-            </tr>
-          </thead>
-          <tbody>
-            {currentRows.length === 0 ? (
-              <tr>
-                <td colSpan={selectingRates ? 10 : 9} className={styles.noResults}>
-                  No results found.
-                </td>
-              </tr>
-            ) : (
-              currentRows.map((rate) => (
-                <tr key={rate._id}>
-                  {selectingRates && (
-                    <td>
-                      <input 
-                        type="checkbox" 
-                        checked={!!selectedRates[rate._id]} 
-                        onChange={() => toggleRateSelection(rate._id)} 
-                      />
-                    </td>
-                  )}
-                  {/* <td>{rate.countryCode}</td> */}
-                  <td className="w-20">{rate.country}</td> {/* Adjust width here */}
-                  <td>{rate.qualityDescription}</td>
-                
-                  
-              
-                  <td>{rate.rtp}</td>
-                  <td>{rate.asr}</td>
-                  <td>{rate.acd}</td>  
-                  {/* <td>{rate.billingCycle}</td> */}
-                  <td>{rate.rate}</td>
-                  <td className={`${rate.status.toLowerCase() === "active" ? "text-green-600" : "text-red-600"}`}>
-                    {rate.status.charAt(0).toUpperCase() + rate.status.slice(1)}
-                  </td>
+          <>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Country</th>
+                  <th>Rate</th>
+                  <th>Currency</th>
+                  <th>Prefix</th>
+                  {selectingRates && <th>Select</th>}
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-        
-        
+              </thead>
+              <tbody>
+                {currentRows.map((rate) => (
+                  <tr key={rate._id}>
+                    <td>{rate.country}</td>
+                    <td>{rate.rate}</td>
+                    <td>{rate.currency}</td>
+                    <td>{rate.prefix}</td>
+                    {selectingRates && (
+                      <td>
+                        <input
+                          type="checkbox"
+                          checked={!!selectedRates[rate._id]}
+                          onChange={() => toggleRateSelection(rate._id)}
+                        />
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <div className={styles.pagination}>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                <button
+                  key={page}
+                  className={currentPage === page ? styles.activePage : ""}
+                  onClick={() => paginate(page)}
+                >
+                  {page}
+                </button>
+              ))}
+            </div>
+          </>
         )}
-
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "1rem", paddingBottom: "1rem" }}>
-          {Array.from({ length: totalPages }, (_, index) => (
-            <button
-              key={index + 1}
-              className={`${styles.pageButton} ${currentPage === index + 1 ? styles.activePage : ""}`}
-              onClick={() => paginate(index + 1)}
-            >
-              {index + 1}
-            </button>
-          ))}
-        </div>
       </div>
     </>
   );

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../utils/axiosinstance';
 import Layout from '../../layout/page';
+import axios from 'axios';
 
 const FollowUp = () => {
-  const [activeTab, setActiveTab] = useState('calls');
+  const [activeTab, setActiveTab] = useState('call');
   const [followUpData, setFollowUpData] = useState([]);
   const [customerData, setCustomerData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -19,16 +20,20 @@ const FollowUp = () => {
     const fetchData = async () => {
       try {
         // Step 1: Fetch follow-up data
-        const followUpsResponse = await axiosInstance.get('v3/api/followups'); // Adjust the endpoint as necessary
+        const followUpsResponse = await axios.get('http://localhost:5000/v3/api/followups'); // Adjust the endpoint as necessary
         setFollowUpData(followUpsResponse.data);
 
         // Step 2: Prepare a list of customer IDs to fetch
-        const customerIds = [...new Set(followUpsResponse.data.map(item => item.customerId))];
+        const customerIds = [...new Set(
+          followUpsResponse.data
+            .map(item => item.customerId)
+            .filter(customerId => customerId) // Remove undefined or null IDs
+        )];
 
         // Step 3: Fetch customer data for each customerId
         const customers = {};
         for (const customerId of customerIds) {
-          const response = await axiosInstance.get(`v3/api/customers/${customerId}`); // Assuming this endpoint fetches a single customer by ID
+          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`); // Assuming this endpoint fetches a single customer by ID
           customers[customerId] = response.data;
         }
         setCustomerData(customers);
@@ -79,16 +84,16 @@ const FollowUp = () => {
 
             return (
               <tr
-                key={followUp.id} // Use a unique identifier for the key (e.g., followUp.id)
-                className="cursor-pointer hover:bg-gray-100" // Add hover effect for rows
-                onClick={() => window.location.href = `/modules/admin/v2/Support/FollowUps/FollowupDetails/${followUp.id}`} // Navigate to details page
+                key={followUp.id || followUp._id} // Ensure a unique key exists
+                className="cursor-pointer hover:bg-gray-100"
+                onClick={() => window.location.href = `/modules/admin/v2/Support/FollowUps/FollowupDetails/${followUp.id}`}
               >
                 <td className="border px-4 py-2">{customer.customerId || 'N/A'}</td>
                 <td className="border px-4 py-2">
                   <a
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent row click from triggering
-                      window.location.href = `/modules/admin/v2/Support/FollowUps/${followUp._id}`; // Link to customer details
+                      window.location.href = `/modules/admin/v2/Support/FollowUps/${followUp._id}`;
                     }}
                     className="text-blue-600 hover:underline"
                   >
@@ -125,7 +130,7 @@ const FollowUp = () => {
         <div className="flex justify-center mb-6">
           {['call', 'email', 'chat'].map((tab) => (
             <button
-              key={tab}
+              key={tab} // Ensure unique keys for buttons
               onClick={() => setActiveTab(tab)}
               className={`relative flex-1 text-center py-3 transition-colors duration-300 focus:outline-none ${
                 activeTab === tab

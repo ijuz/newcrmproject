@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Layout from '../../../layout/page'
 import axiosInstance from '../../../utils/axiosinstance';
+import axios from 'axios';
 
 const AddCustomerPage = () => {
   const [companyDetails, setCompanyDetails] = useState({
@@ -71,9 +72,9 @@ const AddCustomerPage = () => {
         ...technicalDetails,
       };
 
-      const response = await axiosInstance.post('v3/api/customers', mergedData);
+      const response = await axios.post('http://localhost:5000/v3/api/customers', mergedData);
       console.log(response.data); // Handle the response from the backend
-      router.push('/modules/admin/Dashboard'); // Redirect to customers page
+      // router.push('/modules/admin/Dashboard'); // Redirect to customers page
     } catch (error) {
       console.error('Error adding customer:', error);
     } finally {

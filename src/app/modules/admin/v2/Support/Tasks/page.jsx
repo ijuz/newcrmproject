@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../utils/axiosinstance';
 import Layout from '../../layout/page';
+import axios from 'axios';
 
 const FollowUp = () => {
-  const [activeTab, setActiveTab] = useState('calls');
+  const [activeTab, setActiveTab] = useState('call');
   const [followUpData, setFollowUpData] = useState([]);
   const [customerData, setCustomerData] = useState({});
   const [loading, setLoading] = useState(true);
@@ -19,16 +20,20 @@ const FollowUp = () => {
     const fetchData = async () => {
       try {
         // Step 1: Fetch follow-up data
-        const followUpsResponse = await axiosInstance.get('v3/api/followups'); // Adjust the endpoint as necessary
+        const followUpsResponse = await axios.get('http://localhost:5000/v3/api/followups'); // Adjust the endpoint as necessary
         setFollowUpData(followUpsResponse.data);
 
         // Step 2: Prepare a list of customer IDs to fetch
-        const customerIds = [...new Set(followUpsResponse.data.map(item => item.customerId))];
+        const customerIds = [...new Set(
+          followUpsResponse.data
+            .map(item => item.customerId)
+            .filter(customerId => customerId) // Remove undefined or null IDs
+        )];
 
         // Step 3: Fetch customer data for each customerId
         const customers = {};
         for (const customerId of customerIds) {
-          const response = await axiosInstance.get(`v3/api/customers/${customerId}`); // Assuming this endpoint fetches a single customer by ID
+          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`); // Assuming this endpoint fetches a single customer by ID
           customers[customerId] = response.data;
         }
         setCustomerData(customers);

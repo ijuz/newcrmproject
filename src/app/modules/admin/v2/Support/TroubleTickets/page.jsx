@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../layout/page';
-import axiosInstance from '../../../utils/axiosinstance';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from React Router
 
 const FollowUp = () => {
   const [activeTab, setActiveTab] = useState('calls');
@@ -9,33 +10,55 @@ const FollowUp = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const navigate = useNavigate(); // Initialize useNavigate
+
   // Fetch follow-up data and then fetch customer data based on customerId
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Step 1: Fetch follow-up data
-        const followUpsResponse = await axiosInstance.get('v3/api/followups'); // Adjust the endpoint as necessary
+        const followUpsResponse = await axios.get('http://localhost:5000/v3/api/followups');
         setFollowUpData(followUpsResponse.data);
-
-        // Step 2: Prepare a list of customer IDs to fetch
-        const customerIds = [...new Set(followUpsResponse.data.map(item => item.customerId))];
-
-        // Step 3: Fetch customer data for each customerId
-        const customers = {};
-        for (const customerId of customerIds) {
-          const response = await axiosInstance.get(`v3/api/customers/${customerId}`); // Assuming this endpoint fetches a single customer by ID
-          customers[customerId] = response.data;
-        }
+  
+        // Debugging: Log follow-up data
+       
+  
+        // Step 2: Prepare a list of unique and valid customer IDs
+        const customerIds = [...new Set(
+          followUpsResponse.data
+            .map(item => item.customerId)
+            .filter(customerId => customerId) // Remove undefined or null IDs
+        )];
+  
+        // Debugging: Log customer IDs
+        
+  
+        // Step 3: Fetch customer data for each customerId in parallel
+        const customerRequests = customerIds.map((customerId) =>
+          axios.get(`http://localhost:5000/v3/api/customers/${customerId}`)
+        );
+        const customerResponses = await Promise.all(customerRequests);
+  
+        // Map customer data into an object with customerId as the key
+        const customers = customerResponses.reduce((acc, response) => {
+          const { customerId } = response.data;
+          acc[customerId] = response.data;
+          return acc;
+        }, {});
+  
         setCustomerData(customers);
       } catch (err) {
+        console.error("Error fetching data:", err);
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
+  
 
   const renderTabContent = () => {
     if (loading) {
@@ -76,14 +99,14 @@ const FollowUp = () => {
               <tr
                 key={followUp.id} // Use a unique identifier for the key (e.g., followUp.id)
                 className="cursor-pointer hover:bg-gray-100" // Add hover effect for rows
-                onClick={() => window.location.href = `/modules/admin/v2/Support/FollowUps/FollowupDetails/${followUp.id}`} // Navigate to details page
+                onClick={() => navigate(`/modules/admin/v2/Support/FollowUps/FollowupDetails/${followUp.id}`)} // Use navigate for navigation
               >
                 <td className="border px-4 py-2">{customer.customerId || 'N/A'}</td>
                 <td className="border px-4 py-2">
                   <a
                     onClick={(e) => {
                       e.stopPropagation(); // Prevent row click from triggering
-                      window.location.href = `/modules/admin/v2/Support/FollowUps/${followUp._id}`; // Link to customer details
+                      navigate(`/modules/admin/v2/Support/FollowUps/${followUp._id}`); // Use navigate for link navigation
                     }}
                     className="text-blue-600 hover:underline"
                   >

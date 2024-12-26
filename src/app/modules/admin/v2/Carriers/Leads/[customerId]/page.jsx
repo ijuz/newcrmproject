@@ -1,123 +1,149 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
-import axios from "axios";
-import Layout from "./Layout";
-import { 
-  User, Mail, Phone, Globe, MapPin, Calendar, Flag, Briefcase, Users, Link, FileText 
-} from "lucide-react";
+import {
+  FaUser,
+  FaCreditCard,
+  FaQuestionCircle,
+  FaCommentDots,
+  FaDollarSign,
+  FaChevronDown,
+} from "react-icons/fa";
+import clsx from "clsx";
+import Layout from "../../../layout/page";
+import ProfileTab from "./components/Profile";
+import PaymentsTab from "./components/Payments";
+import SupportTab from "./components/Support";
+import FollowUpTab from "./components/Followups";
+import Rates from "./components/Rates";
+import PrivateRates from "./components/PrivateRates";
+import FormFollowUpTab from "./components/Formfollow";
+
+const tabs = [
+  {
+    id: "profile",
+    label: "Profile",
+    icon: FaUser,
+    color: "rose",
+  },
+  {
+    id: "rates",
+    label: "Rates",
+    icon: FaDollarSign,
+    color: "blue",
+    submenu: [
+      { id: "rates1", label: "Base Rates", path: "Rates" },
+      { id: "rates2", label: "Private Rates", path: "PrivateRates" },
+    ],
+  },
+  {
+    id: "payments",
+    label: "Payments",
+    icon: FaCreditCard,
+    color: "amber",
+  },
+  {
+    id: "support",
+    label: "Support",
+    icon: FaQuestionCircle,
+    color: "purple",
+  },
+  {
+    id: "followup",
+    label: "Follow-Ups",
+    icon: FaCommentDots,
+    color: "slate",
+  },
+];
 
 const LeadDetails = () => {
-  const [leadData, setLeadData] = useState(null);
-  const [newStatus, setNewStatus] = useState("");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState("");
-  const params = useParams();
-  const customerId = params.customerId;
-  const [updateModalOpen, setUpdateModalOpen] = useState(false);
-  const [updatedLeadInfo, setUpdatedLeadInfo] = useState({});
+  const { customerId } = useParams();
+  const [activeTab, setActiveTab] = useState("profile");
+  const [dropdownOpen, setDropdownOpen] = useState(null);
 
-  useEffect(() => {
-    const fetchLeadData = async () => {
-      try {
-        const response = await axios.get(`/v3/api/customers/${customerId}`);
-        setLeadData(response.data);
-      } catch (error) {
-        console.error("Error fetching lead details:", error);
-        setError("Failed to fetch lead details.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    if (customerId) fetchLeadData();
-    
-    return () => {
-      setLeadData(null);
-      setError(null);
-      setSuccessMessage("");
-    };
-  }, [customerId]);
-
-  const handleConversion = async (type) => {
-    try {
-      await axios.put(`/v3/api/customers/${customerId}`, { customerType: type });
-      setSuccessMessage("Conversion successful");
-      setLeadData((prev) => ({ ...prev, customerType: type }));
-    } catch (error) {
-      console.error("Error converting lead:", error);
-      setError("Failed to convert lead.");
+  const handleTabClick = (tab) => {
+    if (tab.submenu) {
+      setDropdownOpen((prev) => (prev === tab.id ? null : tab.id));
+    } else {
+      setActiveTab(tab.id);
+      setDropdownOpen(null);
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUpdatedLeadInfo({ ...updatedLeadInfo, [name]: value });
+  const handleSubItemClick = (subItem) => {
+    setActiveTab(subItem.id);
+    setDropdownOpen(null);
   };
-
-  const handleUpdateLead = async () => {
-    try {
-      const response = await axios.put(`/v3/api/customers/${customerId}`, updatedLeadInfo);
-      console.log("Lead updated successfully:", response.data);
-      setUpdateModalOpen(false);
-    } catch (error) {
-      console.error("Error updating lead:", error);
-    }
-  };
-
-  const handleStatusChange = async () => {
-    try {
-      await axios.put(`/v3/api/customers/${customerId}`, { leadStatus: newStatus });
-      setSuccessMessage("Lead status updated");
-      setNewStatus("");
-      setLeadData((prev) => ({ ...prev, leadStatus: newStatus }));
-    } catch (error) {
-      console.error("Error updating status:", error);
-      setError("Failed to update lead status.");
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-orange-50 to-blue-50">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-orange-500"></div>
-      </div>
-    );
-  }
 
   return (
     <Layout>
-      <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-orange-50 to-blue-50">
-        <div className="max-w-6xl mx-auto space-y-8">
-          <h1 className="text-4xl font-bold text-center text-gray-800">
-            {leadData?.companyName || "Company Name Not Available"}
-          </h1>
-
-          {error && (
-            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
-              <p className="font-bold">Error</p>
-              <p>{error}</p>
+      <div className="min-h-screen p-6 bg-gray-50">
+        {/* Tabs Navigation */}
+        <div className="flex justify-center space-x-8 mb-10">
+          {tabs.map((tab) => (
+            <div key={tab.id} className="relative">
+              <motion.button
+                className={clsx(
+                  "flex items-center p-3 rounded-lg transition-all space-x-2",
+                  activeTab === tab.id
+                    ? `bg-${tab.color}-100 text-${tab.color}-600`
+                    : "hover:bg-gray-200 text-gray-600"
+                )}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => handleTabClick(tab)}
+              >
+                <tab.icon
+                  size={24}
+                  className={
+                    activeTab === tab.id
+                      ? `text-${tab.color}-600`
+                      : "text-gray-500"
+                  }
+                />
+                <span className="font-medium text-md">{tab.label}</span>
+                {tab.submenu && (
+                  <FaChevronDown
+                    className={clsx(
+                      "ml-2 transition-transform",
+                      dropdownOpen === tab.id ? "rotate-180" : ""
+                    )}
+                    size={14}
+                  />
+                )}
+              </motion.button>
+              {tab.submenu && dropdownOpen === tab.id && (
+                <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg z-20">
+                  {tab.submenu.map((subItem) => (
+                    <motion.button
+                      key={subItem.id}
+                      className="block w-full text-left px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100"
+                      whileHover={{ x: 4 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => handleSubItemClick(subItem)}
+                    >
+                      {subItem.label}
+                    </motion.button>
+                  ))}
+                </div>
+              )}
             </div>
+          ))}
+        </div>
+
+        {/* Active Tab Content */}
+        <div className="p-6 bg-white rounded-lg shadow-md">
+          {activeTab === "profile" && <ProfileTab customerId={customerId} />}
+          {activeTab === "rates1" && <Rates customerId={customerId} />}
+          {activeTab === "rates2" && <PrivateRates customerId={customerId} />}
+          {activeTab === "payments" && <PaymentsTab customerId={customerId} />}
+          {activeTab === "support" && <SupportTab customerId={customerId} />}
+          {activeTab === "followup" && (
+            <FollowUpTab setActiveTab={setActiveTab} customerId={customerId} />
           )}
-
-          {successMessage && (
-            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
-              <p className="font-bold">Success</p>
-              <p>{successMessage}</p>
-            </div>
+          {activeTab === "formfollow" && (
+            <FormFollowUpTab setActiveTab={setActiveTab} customerId={customerId} />
           )}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Info Sections (Company Information, Contact Information, Lead Details, Technical Details) */}
-            {/* Implement the InfoSection and InfoItem as reusable components */}
-          </div>
-
-          <div className="bg-white shadow-md rounded-lg p-6 mt-8">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">Lead Actions</h2>
-            <div className="space-y-6">
-              {/* Update and Conversion Actions */}
-            </div>
-          </div>
         </div>
       </div>
     </Layout>

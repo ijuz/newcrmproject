@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import  axios  from "axios";
 import Layout from '../../../../layout/page';
 import { User, Mail, Phone, Globe, MapPin, Calendar, Flag, RefreshCw, AlertTriangle, Briefcase, Users, Link, FileText, ActivityIcon, UploadCloud, } from 'lucide-react';
 
-const ProfileTab = ({ customerId }) => {
+const ProfileTab = () => {
   const [leadData, setLeadData] = useState(null);
   const [newStatus, setNewStatus] = useState("");
   const [loading, setLoading] = useState(true);
@@ -11,7 +12,8 @@ const ProfileTab = ({ customerId }) => {
   const [successMessage, setSuccessMessage] = useState("");
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [updatedLeadInfo, setUpdatedLeadInfo] = useState({});
-
+  const {customerId}=useParams()
+  console.log(customerId)
   useEffect(() => {
     const fetchLeadData = async () => {
       try {
@@ -406,24 +408,7 @@ const ProfileTab = ({ customerId }) => {
       </button>
     </div>
 
-    <div
-      onClick={() => handleConversion("CarrierLead")}
-      className="cursor-pointer flex flex-col items-center bg-green-100 border border-green-300 rounded-lg p-4 hover:shadow-lg transition"
-    >
-      <div className="text-green-500">
-        <Globe size={40} />
-      </div>
-      <h3 className="text-lg font-semibold mt-3">Convert to Carrier Lead</h3>
-      <p className="text-gray-600 text-sm mt-1 text-center">
-        Assign this lead as a carrier lead for business development opportunities.
-      </p>
-      <button
-        onClick={() => handleConversion("CarrierLead")}
-        className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-      >
-        Convert Now
-      </button>
-    </div>
+    
   </div>
 </div>
 

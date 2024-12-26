@@ -1,9 +1,11 @@
 // utils/axiosInstance.js
 import axios from 'axios';
 
+
+
 // Create an Axios instance
 const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_SERVER_URL, // Ensure this points to your backend
+  baseURL: process.env.PUBLIC_SERVER_URL, // Ensure this points to your backend
 });
 
 // Add a request interceptor

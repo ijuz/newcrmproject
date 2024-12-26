@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../layout/page';
 import axiosInstance from '../../utils/axiosinstance';
+import axios from 'axios';
 
 const PrivateRatePage = () => {
     const [customers, setCustomers] = useState([]);
@@ -17,7 +18,7 @@ const PrivateRatePage = () => {
 
     // Fetch all customers on page load
     useEffect(() => {
-        axiosInstance.get('/v3/api/customers')
+        axios.get('https://backend.cloudqlobe.com/v3/api/customers')
             .then(response => setCustomers(response.data))
             .catch(error => console.error("Error fetching customers:", error));
     }, []);
@@ -25,7 +26,7 @@ const PrivateRatePage = () => {
     // Fetch all rates (unfiltered) after customer is selected
     useEffect(() => {
         if (selectedCustomerId) {
-            axiosInstance.get('/v3/api/rates')
+            axios.get('https://backend.cloudqlobe.com/v3/api/rates')
                 .then(response => setRates(response.data))
                 .catch(error => console.error("Error fetching rates:", error));
 
