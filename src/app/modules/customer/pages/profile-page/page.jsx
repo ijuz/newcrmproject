@@ -71,7 +71,7 @@ const ProfilePage = () => {
         if (token) {
           const decoded = jwtDecode(token);
           const customerId = decoded.id;
-          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
+          const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
           setProfileData(response.data);
           setEditableIps(response.data.switchIps);
         }

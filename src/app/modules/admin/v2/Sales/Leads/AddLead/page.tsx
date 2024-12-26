@@ -72,7 +72,7 @@ const AddCustomerPage = () => {
         ...technicalDetails,
       };
 
-      const response = await axios.post('http://localhost:5000/v3/api/customers', mergedData);
+      const response = await axios.post('https://backend.cloudqlobe.com/v3/api/customers', mergedData);
       console.log(response.data); // Handle the response from the backend
       // router.push('/modules/admin/Dashboard'); // Redirect to customers page
     } catch (error) {

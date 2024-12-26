@@ -38,7 +38,7 @@ const ProfileTab = () => {
 
   const handleConversion = async (type) => {
     try {
-      await axios.put(`http://localhost:5000/v3/api/customers/${customerId}`, { customerType: type });
+      await axios.put(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`, { customerType: type });
       setSuccessMessage("Conversion successful");
       setLeadData(prev => ({ ...prev, customerType: type }));
     } catch (error) {
@@ -54,7 +54,7 @@ const ProfileTab = () => {
   // Handle lead update
   const handleUpdateLead = async () => {
     try {
-      const response = await axios.put(`http://localhost:5000/v3/api/customers/${customerId}`, updatedLeadInfo);
+      const response = await axios.put(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`, updatedLeadInfo);
       console.log('Lead updated successfully:', response.data);
       setUpdateModalOpen(false); // Close modal after update
       // Optionally refresh data or update local state
@@ -64,7 +64,7 @@ const ProfileTab = () => {
   };
   const handleStatusChange = async () => {
     try {
-      await axios.put(`http://localhost:5000/v3/api/customers/${customerId}`, { leadStatus: newStatus });
+      await axios.put(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`, { leadStatus: newStatus });
       setSuccessMessage("Lead status updated");
       setNewStatus("");
       setLeadData(prev => ({ ...prev, leadStatus: newStatus }));

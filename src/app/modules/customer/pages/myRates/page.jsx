@@ -23,7 +23,7 @@ const MyRatesPage = () => {
 
       if (customerId) {
         try {
-          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
+          const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
           setCustomerData(response.data);
         } catch (error) {
           console.error('Error fetching customer data:', error);
@@ -38,7 +38,7 @@ const MyRatesPage = () => {
     const fetchTests = async () => {
       if (customerData) {
         try {
-          const response = await axios.get(`http://localhost:5000/v3/api/tests`);
+          const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/tests`);
           const allTests = response.data;
 
           const filteredTests = allTests.filter(test => test.customerId === customerData._id);
@@ -57,7 +57,7 @@ const MyRatesPage = () => {
       if (customerData && customerData.myRatesId.length) {
         try {
           const rateFetchPromises = customerData.myRatesId.map(async (rateId) => {
-            const ratesResponse = await axios.get(`http://localhost:5000/v3/api/rates/${rateId}`);
+            const ratesResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/rates/${rateId}`);
             return ratesResponse.data;
           });
 
@@ -86,7 +86,7 @@ const MyRatesPage = () => {
         const testStatus = correspondingTest ? correspondingTest.testStatus : rate.status;
         const testReason = 'Requested';
 
-        return axios.post(`http://localhost:5000/v3/api/tests`, {
+        return axios.post(`https://backend.cloudqlobe.com/v3/api/tests`, {
           rateId: rate._id,
           customerId: customerData._id,
           rateCustomerId: `${customerData._id}hi${rate._id}`,

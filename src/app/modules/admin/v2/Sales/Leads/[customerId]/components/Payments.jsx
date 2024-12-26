@@ -8,7 +8,7 @@ const PaymentsTab = ({ customerId }) => {
   useEffect(() => {
     const fetchPayments = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}/payments`);
+        const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}/payments`);
         setPayments(response.data);
       } catch (error) {
         console.error("Error fetching payments:", error);

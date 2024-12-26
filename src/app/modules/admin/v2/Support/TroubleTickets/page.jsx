@@ -17,7 +17,7 @@ const FollowUp = () => {
     const fetchData = async () => {
       try {
         // Step 1: Fetch follow-up data
-        const followUpsResponse = await axios.get('http://localhost:5000/v3/api/followups');
+        const followUpsResponse = await axios.get('https://backend.cloudqlobe.com/v3/api/followups');
         setFollowUpData(followUpsResponse.data);
   
         // Debugging: Log follow-up data
@@ -35,7 +35,7 @@ const FollowUp = () => {
   
         // Step 3: Fetch customer data for each customerId in parallel
         const customerRequests = customerIds.map((customerId) =>
-          axios.get(`http://localhost:5000/v3/api/customers/${customerId}`)
+          axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`)
         );
         const customerResponses = await Promise.all(customerRequests);
   

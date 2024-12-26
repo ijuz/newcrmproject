@@ -126,7 +126,7 @@ const FollowUp = () => {
       if (!customerId) return;
 
       try {
-        const followUpsResponse = await axios.get("http://localhost:5000/v3/api/followups");
+        const followUpsResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/followups");
         const filteredData = followUpsResponse.data.filter(
           (item) =>
             item.followupCategory === "General" && item.companyId === customerId
@@ -138,7 +138,7 @@ const FollowUp = () => {
         ];
         const customers = {};
         for (const id of customerIds) {
-          const response = await axios.get(`http://localhost:5000/v3/api/customers/${id}`);
+          const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${id}`);
           customers[id] = response.data;
         }
         setCustomerData(customers);

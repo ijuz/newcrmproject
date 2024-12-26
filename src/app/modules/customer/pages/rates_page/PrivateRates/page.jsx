@@ -33,12 +33,12 @@ const NormalRatesPage = () => {
         if (customerId) {
           // Fetch customer details
           const customerResponse = await axios.get(
-            `http://localhost:5000/v3/api/customers/${customerId}`
+            `https://backend.cloudqlobe.com/v3/api/customers/${customerId}`
           );
           setCustomerData(customerResponse.data);
 
           // Fetch rates
-          const ratesResponse = await axios.get("http://localhost:5000/v3/api/rates");
+          const ratesResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
           const specialRates = ratesResponse.data.filter((rate) => rate.category === "specialrate");
           setNormalRatesData(specialRates);
         }
@@ -64,7 +64,7 @@ const NormalRatesPage = () => {
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/v3/api/customers/updatemyrate/${id}`,
+        `https://backend.cloudqlobe.com/v3/api/customers/updatemyrate/${id}`,
         {
           myRatesId: selectedRateIds,
         }

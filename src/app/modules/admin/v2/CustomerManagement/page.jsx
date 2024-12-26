@@ -17,7 +17,7 @@ const CustomersPage = () => {
     const fetchCustomers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/v3/api/customers');
+        const response = await axios.get('https://backend.cloudqlobe.com/v3/api/customers');
         setCustomers(response.data || []);
       } catch (error) {
         console.error('Error fetching customers:', error);

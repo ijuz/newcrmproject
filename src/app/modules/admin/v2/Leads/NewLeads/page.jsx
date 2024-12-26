@@ -27,7 +27,7 @@ const CustomersPage = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "http://localhost:5000/v3/api/customers"
+          "https://backend.cloudqlobe.com/v3/api/customers"
         );
         const filteredCustomers = response.data.filter(
           (customer) => customer.customerType === "Lead"

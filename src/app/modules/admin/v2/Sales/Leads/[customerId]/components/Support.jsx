@@ -9,7 +9,7 @@ const SupportTab = ({ customerId }) => {
   useEffect(() => {
     const fetchSupportRequests = async () => {
       try {
-        const response = await  axios.get(`http://localhost:5000/v3/api/customers/${customerId}/support`);
+        const response = await  axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}/support`);
         setSupportRequests(response.data);
       } catch (error) {
         console.error("Error fetching support requests:", error);

@@ -44,7 +44,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTickerData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/v3/api/clirates');
+        const response = await axios.get('https://backend.cloudqlobe.com/v3/api/clirates');
         setTickerData(response.data);
       } catch (error) {
         console.error("Error fetching ticker data:", error);
@@ -71,7 +71,7 @@ const Dashboard = () => {
         if (token) {
           const decoded = jwtDecode(token);
           const customerId = decoded.id;
-          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
+          const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
           setProfileData(response.data);
         }
       } catch (error) {
@@ -98,7 +98,7 @@ const Dashboard = () => {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:5000/v3/api/rates");
+      const response = await fetch("https://backend.cloudqlobe.com/v3/api/rates");
       if (!response.ok) throw new Error("Failed to fetch data");
 
       const fetchedData = await response.json();

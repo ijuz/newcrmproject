@@ -16,7 +16,7 @@ const TestingPage = () => {
   useEffect(() => {
     const fetchCustomersData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/v3/api/customers");
+        const response = await axios.get("https://backend.cloudqlobe.com/v3/api/customers");
         setCustomersData(response.data);
       } catch (error) {
         console.error("Error fetching customer data:", error);
@@ -29,7 +29,7 @@ const TestingPage = () => {
   useEffect(() => {
     const fetchTestsData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/v3/api/tests");
+        const response = await axios.get("https://backend.cloudqlobe.com/v3/api/tests");
         setTestsData(response.data);
       } catch (error) {
         console.error("Error fetching tests data:", error);
@@ -42,7 +42,7 @@ const TestingPage = () => {
   useEffect(() => {
     const fetchRatesData = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/v3/api/rates");
+        const response = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
         setRatesData(response.data);
       } catch (error) {
         console.error("Error fetching rates data:", error);
