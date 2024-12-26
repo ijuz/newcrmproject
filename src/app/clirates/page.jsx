@@ -33,7 +33,7 @@ const RateTable = ({ className }) => {
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/v3/api/clirates");
+        const response = await axios.get("https://backend.cloudqlobe.com/v3/api/clirates");
         if (!response.ok) throw new Error("Failed to fetch rates");
         const data = await response.json();
         setRates(data);
