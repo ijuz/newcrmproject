@@ -4,8 +4,11 @@ import {
   LogOut, 
   LayoutDashboard, 
   UserPlus, 
-  LogIn 
+  LogIn, 
+  
 } from "lucide-react";
+
+import {Link} from 'react-router-dom'
 
 const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -145,12 +148,12 @@ const Header = () => {
       <div className="flex items-center space-x-3" style={{ marginRight: "1em" }}>
         {isLoggedIn ? (
           <>
-            <a href="https://www.cloudqlobe.com/modules/customer/pages/home">
+            <Link to="/dash-board">
               <button className={`${buttonBaseClasses} bg-blue-600 hover:bg-blue-700`}>
                 <LayoutDashboard size={18} />
                 <span>Dashboard</span>
               </button>
-            </a>
+            </Link>
             <button
               onClick={handleLogout}
               className={`${buttonBaseClasses} bg-red-600 hover:bg-red-700`}
@@ -182,5 +185,3 @@ const Header = () => {
 
 export default Header;
 
-// https://www.cloudqlobe.com/modules/auth/Base/Signup
-// https://www.cloudqlobe.com/modules/auth/Base/login

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axiosInstance from "../../admin/v2/utils/axiosinstance"; // Adjust the import path based on your folder structure
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode';
+import axios from "axios";
 
 const SignInPage = () => {
   const [username, setUsername] = useState("");
@@ -9,7 +9,7 @@ const SignInPage = () => {
   const [showPassword, setShowPassword] = useState(false); // New state for showing password
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false); // New loading state
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // Check if the user is already authenticated
   useEffect(() => {
@@ -21,11 +21,11 @@ const SignInPage = () => {
           const decoded = jwtDecode(token);
           const customerId = decoded.id;
           // Make an API call to check if the user is valid
-          const response = await axiosInstance.get(`/v3/api/customers/${customerId}`); // Adjust the endpoint as needed
+          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`); // Adjust the endpoint as needed
           console.log(decoded.id);
           // If the user exists in the database, redirect to the dashboard
           if (response.data) {
-            history.push("/modules/customer/pages/home");
+            navigate("/modules/customer/pages/home");
           }
         } catch (error) {
           console.error("User not authenticated or token is invalid", error);
@@ -34,7 +34,7 @@ const SignInPage = () => {
     };
     
     checkAuthentication();
-  }, [history]);
+  }, [navigate]);
 
   const handleSignIn = async (e) => {
     e.preventDefault();
@@ -42,21 +42,23 @@ const SignInPage = () => {
 
     try {
       // Make the login request using axiosInstance
-      const response = await axiosInstance.post("/v3/api/customers/login", {
+      const response = await axios.post("http://localhost:5000/v3/api/customers/login", {
         username,
         password,
       });
 
       const data = response.data;
-
+ console.log(data);
+ 
       // Store the JWT token
       localStorage.setItem("token", data.token);
 
       // Redirect to dashboard
-      history.push("/modules/customer/pages/home");
+     navigate("/dash-board");
     } catch (err) {
       // Handle error response
-      setError(err.response?.data?.error || "Login failed. Please try again.");
+      // setError(err.response?.data?.error || "Login failed. Please try again.");
+      console.log(err)
     } finally {
       setLoading(false); // Stop loading
     }

@@ -1,9 +1,9 @@
 import React from "react";
 // Import the Navbar component
-import Header from "../auth/Header";
+import Header from "../../../auth/Header";
 import Footer from "../auth/HeaderAndFooter/Footer";
 import Navbar from "./sidebar/sidebar";
-import Chatbot from "../chatbot/page";
+import Chatbot from "../../../../chatbot/page";
 
 const DashboardLayout = ({ children }) => {
   return (
