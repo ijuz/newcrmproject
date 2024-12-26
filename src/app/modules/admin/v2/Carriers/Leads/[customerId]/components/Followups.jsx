@@ -9,7 +9,7 @@ const FollowUpTab = ({ setActiveTab }) => {
   useEffect(() => {
     const fetchFollowups = async () => {
       try {
-        const response = await fetch("http://localhost:5000/v3/api/followups");
+        const response = await fetch("https://backend.cloudqlobe.com/v3/api/followups");
         const data = await response.json();
         setFollowups(data);
       } catch (error) {
@@ -28,7 +28,7 @@ const FollowUpTab = ({ setActiveTab }) => {
       followupTime: new Date(),
     };
 
-    const response = await fetch("http://localhost:5000/v3/api/followups", {
+    const response = await fetch("https://backend.cloudqlobe.com/v3/api/followups", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(newFollowUpObj),

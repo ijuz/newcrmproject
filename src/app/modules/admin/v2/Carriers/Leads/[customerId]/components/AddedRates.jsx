@@ -8,7 +8,7 @@ const CartTab = ({ customerId }) => {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}/cart`);
+        const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}/cart`);
         setCartItems(response.data);
       } catch (error) {
         console.error("Error fetching cart items:", error);

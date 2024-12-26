@@ -22,7 +22,7 @@ const FormFollowUpTab = ({setActiveTab}) => {
       const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-          const response = await  axios.post("http://localhost:5000/v3/api/followups", followUpDetails);
+          const response = await  axios.post("hhttps://backend.cloudqlobe.com/v3/api/followups", followUpDetails);
           console.log(response, "hello");
           if (response.status === 201) {
             toast.success("Follow-up added successfully!");
