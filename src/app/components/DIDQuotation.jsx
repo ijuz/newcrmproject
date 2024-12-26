@@ -32,7 +32,7 @@ const CustomizedQuotesForm = () => {
     setIsSubmitted(false);
 
     try {
-      await axiosInstance.post("/v3/api/inquiries", formData);
+      await axiosInstance.post("v3/api/inquiries", formData);
       setIsSubmitted(true); // show success message
     } catch (error) {
       console.error("Error submitting form:", error);
