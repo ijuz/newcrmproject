@@ -10,7 +10,7 @@ const TroubleTickets = () => {
   // Fetch tickets from the backend API
   const fetchTickets = async () => {
     try {
-      const response = await axiosInstance('v3/api/tickets');
+      const response = await axiosInstance.get('v3/api/tickets');
       const data = await response.data;
       setTickets(data);
     } catch (error) {

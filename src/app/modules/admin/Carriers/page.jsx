@@ -11,7 +11,7 @@ const CarriersPage = () => {
     // Fetch the carriers from the backend
     const fetchCarriers = async () => {
       try {
-        const response = await axios.get('v3/api/customers/');
+        const response = await axios.get('https://backend.cloudqlobe.com/v3/api/customers/');
         setCarriers(response.data);
       } catch (error) {
         console.error('Error fetching carriers:', error);

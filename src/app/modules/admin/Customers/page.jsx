@@ -12,7 +12,7 @@ const CustomersPage = () => {
     const fetchCustomers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('/v3/api/customers');
+        const response = await axios.get('https://backend.cloudqlobe.com/v3/api/customers');
         const filteredCustomers = response.data.filter(
           (customer) => customer.customerType === 'Customer'
         );

@@ -15,7 +15,7 @@ const CarrierDetailsPage = () => {
       // Fetch the carrier details based on the ID
       const fetchCarrierDetails = async () => {
         try {
-          const response = await axios.get(`v3/api/customers/${carrierId}`);
+          const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${carrierId}`);
           setCarrier(response.data);
         } catch (error) {
           console.error('Error fetching carrier details:', error);
