@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { PlusIcon, FunnelIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
-// import axiosInstance from "../../../../admin/utils/axiosinstance.js";
+import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import DashboardLayout from "../../dash_layout/page";
-import axios from "axios";
-
 
 const NormalRatesPage = () => {
-  const [selectedCountry, setSelectedCountry] = useState("");
+  const [search, setSearch] = useState("");
   const [sort, setSort] = useState("countryCode");
   const [normalRatesData, setNormalRatesData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +14,7 @@ const NormalRatesPage = () => {
   const [customerData, setCustomerData] = useState(null);
   const [showSelectColumn, setShowSelectColumn] = useState(false);
   const [showOnlySelected, setShowOnlySelected] = useState(false);
- 
+
   const getCustomerIdFromToken = () => {
     const token = localStorage.getItem("token");
     if (!token) return null;
@@ -30,13 +28,12 @@ const NormalRatesPage = () => {
       try {
         const customerId = getCustomerIdFromToken();
         if (customerId) {
-          const customerResponse = await axios.get(
-            `https://backend.cloudqlobe.com/v3/api/customers/${customerId}`
-          );
+          const customerResponse = await axios.get(`/v3/api/customers/${customerId}`);
           setCustomerData(customerResponse.data);
 
-          const ratesResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
-          setNormalRatesData(ratesResponse.data);
+          const ratesResponse = await axios.get("v3/api/rates");
+          const specialRates = ratesResponse.data.filter(rate => rate.category === "specialrate");
+          setNormalRatesData(specialRates);
         }
       } catch (error) {
         console.error("Error fetching customer or rates:", error);
@@ -54,16 +51,13 @@ const NormalRatesPage = () => {
       console.error("Customer ID not found in token");
       return;
     }
-    console.log(id,'my id')
-    const selectedRateIds = selectedRates.map((rate) => rate._id);
-    console.log(selectedRateIds)
+
+    const selectedRateIds = selectedRates.map(rate => rate._id);
+
     try {
-      const response = await axios.put(
-        `https://backend.cloudqlobe.com/v3/api/customers/updatemyrate/${id}`,
-        {
-          myRatesId: selectedRateIds,
-        }
-      );
+      const response = await axios.put(`v3/api/customers/updatemyrate/${id}`, {
+        myRatesId: selectedRateIds,
+      });
       console.log("Selected rates successfully added to My Rates:", response.data);
       window.alert("Rate(s) added Successfully");
       window.location.reload();
@@ -72,9 +66,10 @@ const NormalRatesPage = () => {
     }
   };
 
-  const isRateDisabled = (rateId) => {
+  const isRateDisabled = rateId => {
     if (!customerData) return false;
     const { myRatesId, rateAddedtotest, rateTested, rateTesting } = customerData;
+
     return (
       myRatesId.includes(rateId) ||
       rateAddedtotest.includes(rateId) ||
@@ -83,11 +78,9 @@ const NormalRatesPage = () => {
     );
   };
 
-  const countryOptions = Array.from(new Set(normalRatesData.map((item) => item.country))).sort();
-
-  const filteredData = selectedCountry
-    ? normalRatesData.filter((item) => item.country === selectedCountry)
-    : normalRatesData;
+  const filteredData = normalRatesData.filter(item =>
+    item.country.toLowerCase().includes(search.toLowerCase())
+  );
 
   const sortedData = filteredData.sort((a, b) => {
     return sort === "countryName"
@@ -111,34 +104,20 @@ const NormalRatesPage = () => {
 
   return (
     <DashboardLayout>
-      <div className="p-0 bg-gray-100 text-gray-800">
-        <div className="text-left my-6"></div>
-
-        <div className="flex items-center" style={{ marginLeft: "0em" }}>
-          <div className="bg-orange-500 text-2xl rounded-lg text-white p-2 mr-2" style={{ paddingTop: ".25em", paddingLeft: ".8em", paddingRight: ".8em", paddingBottom: ".25em" }}>
-            $
-          </div>
-          <div className="flex items-center p-2 py-2 rounded-lg bg-blue-500">
-            <h1 className="text-lg font-regular text-white mb-0">Premium CC Routes</h1>
-          </div>
-        </div>
-
+      <div className="p-6 bg-gray-100 text-gray-800">
         <div className="mt-6 flex items-center justify-between space-x-4">
-          <div className="flex  ml-0 space-x-2" style={{width:"20em"}}>
-            <select
-              value={selectedCountry}
-              onChange={(e) => setSelectedCountry(e.target.value)}
+          <div className="flex w-2/3 ml-5 space-x-2">
+            <input
+              type="text"
+              placeholder="Search by country name..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
               className="flex-grow bg-white text-gray-800 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select a country</option>
-              {countryOptions.map((country) => (
-                <option key={country} value={country}>
-                  {country}
-                </option>
-              ))}
-            </select>
+            />
+            <button className="px-4 py-2 bg-orange-600 text-white font-regular rounded-lg hover:bg-orange-700 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500">
+              Search
+            </button>
           </div>
-
           <div className="flex items-center space-x-1">
             <button
               onClick={() => setShowSelectColumn(!showSelectColumn)}
@@ -146,16 +125,13 @@ const NormalRatesPage = () => {
             >
               {showSelectColumn ? "Hide Select Rates" : "Select Rates"}
             </button>
-
-            <div className="flex items-center">
-              <button style={{marginRight:"0em"}}
-                onClick={() => setShowOnlySelected(!showOnlySelected)}
-                className="px-7 h-10 bg-[#005F73] text-white rounded transition duration-200 ease-in-out hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center"
-              >
-                <FunnelIcon className="w-5 h-5" />
-                <span className="ml-1">Filter</span>
-              </button>
-            </div>
+            <button
+              style={{ marginRight: "2em" }}
+              onClick={() => setShowOnlySelected(!showOnlySelected)}
+              className="w-10 h-10 bg-[#005F73] text-white rounded-full hover:bg-orange-700 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center"
+            >
+              <FunnelIcon className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
@@ -171,12 +147,12 @@ const NormalRatesPage = () => {
           </div>
         )}
 
-        <div className="tableContainer overflow-x-auto py-3 rounded-lg">
-          <table className="rateTable w-full font-normal border-collapse bg-white shadow-lg rounded-lg">
+        <div className="tableContainer overflow-x-auto py-5 rounded-lg">
+          <table className="rateTable w-full border-collapse bg-white shadow-lg rounded-lg">
             <thead>
-              <tr className="bg-[#005F73] text-white font-normal uppercase rounded-lg">
+              <tr className="bg-[#005F73] text-white uppercase tracking-wider rounded-lg">
                 {showSelectColumn && (
-                  <th className="p-2 text-center border rounded-lg border-gray-300">Select</th>
+                  <th className="p-2 text-center border border-gray-300">Select</th>
                 )}
                 <th className="p-2 text-center border border-gray-300 w-1/6">Country Code</th>
                 <th className="p-2 text-center border border-gray-300 w-1/4">Country Name</th>
@@ -190,18 +166,20 @@ const NormalRatesPage = () => {
               {displayedData.map((item, index) => (
                 <tr
                   key={item._id}
-                  className={`${index % 2 === 0 ? "bg-[#dde0e5]" : "bg-[#FFFFFF]"} hover:bg-[#b5b8bc] transition duration-200 ease-in-out`}
+                  className={`${
+                    index % 2 === 0 ? "bg-[#dde0e5]" : "bg-[#FFFFFF]"
+                  } hover:bg-[#b5b8bc] transition duration-200 ease-in-out`}
                 >
                   {showSelectColumn && (
                     <td className="p-2 text-center border border-gray-300">
                       <input
                         type="checkbox"
                         disabled={isRateDisabled(item._id)}
-                        checked={selectedRates.some((rate) => rate._id === item._id)}
+                        checked={selectedRates.some(rate => rate._id === item._id)}
                         onChange={() => {
-                          if (selectedRates.some((rate) => rate._id === item._id)) {
+                          if (selectedRates.some(rate => rate._id === item._id)) {
                             setSelectedRates(
-                              selectedRates.filter((rate) => rate._id !== item._id)
+                              selectedRates.filter(rate => rate._id !== item._id)
                             );
                           } else {
                             setSelectedRates([...selectedRates, item]);

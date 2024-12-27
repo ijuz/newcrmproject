@@ -50,6 +50,10 @@ import Admintask from "./app/modules/admin/v2/Support/Tasks/page.jsx";
 import PageUnderDevelopment from "./app/modules/admin/v2/Support/Messages/page.jsx";
 import InternalAssistence from "./app/modules/admin/v2/Support/InternalAssistance/page.jsx";
 import CSettingsPage from '../src/app/modules/customer/pages/settings/page'
+import RateTableCli from "./app/clirates/page.jsx";
+import RateTableSpecial from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
+import RateTableAdd from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
+
 
 function App() {
   return (
@@ -104,6 +108,9 @@ function App() {
         <Route path="/admin/support/task" element={<Admintask/>}/>
         <Route path="/admin/support/messages" element={<PageUnderDevelopment/>}/>
         <Route path="/admin/support/internalassistence" element={<InternalAssistence/>}/>
+        <Route path="/cliratestable" element={<RateTableCli/>}/>
+        <Route path="/specialrates" element={<RateTableSpecial/>}/>
+        <Route path="/addrates" element={<RateTableAdd/>}/>
       </Routes>
   );
 }

@@ -86,7 +86,7 @@ const RateTable = ({ className }) => {
   };
 
   const navigateToRatesPage = () => {
-    navigate("/modules/customer/pages/rates_page/Rates");
+    navigate("/specialrates");
   };
 
   const paginate = (pageNumber) => {
@@ -101,13 +101,13 @@ const RateTable = ({ className }) => {
       <header className={styles2.header}>
         <nav className={styles2.navbar}>
           <div className={styles2.navbarLeft}>
-            <div className={styles2.navbarItem} onClick={() => navigate("/clirates")}>
+            <div className={styles2.navbarItem} onClick={() => navigate("/cliratestable")}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faChartLine} size="lg" />
               </div>
               <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>CLI Rates</div>
             </div>
-            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
+            <div className={styles2.navbarItem}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faStar} size="lg" />
               </div>
@@ -119,7 +119,7 @@ const RateTable = ({ className }) => {
               </div>
               <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Select Rates</div>
             </div>
-            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
+            <div className={styles2.navbarItem} onClick={() => navigate("/addrates")}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faPlusCircle} size="lg" />
               </div>
