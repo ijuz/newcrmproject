@@ -10,7 +10,7 @@ const CustomerDetailsPage = () => {
       // Fetch the customer details based on the ID
       const fetchCustomerDetails = async () => {
         try {
-          const response = await axios.get(`v3/api/customers/${customerId}`);
+          const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
           setCustomer(response.data);
         } catch (error) {
           console.error('Error fetching customer details:', error);
