@@ -28,10 +28,10 @@ const NormalRatesPage = () => {
       try {
         const customerId = getCustomerIdFromToken();
         if (customerId) {
-          const customerResponse = await axios.get(`/v3/api/customers/${customerId}`);
+          const customerResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
           setCustomerData(customerResponse.data);
 
-          const ratesResponse = await axios.get("v3/api/rates");
+          const ratesResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
           const specialRates = ratesResponse.data.filter(rate => rate.category === "specialrate");
           setNormalRatesData(specialRates);
         }
@@ -55,7 +55,7 @@ const NormalRatesPage = () => {
     const selectedRateIds = selectedRates.map(rate => rate._id);
 
     try {
-      const response = await axios.put(`v3/api/customers/updatemyrate/${id}`, {
+      const response = await axios.put(`https://backend.cloudqlobe.com/v3/api/customers/updatemyrate/${id}`, {
         myRatesId: selectedRateIds,
       });
       console.log("Selected rates successfully added to My Rates:", response.data);

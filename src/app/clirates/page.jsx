@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Replaced Next.js router with react-router-dom
 import styles from "../components/RateTable.module.css";
-import {Link} from 'react-router-dom'
+import Header from "../components/Header";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Ticker from "../components/TickerCli";
 import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
@@ -14,7 +15,6 @@ import {
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import styles2 from "../components/RatesNavbar.module.css";
-import axios from "axios";
 
 const RateTable = ({ className }) => {
   const navigate = useNavigate();
@@ -33,7 +33,7 @@ const RateTable = ({ className }) => {
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const response = await axios.get("https://backend.cloudqlobe.com/v3/api/clirates");
+        const response = await fetch("https://backend.cloudqlobe.com/v3/api/clirates");
         if (!response.ok) throw new Error("Failed to fetch rates");
         const data = await response.json();
         setRates(data);
@@ -42,14 +42,11 @@ const RateTable = ({ className }) => {
         const uniqueCountries = Array.from(new Set(data.map((rate) => rate.country)));
         setCountryOptions(["All", ...uniqueCountries]);
       } catch (err) {
-        // setError("Error fetching rates.");
-        console.log(err);
-        
+        setError("Error fetching rates.");
       } finally {
         setLoading(false);
       }
     };
-
     const id = getCustomerIdFromToken();
     setCustomerId(id);
     fetchRates();
@@ -97,7 +94,7 @@ const RateTable = ({ className }) => {
   };
 
   const navigateToRatesPage = () => {
-    navigate('/modules/customer/pages/rates_page/Rates');
+    navigate("specialrates");
   };
 
   const paginate = (pageNumber) => {
@@ -106,40 +103,49 @@ const RateTable = ({ className }) => {
 
   return (
     <>
+    <Header />
       <header className={styles2.header}>
         <nav className={styles2.navbar}>
           <div className={styles2.navbarLeft}>
-            <div className={styles2.navbarItem} onClick={() => navigate('/pricing')}>
+            <div className={styles2.navbarItem} onClick={() => navigate("/pricing")}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faChartLine} size="lg" />
               </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ''}`}>CC Rates</div>
+              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>
+                CC Rates
+              </div>
             </div>
-
-           <Link to="/SpecilaRate_page"><div className={styles2.navbarItem} >
+            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faStar} size="lg" />
               </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ''}`}>Special Rates</div>
-            </div></Link>
-
+              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>
+                Special Rates
+              </div>
+            </div>
             <div className={styles2.navbarItem} onClick={handleSelectRatesClick}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faCheckCircle} size="lg" />
               </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ''}`}>Select Rates</div>
+              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>
+                Select Rates
+              </div>
             </div>
             <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faPlusCircle} size="lg" />
               </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ''}`}>Add Rates</div>
+              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>
+                Add Rates
+              </div>
             </div>
             <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faFilter} size="lg" />
               </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ''}`}>Filter Rates</div>
+              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>
+                Filter Rates
+              </div>
             </div>
           </div>
           <div className={styles2.navbarProfile}>
@@ -157,9 +163,20 @@ const RateTable = ({ className }) => {
 
         <Ticker />
 
-        <div className={styles.container} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div
+          className={styles.container}
+          style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
+        >
           <div className="flex items-center" style={{ marginLeft: "3.5em" }}>
-            <div className="bg-orange-500 text-2xl rounded-lg text-white p-2 mr-2" style={{ paddingTop: ".25em", paddingLeft: ".8em", paddingRight: ".8em", paddingBottom: ".25em" }}>
+            <div
+              className="bg-orange-500 text-2xl rounded-lg text-white p-2 mr-2"
+              style={{
+                paddingTop: ".25em",
+                paddingLeft: ".8em",
+                paddingRight: ".8em",
+                paddingBottom: ".25em",
+              }}
+            >
               $
             </div>
             <div className="flex items-center p-2 py-2 rounded-lg bg-blue-500">
@@ -167,7 +184,10 @@ const RateTable = ({ className }) => {
             </div>
           </div>
 
-          <div className={styles.searchArea} style={{ display: "flex", alignItems: "center", marginRight: "3em" }}>
+          <div
+            className={styles.searchArea}
+            style={{ display: "flex", alignItems: "center", marginRight: "3em" }}
+          >
             <select
               className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={selectedCountry}
@@ -191,28 +211,33 @@ const RateTable = ({ className }) => {
         </div>
       </div>
 
-      <div className={`${styles.tableContainer} ${className}`}>
+      <div className={`${styles.tableContainer} ${className}`} style={{ marginTop: "0" }}>
         {loading ? (
-          <div>Loading rates...</div>
+          <div className={styles.loading}>Loading...</div>
         ) : (
-          <>
-            <table className={styles.table}>
-              <thead>
+          <table className={styles.rateTable}>
+            <thead>
+              <tr>
+                {selectingRates && <th>Select</th>}
+                <th>Country</th>
+                <th>Quality Description</th>
+                <th style={{ width: "15%" }}>RTP</th>
+                <th>ASR</th>
+                <th>ACD</th>
+                <th>Rate ($)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentRows.length === 0 ? (
                 <tr>
-                  <th>Country</th>
-                  <th>Rate</th>
-                  <th>Currency</th>
-                  <th>Prefix</th>
-                  {selectingRates && <th>Select</th>}
+                  <td colSpan={selectingRates ? 10 : 9} className={styles.noResults}>
+                    No results found.
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {currentRows.map((rate) => (
+              ) : (
+                currentRows.map((rate) => (
                   <tr key={rate._id}>
-                    <td>{rate.country}</td>
-                    <td>{rate.rate}</td>
-                    <td>{rate.currency}</td>
-                    <td>{rate.prefix}</td>
                     {selectingRates && (
                       <td>
                         <input
@@ -222,23 +247,46 @@ const RateTable = ({ className }) => {
                         />
                       </td>
                     )}
+                    <td className="w-20">{rate.country}</td>
+                    <td>{rate.qualityDescription}</td>
+                    <td>{rate.rtp}</td>
+                    <td>{rate.asr}</td>
+                    <td>{rate.acd}</td>
+                    <td>{rate.rate}</td>
+                    <td
+                      className={`${
+                        rate.status.toLowerCase() === "active" ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      {rate.status?.charAt(0).toUpperCase() + rate.status.slice(1)}
+                    </td>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className={styles.pagination}>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  className={currentPage === page ? styles.activePage : ""}
-                  onClick={() => paginate(page)}
-                >
-                  {page}
-                </button>
-              ))}
-            </div>
-          </>
+                ))
+              )}
+            </tbody>
+          </table>
         )}
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "1rem",
+            paddingBottom: "1rem",
+          }}
+        >
+          {Array.from({ length: totalPages }, (_, index) => (
+            <button
+              key={index + 1}
+              className={`${styles.pageButton} ${
+                currentPage === index + 1 ? styles.activePage : ""
+              }`}
+              onClick={() => paginate(index + 1)}
+            >
+              {index + 1}
+            </button>
+          ))}
+        </div>
       </div>
     </>
   );

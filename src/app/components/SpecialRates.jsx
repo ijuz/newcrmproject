@@ -107,8 +107,8 @@ const RateTable = ({ className }) => {
               </div>
               <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>CLI Rates</div>
             </div>
-            <div className={styles2.navbarItem}>
-              <div className={styles2.navbarItemIcon}>
+            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
+              <div className={styles2.navbarItemIcon} >
                 <FontAwesomeIcon icon={faStar} size="lg" />
               </div>
               <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Special Rates</div>
