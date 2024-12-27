@@ -35,7 +35,7 @@ const CurrencyTicker = () => {
     if (!loading && tickerData.length > 0) {
       const calculateCloneCount = () => {
         const containerWidth = containerRef.current?.offsetWidth || 0;
-        const cardWidth = 280; // Increased card width
+        const cardWidth = 280;
         const visibleCards = Math.ceil(containerWidth / cardWidth);
         return Math.max(2, Math.ceil(visibleCards / tickerData.length) + 1);
       };
@@ -50,7 +50,7 @@ const CurrencyTicker = () => {
     }
   }, [loading, tickerData]);
 
-  const RateCard = React.memo(({ data }) => (
+  const RateCard = ({ data }) => (
     <div className="relative rate-card flex-shrink-0 rounded-xl p-4 mx-3 min-w-[260px] bg-white/40 backdrop-blur-sm border border-orange-100 hover:border-orange-200">
       <div className="w-full space-y-3">
         <div className="flex justify-between items-center">
@@ -62,12 +62,12 @@ const CurrencyTicker = () => {
             {data.status}
           </span>
         </div>
-        
+
         <div className="space-y-2">
           <div className="flex justify-between items-center bg-white/60 rounded-lg p-3 transition-all hover:bg-white/80">
             <span className="font-medium text-sm text-gray-800">{data.qualityDescription || "N/A"}</span>
           </div>
-          
+
           <div className="flex justify-between items-center bg-white/60 rounded-lg p-3 transition-all hover:bg-white/80">
             <span className="text-sm text-gray-600">Rate</span>
             <span className="font-medium flex items-center text-sm">
@@ -82,7 +82,7 @@ const CurrencyTicker = () => {
         </div>
       </div>
     </div>
-  ));
+  );
 
   if (loading) return (
     <div className="flex items-center justify-center p-6 space-x-3">
@@ -101,7 +101,7 @@ const CurrencyTicker = () => {
   const totalWidth = tickerData.length * cardWidth;
 
   return (
-    <div className="relative w-full overflow-hidden" ref={containerRef}>
+    <div className="relative w-full overflow-hidden " ref={containerRef}>
       <style>
         {`
           @keyframes smoothScroll {
@@ -125,14 +125,14 @@ const CurrencyTicker = () => {
           }
         `}
       </style>
-      
+
       <div className="ticker-container py-6">
         <div className="ticker-content">
           {Array.from({ length: cloneCount }).map((_, cloneIndex) => (
             <div key={`clone-${cloneIndex}`} className="flex">
               {tickerData.map((data, index) => (
                 <RateCard 
-                  key={`${cloneIndex}-${data._id}-${index}`} 
+                  key={`${cloneIndex}-${data._id || index}`} 
                   data={data} 
                 />
               ))}
