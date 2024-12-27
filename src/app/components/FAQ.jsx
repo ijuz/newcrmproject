@@ -18,7 +18,7 @@ const FAQ_QA = () => {
 
   return (
     <div>
-      <div className={styles.faqContainer} style={{marginRight:"-60rem", marginTop:"-35rem"}}>
+      <div className={styles.faqContainer} style={{marginRight:"-54rem", marginTop:"-35rem"}}>
         <h1 className={styles.faqTitle}>{faqContent.FAQ_TITLE}</h1>
         <input
           type="text"
