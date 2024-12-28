@@ -94,7 +94,7 @@ const RateTable = ({ className }) => {
   };
 
   const navigateToRatesPage = () => {
-    navigate("/specialrates");
+    navigate("specialrates");
   };
 
   const paginate = (pageNumber) => {
