@@ -6,7 +6,7 @@ const CurrencyTicker = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const containerRef = useRef(null);
-  const [cloneCount, setCloneCount] = useState(2);
+  const [cloneCount, setCloneCount] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,13 +44,16 @@ const CurrencyTicker = () => {
     if (!loading && tickerData.length > 0) {
       const calculateCloneCount = () => {
         const containerWidth = containerRef.current?.offsetWidth || 0;
+        console.log(containerWidth,"width")
         const cardWidth = 216; // 200px card + 16px margin
         const visibleCards = Math.ceil(containerWidth / cardWidth);
+        console.log(tickerData.length,"len")
         return Math.max(2, Math.ceil(visibleCards / tickerData.length) + 1);
       };
+      console.log(calculateCloneCount(),"count")
 
       const updateCloneCount = () => {
-        setCloneCount(calculateCloneCount());
+        // setCloneCount(calculateCloneCount());
       };
 
       updateCloneCount();
@@ -75,7 +78,7 @@ const CurrencyTicker = () => {
       </div>
     );
   }
-  console.log(tickerData,"tocker")
+
 
   return (
     <div className="relative w-full overflow-hidden bg-gradient-to-r from-orange-50 to-white" ref={containerRef}>

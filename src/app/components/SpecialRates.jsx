@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import styles from "./RateTable.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Ticker from "./Ticker";
-import { faDollarSign, faChartLine, faStar, faCheckCircle, faPlusCircle, faFilter, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import {  faChartLine, faStar, faCheckCircle, faPlusCircle, faFilter, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import styles2 from "./RatesNavbar.module.css";
 
 const RateTable = ({ className }) => {
