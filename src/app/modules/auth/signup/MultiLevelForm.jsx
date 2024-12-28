@@ -347,9 +347,8 @@ const UserInfo = ({ onSubmit, formData, setFormData }) => {
 };
 
 // Main App Component
-const FormStep = ({setData}) => {
-
-  const navigate = useNavigate()
+const FormStep = ({ setData }) => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     companyName: "",
@@ -368,36 +367,90 @@ const FormStep = ({setData}) => {
     username: "",
     password: "",
     userMobile: "",
-    userEmail:""
+    userEmail: "",
   });
 
-  const handleNextStep = async () => {
-    setCurrentStep(currentStep + 1);
+  const [errors, setErrors] = useState({});
+
+  const validateStep = () => {
+    let stepErrors = {};
+
+    if (currentStep === 1) {
+      if (!formData.companyName.trim()) stepErrors.companyName = "Company name is required.";
+      if (!formData.companyEmail.trim() || !/\S+@\S+\.\S+/.test(formData.companyEmail))
+        stepErrors.companyEmail = "Valid company email is required.";
+      if (!formData.contactPerson.trim()) stepErrors.contactPerson = "Contact person is required.";
+    }
+
+    if (currentStep === 2) {
+      if (!formData.sipSupport.trim()) stepErrors.sipSupport = "SIP support is required.";
+      if (formData.switchIps.length === 0) stepErrors.switchIps = "At least one switch IP is required.";
+    }
+
+    if (currentStep === 3) {
+      if (!formData.userFirstname.trim()) stepErrors.userFirstname = "First name is required.";
+      if (!formData.userLastname.trim()) stepErrors.userLastname = "Last name is required.";
+      if (!formData.userEmail.trim() || !/\S+@\S+\.\S+/.test(formData.userEmail))
+        stepErrors.userEmail = "Valid user email is required.";
+      if (!formData.password.trim() || formData.password.length < 6)
+        stepErrors.password = "Password must be at least 6 characters long.";
+    }
+
+    setErrors(stepErrors);
+    return Object.keys(stepErrors).length === 0;
+  };
+
+  const handleNextStep = () => {
+    if (validateStep()) {
+      setCurrentStep(currentStep + 1);
+    }
   };
 
   const handleSubmit = async () => {
-    alert("Form submitted successfully!");
-    try {
-      console.log("Submitting form with data:", formData); 
-      const response = await axios.post(`https://backend.cloudqlobe.com/v3/api/customers`, formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-  
-      console.log("Form submitted successfully:", );
-      console.log(response);
-      navigate('/signIn')
-    } catch (error) {
-      console.error("Error submitting form:", error);
-    }  };
+    if (validateStep()) {
+      try {
+        console.log("Submitting form with data:", formData);
+        const response = await axios.post(`https://backend.cloudqlobe.com/v3/api/customers`, formData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+
+        console.log("Form submitted successfully:", response);
+        navigate("/signIn");
+      } catch (error) {
+        console.error("Error submitting form:", error);
+      }
+    }
+  };
 
   return (
     <div className="p-8">
       <StepIndicator currentStep={currentStep} setStep={setCurrentStep} />
-      {currentStep === 1 && <CompanyInfo onNext={handleNextStep} formData={formData} setFormData={setFormData} />}
-      {currentStep === 2 && <TechnicalInfo onNext={handleNextStep} formData={formData} setFormData={setFormData} />}
-      {currentStep === 3 && <UserInfo onSubmit={handleSubmit} formData={formData} setFormData={setFormData} />}
+      {currentStep === 1 && (
+        <CompanyInfo
+          onNext={handleNextStep}
+          formData={formData}
+          setFormData={setFormData}
+          errors={errors}
+        />
+      )}
+      {currentStep === 2 && (
+        <TechnicalInfo
+          onNext={handleNextStep}
+          formData={formData}
+          setFormData={setFormData}
+          errors={errors}
+        />
+      )}
+      {currentStep === 3 && (
+        <UserInfo
+          onSubmit={handleSubmit}
+          formData={formData}
+          setFormData={setFormData}
+          errors={errors}
+        />
+      )}
     </div>
   );
 };
