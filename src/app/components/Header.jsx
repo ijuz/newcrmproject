@@ -164,7 +164,7 @@ const Header = () => {
           </>
         ) : (
           <>
-            <a href="signUp">
+            <a href="Registers">
               <button className={`${buttonBaseClasses} bg-green-600 hover:bg-green-700`}>
                 <UserPlus size={18} />
                 <span>SIGN UP</span>

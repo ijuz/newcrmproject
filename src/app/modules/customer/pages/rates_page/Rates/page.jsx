@@ -49,6 +49,7 @@ const NormalRatesPage = () => {
         const ratesResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
         const specialRates = ratesResponse.data.filter(rate => rate.category === "specialrate");
         setNormalRatesData(specialRates);
+        
       } catch (error) {
         console.error("Error fetching customer or rates:", error);
       } finally {
