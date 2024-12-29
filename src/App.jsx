@@ -114,7 +114,6 @@ function App() {
         <Route path="/cliratestable" element={<RateTableCli/>}/>
         <Route path="/specialrates" element={<RateTableSpecial/>}/>
         <Route path="/addrates" element={<RateTableAdd/>}/>
-
         <Route path="/TechnicalInfo" element={<TechnicalInfo/>}/>
         <Route path="/Register" element={<CompanyInfo/>}/>
         <Route path="/Registers" element={<SignUpPage/>}/>
