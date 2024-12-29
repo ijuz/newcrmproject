@@ -1,37 +1,19 @@
-import axios from "axios";
-import { useState } from "react";
+import React, { useState } from "react";
 
-const TechnicalInfo = () => {
-  const [formData, setFormData] = useState({
-    supportEmail: "",
-    sipSupport: "",
-    switchIps: [],
-    codex: "",
-    userFirstname: "",
-    userLastname: "",
-  });
-
+const TechnicalInfo = ({ onNext, formData, setFormData }) => {
   const [ips, setIps] = useState(formData.switchIps || []);
   const [currentIp, setCurrentIp] = useState("");
   const [error, setError] = useState("");
+console.log(error);
 
   const validateIp = (ip) => {
     const ipRegex = /^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$/;
     return ipRegex.test(ip);
   };
 
-  const handleAddIp = () => {
-    if (currentIp && validateIp(currentIp) && !ips.includes(currentIp) && ips.length < 30) {
-      setIps([...ips, currentIp]);
-      setCurrentIp("");
-      setError("");
-    } else {
-      setError("Please enter a valid, unique IP address.");
-    }
-  };
-
   const handleRemoveIp = (ipToRemove) => {
     setIps(ips.filter((ip) => ip !== ipToRemove));
+    setError(""); // Clear any error when modifying IPs
   };
 
   const handleKeyDown = (e) => {
@@ -41,15 +23,27 @@ const TechnicalInfo = () => {
     }
   };
 
-  const handleTechniqalInfo = async () => {
-    try {
-      const response = await axios.post(
-        "https://backend.cloudqlobe.com/v3/api/customers",
-        { ...formData, switchIps: ips }
-      );
-      console.log("Data submitted successfully:", response.data);
-    } catch (error) {
-      console.error("Error submitting data:", error.response?.data || error.message);
+  const handleAddIp = () => {
+    if (currentIp && validateIp(currentIp)) {
+      if (!ips.includes(currentIp) && ips.length < 30) {
+        setIps([...ips, currentIp]);
+        setCurrentIp("");
+        setError(""); // Clear error after a successful addition
+        setFormData({ ...formData, switchIps: [...ips, currentIp] });
+      } else {
+        setError("IP address must be unique and limited to 30 entries.");
+      }
+    } else {
+      setError("Please enter a valid IP address.");
+    }
+  };
+
+  const handleInputChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
+
+    // Real-time validation for email and SIP port
+    if (field === "supportEmail" && /\S+@\S+\.\S+/.test(value)) {
+      setError(""); // Clear email-related errors
     }
   };
 
@@ -61,12 +55,13 @@ const TechnicalInfo = () => {
           <label className="block mb-2">Support Email</label>
           <input
             type="email"
-            className="w-full border rounded p-2"
+            className={`w-full border rounded p-2 ${error ? "border-red-500" : ""}`}
             placeholder="Support email"
             value={formData.supportEmail}
-            onChange={(e) => setFormData({ ...formData, supportEmail: e.target.value })}
+            onChange={(e) => handleInputChange("supportEmail", e.target.value)}
             required
           />
+          {error && <p className="text-red-500 text-sm">{error}</p>}
         </div>
         <div>
           <label className="block mb-2">SIP Port</label>
@@ -75,7 +70,7 @@ const TechnicalInfo = () => {
             className="w-full border rounded p-2"
             placeholder="SIP port"
             value={formData.sipSupport}
-            onChange={(e) => setFormData({ ...formData, sipSupport: e.target.value })}
+            onChange={(e) => handleInputChange("sipSupport", e.target.value)}
             required
           />
         </div>
@@ -84,7 +79,7 @@ const TechnicalInfo = () => {
           <div className="flex items-center">
             <input
               type="text"
-              className="w-full border rounded p-2"
+              className={`w-full border rounded p-2 ${error ? "border-red-500" : ""}`}
               placeholder="Enter Switch IP"
               value={currentIp}
               onChange={(e) => setCurrentIp(e.target.value)}
@@ -99,6 +94,7 @@ const TechnicalInfo = () => {
             </button>
           </div>
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
           <div className="mt-2 flex flex-wrap">
             {ips.map((ip, index) => (
               <span
@@ -124,12 +120,12 @@ const TechnicalInfo = () => {
             className="w-full border rounded p-2"
             placeholder="Codex"
             value={formData.codex}
-            onChange={(e) => setFormData({ ...formData, codex: e.target.value })}
+            onChange={(e) => handleInputChange("codex", e.target.value)}
           />
         </div>
       </div>
       <button
-        onClick={handleTechniqalInfo}
+        onClick={onNext}
         className="mt-6 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
       >
         Next
@@ -138,4 +134,4 @@ const TechnicalInfo = () => {
   );
 };
 
-export default TechnicalInfo;
+export default TechnicalInfo

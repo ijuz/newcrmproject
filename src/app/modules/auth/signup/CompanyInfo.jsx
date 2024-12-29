@@ -1,56 +1,45 @@
-import axios from "axios";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
 
-const CompanyInfo = () => {
+const CompanyInfo = ({ onNext, formData, setFormData }) => {
   const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({
-    companyName: "",
-    companyEmail: "",
-    contactPerson: "",
-    country: "",
-    companyPhone: "",
-    address: "",
-    companyWebsite: "",
-  });
+  console.log("Error", errors);
 
-  const navigate = useNavigate();
-
-  const validateForm = () => {
+  const validate = () => {
     const newErrors = {};
-
     if (!formData.companyName) newErrors.companyName = "Company Name is required.";
     if (!formData.companyEmail || !/\S+@\S+\.\S+/.test(formData.companyEmail))
-      newErrors.companyEmail = "Valid Email is required.";
+      newErrors.companyEmail = "Valid email is required.";
     if (!formData.contactPerson) newErrors.contactPerson = "Contact Person is required.";
     if (!formData.country) newErrors.country = "Country is required.";
     if (!formData.companyPhone || !/^\d+$/.test(formData.companyPhone))
-      newErrors.companyPhone = "Valid Phone number is required.";
+      newErrors.companyPhone = "Valid phone number is required.";
     if (!formData.address) newErrors.address = "Address is required.";
-    if (
-      formData.companyWebsite &&
-      !/^https?:\/\/[^\s/$.?#].[^\s]*$/.test(formData.companyWebsite)
-    )
-      newErrors.companyWebsite = "Valid Website URL is required.";
+
+    console.log("new", newErrors);
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handlecompanyInfo = async () => {
-    if (!validateForm()) return;
+  const handleInputChange = (field, value) => {
+    setFormData({ ...formData, [field]: value });
 
-    try {
-      const response = await axios.post(
-        "https://backend.cloudqlobe.com/v3/api/customers",
-        formData
-      );
-      console.log("Response:", response.data);
-      // Navigate to next step or success page
-      navigate("/next-step");
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      setErrors({ submit: "Failed to submit the form. Please try again." });
+    // Remove the specific error for the field if it becomes valid
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
+      if (field === "companyName" && value) delete newErrors.companyName;
+      if (field === "companyEmail" && /\S+@\S+\.\S+/.test(value)) delete newErrors.companyEmail;
+      if (field === "contactPerson" && value) delete newErrors.contactPerson;
+      if (field === "country" && value) delete newErrors.country;
+      if (field === "companyPhone" && /^\d+$/.test(value)) delete newErrors.companyPhone;
+      if (field === "address" && value) delete newErrors.address;
+      return newErrors;
+    });
+  };
+
+  const handleNext = () => {
+    if (validate()) {
+      onNext();
     }
   };
 
@@ -62,12 +51,11 @@ const CompanyInfo = () => {
           <label className="block mb-2">Company Name</label>
           <input
             type="text"
-            className="w-full border rounded p-2"
+            className={`w-full border rounded p-2 ${errors.companyName ? "border-red-500" : ""}`}
             placeholder="Company name"
             value={formData.companyName}
-            onChange={(e) =>
-              setFormData({ ...formData, companyName: e.target.value })
-            }
+            onChange={(e) => handleInputChange("companyName", e.target.value)}
+            required
           />
           {errors.companyName && (
             <p className="text-red-500 text-sm">{errors.companyName}</p>
@@ -77,12 +65,11 @@ const CompanyInfo = () => {
           <label className="block mb-2">Company Email</label>
           <input
             type="email"
-            className="w-full border rounded p-2"
+            className={`w-full border rounded p-2 ${errors.companyEmail ? "border-red-500" : ""}`}
             placeholder="Email"
             value={formData.companyEmail}
-            onChange={(e) =>
-              setFormData({ ...formData, companyEmail: e.target.value })
-            }
+            onChange={(e) => handleInputChange("companyEmail", e.target.value)}
+            required
           />
           {errors.companyEmail && (
             <p className="text-red-500 text-sm">{errors.companyEmail}</p>
@@ -92,12 +79,11 @@ const CompanyInfo = () => {
           <label className="block mb-2">Contact Person</label>
           <input
             type="text"
-            className="w-full border rounded p-2"
+            className={`w-full border rounded p-2 ${errors.contactPerson ? "border-red-500" : ""}`}
             placeholder="Name"
             value={formData.contactPerson}
-            onChange={(e) =>
-              setFormData({ ...formData, contactPerson: e.target.value })
-            }
+            onChange={(e) => handleInputChange("contactPerson", e.target.value)}
+            required
           />
           {errors.contactPerson && (
             <p className="text-red-500 text-sm">{errors.contactPerson}</p>
@@ -106,14 +92,14 @@ const CompanyInfo = () => {
         <div>
           <label className="block mb-2">Country</label>
           <select
-            className="w-full border rounded p-2"
+            className={`w-full border rounded p-2 ${errors.country ? "border-red-500" : ""}`}
             value={formData.country}
-            onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+            onChange={(e) => handleInputChange("country", e.target.value)}
+            required
           >
             <option value="">Select</option>
             <option value="India">India</option>
-            <option value="United States">United States</option>
-            <option value="Canada">Canada</option>
+            {/* Add more countries */}
           </select>
           {errors.country && (
             <p className="text-red-500 text-sm">{errors.country}</p>
@@ -123,12 +109,11 @@ const CompanyInfo = () => {
           <label className="block mb-2">Company Phone</label>
           <input
             type="tel"
-            className="w-full border rounded p-2"
+            className={`w-full border rounded p-2 ${errors.companyPhone ? "border-red-500" : ""}`}
             placeholder="Phone"
             value={formData.companyPhone}
-            onChange={(e) =>
-              setFormData({ ...formData, companyPhone: e.target.value })
-            }
+            onChange={(e) => handleInputChange("companyPhone", e.target.value)}
+            required
           />
           {errors.companyPhone && (
             <p className="text-red-500 text-sm">{errors.companyPhone}</p>
@@ -137,13 +122,12 @@ const CompanyInfo = () => {
         <div>
           <label className="block mb-2">Address</label>
           <textarea
-            className="w-full border rounded p-2"
+            className={`w-full border rounded p-2 ${errors.address ? "border-red-500" : ""}`}
             placeholder="Address"
             rows={3}
             value={formData.address}
-            onChange={(e) =>
-              setFormData({ ...formData, address: e.target.value })
-            }
+            onChange={(e) => handleInputChange("address", e.target.value)}
+            required
           ></textarea>
           {errors.address && (
             <p className="text-red-500 text-sm">{errors.address}</p>
@@ -153,23 +137,15 @@ const CompanyInfo = () => {
           <label className="block mb-2">Company Website</label>
           <input
             type="url"
-            className="w-full border rounded p-2"
             placeholder="Website"
             value={formData.companyWebsite}
-            onChange={(e) =>
-              setFormData({ ...formData, companyWebsite: e.target.value })
-            }
+            onChange={(e) => handleInputChange("companyWebsite", e.target.value)}
+            required
           />
-          {errors.companyWebsite && (
-            <p className="text-red-500 text-sm">{errors.companyWebsite}</p>
-          )}
         </div>
       </div>
-      {errors.submit && (
-        <p className="text-red-500 text-sm mt-4">{errors.submit}</p>
-      )}
       <button
-        onClick={handlecompanyInfo}
+        onClick={handleNext}
         className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
         Next
@@ -177,5 +153,4 @@ const CompanyInfo = () => {
     </div>
   );
 };
-
-export default CompanyInfo;
+export default CompanyInfo

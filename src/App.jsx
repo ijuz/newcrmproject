@@ -55,6 +55,7 @@ import RateTableSpecial from "./app/modules/customer/pages/rates_page/Rates/page
 import RateTableAdd from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
 import TechnicalInfo from "./app/modules/auth/signup/TechnicalInfo.jsx";
 import CompanyInfo from "./app/modules/auth/signup/CompanyInfo.jsx";
+import SignUpPage from "./app/modules/auth/signup/page.jsx";
 
 
 function App() {
@@ -116,6 +117,8 @@ function App() {
 
         <Route path="/TechnicalInfo" element={<TechnicalInfo/>}/>
         <Route path="/Register" element={<CompanyInfo/>}/>
+        <Route path="/Registers" element={<SignUpPage/>}/>
+
       </Routes>
   );
 }
