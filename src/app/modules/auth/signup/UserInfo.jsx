@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const UserInfo = ({ onNext, formData, setFormData }) => {
+const UserInfo = ({ onNext, onPrevious, formData, setFormData }) => {
   const [errors, setErrors] = useState({});
 
   const validateForm = () => {
@@ -107,12 +107,21 @@ const UserInfo = ({ onNext, formData, setFormData }) => {
           {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
         </div>
       </div>
+      <div className="flex justify-between">
+      <button
+        onClick={onPrevious}
+        className="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+      >
+        Previous
+      </button>
+
       <button
         onClick={handleNext}
         className="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
       >
         Submit
       </button>
+      </div>
     </div>
   );
 };

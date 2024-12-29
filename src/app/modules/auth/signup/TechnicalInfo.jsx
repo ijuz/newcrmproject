@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 
-const TechnicalInfo = ({ onNext, formData, setFormData }) => {
+const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
   const [ips, setIps] = useState(formData.switchIps || []);
   const [currentIp, setCurrentIp] = useState("");
   const [error, setError] = useState("");
-console.log(error);
 
   const validateIp = (ip) => {
     const ipRegex = /^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$/;
@@ -124,12 +123,20 @@ console.log(error);
           />
         </div>
       </div>
+      <div className="flex justify-between">
+      <button
+        onClick={onPrevious}
+        className="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+      >
+        Previous
+      </button>
       <button
         onClick={onNext}
         className="mt-6 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
       >
         Next
       </button>
+      </div>
     </div>
   );
 };

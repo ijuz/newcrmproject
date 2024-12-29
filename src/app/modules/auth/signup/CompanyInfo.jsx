@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 const CompanyInfo = ({ onNext, formData, setFormData }) => {
   const [errors, setErrors] = useState({});
-  console.log("Error", errors);
 
   const validate = () => {
     const newErrors = {};
@@ -15,7 +14,6 @@ const CompanyInfo = ({ onNext, formData, setFormData }) => {
       newErrors.companyPhone = "Valid phone number is required.";
     if (!formData.address) newErrors.address = "Address is required.";
 
-    console.log("new", newErrors);
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;

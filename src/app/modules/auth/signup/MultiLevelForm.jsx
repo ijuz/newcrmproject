@@ -76,18 +76,19 @@ const MultiStepForm = () => {
   });
 
   const nextStep = () => setStep(step + 1);
+  const Previous = () => setStep(step - 1);
 
   const handleSubmit = async () => {
     try {
       console.log("Submitting form with data:", formData);
-      const response = await axiosInstance.post("v3/api/customers", formData, {
+      const response = await axios.post("http://localhost:5000/v3/api/customers", formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
 
       console.log("Form submitted successfully:", response);
-      window.location.href = "/modules/auth/Base/login";
+      window.location.href = "/dash-board";
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -97,8 +98,8 @@ const MultiStepForm = () => {
     <div className="container mx-auto px-4">
       <StepIndicator currentStep={step} />
       {step === 1 && <CompanyInfo onNext={nextStep} formData={formData} setFormData={setFormData} />}
-      {step === 2 && <TechnicalInfo onNext={nextStep} formData={formData} setFormData={setFormData} />}
-      {step === 3 && <UserInfo onNext={handleSubmit} formData={formData} setFormData={setFormData} />}
+      {step === 2 && <TechnicalInfo onPrevious={Previous} onNext={nextStep} formData={formData} setFormData={setFormData} />}
+      {step === 3 && <UserInfo onPrevious={Previous} onNext={handleSubmit} formData={formData} setFormData={setFormData} />}
     </div>
   );
 };
