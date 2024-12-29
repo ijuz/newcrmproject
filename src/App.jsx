@@ -53,6 +53,8 @@ import CSettingsPage from '../src/app/modules/customer/pages/settings/page'
 import RateTableCli from "./app/clirates/page.jsx";
 import RateTableSpecial from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
 import RateTableAdd from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
+import TechnicalInfo from "./app/modules/auth/signup/TechnicalInfo.jsx";
+import CompanyInfo from "./app/modules/auth/signup/CompanyInfo.jsx";
 
 
 function App() {
@@ -111,6 +113,9 @@ function App() {
         <Route path="/cliratestable" element={<RateTableCli/>}/>
         <Route path="/specialrates" element={<RateTableSpecial/>}/>
         <Route path="/addrates" element={<RateTableAdd/>}/>
+
+        <Route path="/TechnicalInfo" element={<TechnicalInfo/>}/>
+        <Route path="/Register" element={<CompanyInfo/>}/>
       </Routes>
   );
 }
