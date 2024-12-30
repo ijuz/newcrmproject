@@ -11,32 +11,32 @@ const Footer = () => {
           </h3>
           <ul className="space-y-2">
             <li>
-              <a href="https://www.cloudqlobe.com/pricing" className="hover:text-orange-500 transition-colors">
+              <a href="#" className="hover:text-orange-500 transition-colors">
                 Rates
               </a>
             </li>
             <li>
-              <a href="https://www.cloudqlobe.com/services/CC-Routes" className="hover:text-orange-500 transition-colors">
+              <a href="#" className="hover:text-orange-500 transition-colors">
                 CC Routes
               </a>
             </li>
             <li>
-              <a href="https://www.cloudqlobe.com/services/CLI-Voice-Termination" className="hover:text-orange-500 transition-colors">
+              <a href="#" className="hover:text-orange-500 transition-colors">
                 CLI Voice Termination
               </a>
             </li>
             <li>
-              <a href="https://www.cloudqlobe.com/services/DID-Voice-Solutions" className="hover:text-orange-500 transition-colors">
+              <a href="#" className="hover:text-orange-500 transition-colors">
                 DID Solutions
               </a>
             </li>
             <li>
-              <a href="https://www.cloudqlobe.com/about" className="hover:text-orange-500 transition-colors">
+              <a href="#" className="hover:text-orange-500 transition-colors">
                 About
               </a>
             </li>
             <li>
-              <a href="https://www.cloudqlobe.com/faq" className="hover:text-orange-500 transition-colors">
+              <a href="#" className="hover:text-orange-500 transition-colors">
                 FAQ
               </a>
             </li>
@@ -84,8 +84,10 @@ const Footer = () => {
                 src="/social-media/Facebook.png"
                 alt="Facebook"
                 className="w-5 h-5"
+                width={20} // Adjust width and height as necessary
+                height={20}
               />
-              <a href="facebook.com/cloudqlobe" className="hover:text-orange-500 transition-colors">
+              <a href="#" className="hover:text-orange-500 transition-colors">
                 facebook.com/cloudqlobe
               </a>
             </li>
@@ -94,8 +96,10 @@ const Footer = () => {
                 src="/social-media/Linkedin.png"
                 alt="LinkedIn"
                 className="w-5 h-5"
+                width={20} // Adjust width and height as necessary
+                height={20}
               />
-              <a href=" linkedin.com/cloud-qlobe/" className="hover:text-orange-500 transition-colors">
+              <a href="#" className="hover:text-orange-500 transition-colors">
                 linkedin.com/cloud-qlobe/
               </a>
             </li>
@@ -104,8 +108,10 @@ const Footer = () => {
                 src="/social-media/Whatsapp.png"
                 alt="WhatsApp"
                 className="w-5 h-5"
+                width={20} // Adjust width and height as necessary
+                height={20}
               />
-              <a href="whatsapp.me/9876543210" className="hover:text-orange-500 transition-colors">
+              <a href="#" className="hover:text-orange-500 transition-colors">
                 whatsapp.me/9876543210
               </a>
             </li>
@@ -114,8 +120,10 @@ const Footer = () => {
                 src="/social-media/Skype.png"
                 alt="Skype"
                 className="w-5 h-5"
+                width={20} // Adjust width and height as necessary
+                height={20}
               />
-              <a href="skype.com/cloudqlobe" className="hover:text-orange-500 transition-colors">
+              <a href="#" className="hover:text-orange-500 transition-colors">
                 skype.com/cloudqlobe
               </a>
             </li>
@@ -124,8 +132,10 @@ const Footer = () => {
                 src="/social-media/Telegram.png"
                 alt="Telegram"
                 className="w-5 h-5"
+                width={20} // Adjust width and height as necessary
+                height={20}
               />
-              <a href=" telegram.me/cloudqlobe" className="hover:text-orange-500 transition-colors">
+              <a href="#" className="hover:text-orange-500 transition-colors">
                 telegram.me/cloudqlobe
               </a>
             </li>

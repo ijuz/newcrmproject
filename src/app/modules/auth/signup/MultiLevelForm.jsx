@@ -4,6 +4,7 @@ import UserInfo from "./UserInfo";
 import CompanyInfo from "./CompanyInfo";
 import TechnicalInfo from "./TechnicalInfo";
 import axiosInstance from "../../admin/v2/utils/axiosinstance";
+import { useNavigate } from "react-router-dom";
 
 
 const StepIndicator = ({ currentStep }) => {
@@ -54,6 +55,7 @@ const StepIndicator = ({ currentStep }) => {
 };
 
 const MultiStepForm = () => {
+  const navigate = useNavigate()
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     companyName: "",
@@ -81,14 +83,13 @@ const MultiStepForm = () => {
   const handleSubmit = async () => {
     try {
       console.log("Submitting form with data:", formData);
-      const response = await axios.post("http://localhost:5000/v3/api/customers", formData, {
+      const response = await axios.post("https://backend.cloudqlobe.com/v3/api/customers", formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-
-      console.log("Form submitted successfully:", response);
-      window.location.href = "/dash-board";
+alert('Form submitted successfully')
+      navigate("/signIn");
     } catch (error) {
       console.error("Error submitting form:", error);
     }

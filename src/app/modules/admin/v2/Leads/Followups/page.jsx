@@ -9,6 +9,9 @@ const FollowUp = () => {
   const [customerData, setCustomerData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+console.log(followUpData);
+console.log(customerData);
+
 
   // Navigate to the add follow-up page
   const handleAddFollowUpClick = () => {
@@ -20,20 +23,18 @@ const FollowUp = () => {
     const fetchData = async () => {
       try {
         // Step 1: Fetch follow-up data
-        const followUpsResponse = await axios.get('http://localhost:5000/v3/api/followups');
+        const followUpsResponse = await axios.get('https://backend.cloudqlobe.com/v3/api/followups');
         setFollowUpData(followUpsResponse.data);
 
         // Step 2: Prepare a list of customer IDs to fetch
-        const customerIds = [...new Set(
-          followUpsResponse.data
-            .map(item => item.customerId)
-            .filter(customerId => customerId) // Remove undefined or null IDs
-        )];
+        const customerIds = [...new Set(followUpsResponse.data.map(item => item.customerId))];
+        const validIds = customerIds.filter(id => id && id.trim() !== "");
+        console.log(validIds);
 
         // Step 3: Fetch customer data for each customerId
         const customers = {};
-        for (const customerId of customerIds) {
-          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
+        for (const customerId of validIds) {
+          const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
           customers[customerId] = response.data;
         }
         setCustomerData(customers);

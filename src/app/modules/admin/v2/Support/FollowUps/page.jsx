@@ -1,27 +1,26 @@
-  import React, { useState, useEffect } from 'react';
-  import axiosInstance from '../../../utils/axiosinstance';
-  import Layout from '../../layout/page';
-  import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import Layout from "../../layout/page"; // Assuming Layout is a regular React component
+import axios from "axios";
 
-  const FollowUp = () => {
-    const [activeTab, setActiveTab] = useState('call');
-    const [followUpData, setFollowUpData] = useState([]);
-    const [customerData, setCustomerData] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
 
-    // Navigate to the add follow-up page
-    const handleAddFollowUpClick = () => {
-      window.location.href = '/modules/admin/v2/Support/FollowUps/Addfollowup';
-    };
+ // Import only necessary icons
+import { FaArrowAltCircleDown ,PhoneIcon,EnvelopeIcon,ChatBubbleOvalLeftIcon, FaPhone} from "react-icons/fa";
+import { CircleChevronRight, LucideCircleUserRound, Mail, MessageCircleCode, MessageSquare } from "lucide-react";
 
-    // Fetch follow-up data and then fetch customer data based on customerId
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          // Step 1: Fetch follow-up data
-          const followUpsResponse = await axios.get('https://backend.cloudqlobe.com/v3/api/followups'); // Adjust the endpoint as necessary
-          setFollowUpData(followUpsResponse.data);
+const FollowUp = () => {
+  const [activeTab, setActiveTab] = useState("call");
+  const [followUpData, setFollowUpData] = useState([]);
+  const [customerData, setCustomerData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch follow-up data and customer data
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Step 1: Fetch follow-up data
+        const followUpsResponse = await axios.get('https://backend.cloudqlobe.com/v3/api/followups'); // Adjust the endpoint as necessary
+        setFollowUpData(followUpsResponse.data);
 
           // Step 2: Prepare a list of customer IDs to fetch
           const customerIds = [...new Set(
@@ -47,106 +46,114 @@
       fetchData();
     }, []);
 
-    const renderTabContent = () => {
-      if (loading) {
-        return <div className="text-center py-4 text-gray-600">Loading...</div>;
-      }
+  const renderTabContent = () => {
+    if (loading) return <div className="text-center py-4 text-gray-600">Loading...</div>;
+    if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
 
-      if (error) {
-        return <div className="text-center py-4 text-gray-600">Error fetching data: {error}</div>;
-      }
+    const filteredFollowUps = followUpData.filter(
+      (item) => item.followupMethod === activeTab && item.followupCategory === "General"
+    );
 
-      // Filter follow-ups based on the active tab
-      const filteredFollowUps = followUpData.filter(item => item.followupMethod === activeTab && item.followupCategory === 'General');
-
-      if (filteredFollowUps.length === 0) {
-        return (
-          <div className="text-center py-4 text-gray-600">
-            No data available for {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
-          </div>
-        );
-      }
-
+    if (filteredFollowUps.length === 0) {
       return (
-        <table className="min-w-full mt-4 bg-white border shadow-lg border-gray-300">
-          <thead >
-            <tr className="bg-blue-500 rounded-lg text-white">
-              <th className="border px-4 py-2">Customer ID</th>
-              <th className="border px-4 py-2">Company Name</th>
-              <th className="border px-4 py-2">Follow-Up Type</th>
-              <th className="border px-4 py-2">Follow-Up Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredFollowUps.map((followUp) => {
-              // Find customer details based on customerId
-              const customer = customerData[followUp.customerId] || {}; // Access customer data using customerId
-
-              return (
-                <tr
-                  key={followUp.id || followUp._id} // Ensure a unique key exists
-                  className="cursor-pointer hover:bg-gray-100"
-                  onClick={() => window.location.href = `/modules/admin/v2/Support/FollowUps/FollowupDetails/${followUp.id}`}
-                >
-                  <td className="border px-4 py-2">{customer.customerId || 'N/A'}</td>
-                  <td className="border px-4 py-2">
-                    <a
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent row click from triggering
-                        window.location.href = `/modules/admin/v2/Support/FollowUps/${followUp._id}`;
-                      }}
-                      className="text-blue-600 hover:underline"
-                    >
-                      {customer.companyName || 'N/A'}
-                    </a>
-                  </td>
-                  <td className="border px-4 py-2">{followUp.followupMethod.charAt(0).toUpperCase() + followUp.followupMethod.slice(1)}</td>
-                  <td className="border px-4 py-2">{followUp.followupStatus}</td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        <div className="text-center py-4 text-gray-500">
+          No follow-ups for {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}.
+        </div>
       );
-    };
+    }
 
     return (
-      <Layout>
-        <div className="p-8 text-gray-900 min-h-screen">
-          <h2 className="text-2xl font-bold mb-4">Follow-up</h2>
-          <p className="text-gray-600 mb-6">View and manage follow-up tasks here.</p>
-
-          {/* Add Follow-up Button */}
-          <div className="mb-6">
-            <button
-              onClick={handleAddFollowUpClick}
-              className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-500 transition duration-300"
-            >
-              Add Follow-up
-            </button>
-          </div>
-
-          {/* Tabs Navigation */}
-          <div className="flex justify-center mb-6">
-            {['call', 'email', 'chat'].map((tab) => (
-              <button
-                key={tab} // Ensure unique keys for buttons
-                onClick={() => setActiveTab(tab)}
-                className={`relative flex-1 text-center py-3 transition-colors duration-300 focus:outline-none ${
-                  activeTab === tab
-                    ? 'text-black-600 font-bold'
-                    : 'text-white-500 hover:text-orange-600'
-                }`}
+      <table className="min-w-full mt-4 bg-white border border-gray-200 shadow-md">
+        <thead>
+          <tr className="bg-blue-600 text-white">
+            <th className="border px-4 py-2">Customer ID</th>
+            <th className="border px-4 py-2">Company Name</th>
+            <th className="border px-4 py-2">Follow-Up Type</th>
+            <th className="border px-4 py-2">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredFollowUps.map((followUp) => {
+            const customer = customerData[followUp.customerId] || {};
+            console.log(customer)
+            return (
+              <>
+              <tr
+                key={followUp.id}
+                className="hover:bg-gray-100 cursor-pointer"
+                onClick={() => (window.location.href = '/modules/admin/v2/Leads/Followups/${followUp.id}')}
               >
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                <td className="border px-4 py-2">{customer.customerId || "N/A"}</td>
+                <td className="border px-4 py-2">
+                  <a
+                    href={'/modules/admin/v2/Leads/Followups/${followUp._id}'}
+                    className="text-blue-600 hover:underline"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    {customer.companyName || "N/A"}
+                  </a>
+                </td>
+                <td className="border px-4 py-2 capitalize">{followUp.followupMethod}</td>
+                <td className="border px-4 py-2">{followUp.followupStatus}</td>
+              </tr>
+              </>
+            );
+          })}
+        </tbody>
+      </table>
+    );
+  };
 
-                {/* Active Tab Indicator */}
-                {activeTab === tab && (
-                  <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3/4 h-1 bg-orange-600 rounded-t-lg transition-all duration-300"></span>
-                )}
-              </button>
-            ))}
+  return (
+    <Layout>
+      <div className="p-8 text-gray-900 min-h-screen">
+        {/* Header with Icon */}
+        <div className="flex items-center space-x-4 mb-6">
+          <div className="bg-orange-500 rounded-full p-3 flex items-center justify-center">
+            <FaArrowAltCircleDown className="text-white w-8 h-8" />
           </div>
+          <h1 className="text-3xl font-bold text-gray-800">Follow Up</h1>
+        </div>
+
+        {/* Filter and Sort By Section */}
+        <div className="flex justify-end items-center space-x-4 mb-6">
+          {/* Sort By */}
+          <div className="relative flex items-center bg-gray-200 px-4 py-2 rounded-lg shadow-md">
+            <span className="text-gray-500 mr-2">🔽</span>
+            <select className="bg-transparent focus:outline-none text-gray-700">
+              <option value="recent">Sort By: Today</option>
+              <option value="oldest">Sort By: Pending</option>
+            </select>
+          </div>
+
+          {/* Filter */}
+          <button className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">
+            <span className="text-white mr-2">⚙️</span>
+            <span>Filter</span>
+          </button>
+        </div>
+
+        {/* Tabs Navigation */}
+        <div className="flex justify-center space-x-6 mb-6">
+  {[
+    { tab: "call", icon: <FaPhone className="w-6 h-6 text-blue-500" />, label: "Call" },
+    { tab: "email", icon: <Mail className="w-6 h-6 text-blue-500" />, label: "Email" },
+    { tab: "chat", icon: <MessageSquare className="w-6 h-6 text-blue-500" />, label: "Chat" },
+  ].map(({ tab, icon, label }) => (
+    <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`py-3 px-8 flex items-center justify-center space-x-3 rounded-lg shadow-lg transition-transform transform ${
+                activeTab === tab
+                  ? "bg-blue-600 text-white scale-105"
+                  : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+              }`}
+            >
+              <span className="text-2xl">{icon}</span>
+              <span className="text-lg font-medium">{label}</span>
+            </button>
+          ))}
+        </div>
 
           {/* Tab Content */}
           <div className="overflow-x-auto">{renderTabContent()}</div>
@@ -155,4 +162,4 @@
     );
   };
 
-  export default FollowUp;
+export default FollowUp;
