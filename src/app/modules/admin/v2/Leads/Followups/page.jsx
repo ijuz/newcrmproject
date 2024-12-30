@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../layout/page'; // Assuming Layout is a regular React component
-import axiosInstance from '../../../utils/axiosinstance';
+import axios from 'axios';
+
 
 const FollowUp = () => {
   const [activeTab, setActiveTab] = useState('calls');
@@ -11,7 +12,7 @@ const FollowUp = () => {
 
   // Navigate to the add follow-up page
   const handleAddFollowUpClick = () => {
-    window.location.href = '/modules/admin/v2/Leads/Followups/Addfollowup';
+    window.location.href = 'https://backend.cloudqlobe.com/modules/admin/v2/Leads/Followups/Addfollowup';
   };
 
   // Fetch follow-up data and then fetch customer data based on customerId
@@ -19,16 +20,20 @@ const FollowUp = () => {
     const fetchData = async () => {
       try {
         // Step 1: Fetch follow-up data
-        const followUpsResponse = await axiosInstance.get('v3/api/followups');
+        const followUpsResponse = await axios.get('http://localhost:5000/v3/api/followups');
         setFollowUpData(followUpsResponse.data);
 
         // Step 2: Prepare a list of customer IDs to fetch
-        const customerIds = [...new Set(followUpsResponse.data.map(item => item.customerId))];
+        const customerIds = [...new Set(
+          followUpsResponse.data
+            .map(item => item.customerId)
+            .filter(customerId => customerId) // Remove undefined or null IDs
+        )];
 
         // Step 3: Fetch customer data for each customerId
         const customers = {};
         for (const customerId of customerIds) {
-          const response = await axiosInstance.get(`v3/api/customers/${customerId}`);
+          const response = await axios.get(`http://localhost:5000/v3/api/customers/${customerId}`);
           customers[customerId] = response.data;
         }
         setCustomerData(customers);
