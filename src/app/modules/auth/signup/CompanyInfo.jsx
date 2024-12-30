@@ -10,9 +10,12 @@ const CompanyInfo = ({ onNext, formData, setFormData }) => {
       newErrors.companyEmail = "Valid email is required.";
     if (!formData.contactPerson) newErrors.contactPerson = "Contact Person is required.";
     if (!formData.country) newErrors.country = "Country is required.";
-    if (!formData.companyPhone || !/^\d+$/.test(formData.companyPhone))
+    if (!formData.companyPhone?.trim() || !/^\d{10}$/.test(formData.companyPhone))
       newErrors.companyPhone = "Valid phone number is required.";
-    if (!formData.address) newErrors.address = "Address is required.";
+    // if (!formData.address) newErrors.address = "Address is required.";
+    if (!formData.companyWebsite || !/^https?:\/\/[^\s$.?#].[^\s]*$/.test(formData.companyWebsite)
+    )
+      newErrors.companyWebsite = "Valid website URL is required.";
 
 
     setErrors(newErrors);
@@ -30,7 +33,8 @@ const CompanyInfo = ({ onNext, formData, setFormData }) => {
       if (field === "contactPerson" && value) delete newErrors.contactPerson;
       if (field === "country" && value) delete newErrors.country;
       if (field === "companyPhone" && /^\d+$/.test(value)) delete newErrors.companyPhone;
-      if (field === "address" && value) delete newErrors.address;
+      // if (field === "address" && value) delete newErrors.address;
+      if (field === "companyWebsite" && /^https?:\/\/[^\s$.?#].[^\s]*$/.test(value)) delete newErrors.companyWebsite;
       return newErrors;
     });
   };
@@ -120,26 +124,27 @@ const CompanyInfo = ({ onNext, formData, setFormData }) => {
         <div>
           <label className="block mb-2">Address</label>
           <textarea
-            className={`w-full border rounded p-2 ${errors.address ? "border-red-500" : ""}`}
+            className={`w-full border rounded p-2`}
             placeholder="Address"
             rows={3}
             value={formData.address}
             onChange={(e) => handleInputChange("address", e.target.value)}
             required
           ></textarea>
-          {errors.address && (
-            <p className="text-red-500 text-sm">{errors.address}</p>
-          )}
         </div>
         <div>
           <label className="block mb-2">Company Website</label>
           <input
             type="url"
+            className={`w-full border rounded p-2 ${errors.companyWebsite ? "border-red-500" : ""}`}
             placeholder="Website"
             value={formData.companyWebsite}
             onChange={(e) => handleInputChange("companyWebsite", e.target.value)}
             required
           />
+          {errors.companyWebsite && (
+            <p className="text-red-500 text-sm">{errors.companyWebsite}</p>
+          )}
         </div>
       </div>
       <button

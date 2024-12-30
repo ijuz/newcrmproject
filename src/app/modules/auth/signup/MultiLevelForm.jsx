@@ -83,7 +83,7 @@ const MultiStepForm = () => {
   const handleSubmit = async () => {
     try {
       console.log("Submitting form with data:", formData);
-      const response = await axios.post("https://backend.cloudqlobe.com/v3/api/customers", formData, {
+      const response = await axiosInstance.post("v3/api/customers", formData, {
         headers: {
           "Content-Type": "application/json",
         },

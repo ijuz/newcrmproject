@@ -3,16 +3,44 @@ import React, { useState } from "react";
 const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
   const [ips, setIps] = useState(formData.switchIps || []);
   const [currentIp, setCurrentIp] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({});
 
   const validateIp = (ip) => {
     const ipRegex = /^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$/;
     return ipRegex.test(ip);
   };
 
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.supportEmail || !/\S+@\S+\.\S+/.test(formData.supportEmail)) {
+      newErrors.supportEmail = "Valid support email is required.";
+    }
+
+    if (!formData.sipSupport || formData.sipSupport.trim() === "") {
+      newErrors.sipSupport = "SIP Port is required.";
+    }
+
+    if (!formData.codex || formData.codex.trim() === "") {
+      newErrors.codex = "Codex is required.";
+    }
+
+    if (ips.length === 0) {
+      newErrors.switchIps = "At least one Switch IP is required.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleRemoveIp = (ipToRemove) => {
-    setIps(ips.filter((ip) => ip !== ipToRemove));
-    setError(""); // Clear any error when modifying IPs
+    const updatedIps = ips.filter((ip) => ip !== ipToRemove);
+    setIps(updatedIps);
+    setFormData({ ...formData, switchIps: updatedIps });
+
+    if (updatedIps.length === 0) {
+      setErrors((prevErrors) => ({ ...prevErrors, switchIps: "At least one Switch IP is required." }));
+    }
   };
 
   const handleKeyDown = (e) => {
@@ -25,24 +53,51 @@ const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
   const handleAddIp = () => {
     if (currentIp && validateIp(currentIp)) {
       if (!ips.includes(currentIp) && ips.length < 30) {
-        setIps([...ips, currentIp]);
+        const updatedIps = [...ips, currentIp];
+        setIps(updatedIps);
         setCurrentIp("");
-        setError(""); // Clear error after a successful addition
-        setFormData({ ...formData, switchIps: [...ips, currentIp] });
+        setFormData({ ...formData, switchIps: updatedIps });
+
+        setErrors((prevErrors) => {
+          const newErrors = { ...prevErrors };
+          delete newErrors.switchIps;
+          return newErrors;
+        });
       } else {
-        setError("IP address must be unique and limited to 30 entries.");
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          switchIps: "IP address must be unique and limited to 30 entries.",
+        }));
       }
     } else {
-      setError("Please enter a valid IP address.");
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        switchIps: "Please enter a valid IP address.",
+      }));
     }
   };
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
 
-    // Real-time validation for email and SIP port
-    if (field === "supportEmail" && /\S+@\S+\.\S+/.test(value)) {
-      setError(""); // Clear email-related errors
+    setErrors((prevErrors) => {
+      const newErrors = { ...prevErrors };
+      if (field === "supportEmail" && /\S+@\S+\.\S+/.test(value)) {
+        delete newErrors.supportEmail;
+      }
+      if (field === "sipSupport" && value.trim() !== "") {
+        delete newErrors.sipSupport;
+      }
+      if (field === "codex" && value.trim() !== "") {
+        delete newErrors.codex;
+      }
+      return newErrors;
+    });
+  };
+
+  const handleNext = () => {
+    if (validate()) {
+      onNext();
     }
   };
 
@@ -54,31 +109,30 @@ const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
           <label className="block mb-2">Support Email</label>
           <input
             type="email"
-            className={`w-full border rounded p-2 ${error ? "border-red-500" : ""}`}
+            className={`w-full border rounded p-2 ${errors.supportEmail ? "border-red-500" : ""}`}
             placeholder="Support email"
             value={formData.supportEmail}
             onChange={(e) => handleInputChange("supportEmail", e.target.value)}
-            required
           />
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+          {errors.supportEmail && <p className="text-red-500 text-sm">{errors.supportEmail}</p>}
         </div>
         <div>
           <label className="block mb-2">SIP Port</label>
           <input
             type="text"
-            className="w-full border rounded p-2"
+            className={`w-full border rounded p-2 ${errors.sipSupport ? "border-red-500" : ""}`}
             placeholder="SIP port"
             value={formData.sipSupport}
             onChange={(e) => handleInputChange("sipSupport", e.target.value)}
-            required
           />
+          {errors.sipSupport && <p className="text-red-500 text-sm">{errors.sipSupport}</p>}
         </div>
         <div>
           <label className="block mb-2">Switch IP</label>
           <div className="flex items-center">
             <input
               type="text"
-              className={`w-full border rounded p-2 ${error ? "border-red-500" : ""}`}
+              className={`w-full border rounded p-2 ${errors.switchIps ? "border-red-500" : ""}`}
               placeholder="Enter Switch IP"
               value={currentIp}
               onChange={(e) => setCurrentIp(e.target.value)}
@@ -92,8 +146,7 @@ const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
               Add IP
             </button>
           </div>
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-
+          {errors.switchIps && <p className="text-red-500 text-sm mt-2">{errors.switchIps}</p>}
           <div className="mt-2 flex flex-wrap">
             {ips.map((ip, index) => (
               <span
@@ -116,29 +169,30 @@ const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
           <label className="block mb-2">Codex</label>
           <input
             type="text"
-            className="w-full border rounded p-2"
+            className={`w-full border rounded p-2 ${errors.codex ? "border-red-500" : ""}`}
             placeholder="Codex"
             value={formData.codex}
             onChange={(e) => handleInputChange("codex", e.target.value)}
           />
+          {errors.codex && <p className="text-red-500 text-sm">{errors.codex}</p>}
         </div>
       </div>
       <div className="flex justify-between">
-      <button
-        onClick={onPrevious}
-        className="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-      >
-        Previous
-      </button>
-      <button
-        onClick={onNext}
-        className="mt-6 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
-      >
-        Next
-      </button>
+        <button
+          onClick={onPrevious}
+          className="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Previous
+        </button>
+        <button
+          onClick={handleNext}
+          className="mt-6 bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600"
+        >
+          Next
+        </button>
       </div>
     </div>
   );
 };
 
-export default TechnicalInfo
+export default TechnicalInfo;
