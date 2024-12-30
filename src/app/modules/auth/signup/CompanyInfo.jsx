@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const CompanyInfo = ({ onNext, formData, setFormData }) => {
+const CompanyInfo = ({ onNext, formData, setFormData, duplicatedData, setDuplicatedData }) => {
   const [errors, setErrors] = useState({});
 
   const validate = () => {
@@ -10,10 +10,10 @@ const CompanyInfo = ({ onNext, formData, setFormData }) => {
       newErrors.companyEmail = "Valid email is required.";
     if (!formData.contactPerson) newErrors.contactPerson = "Contact Person is required.";
     if (!formData.country) newErrors.country = "Country is required.";
-    if (!formData.companyPhone || !/^\d+$/.test(formData.companyPhone))
+    if (!formData.companyPhone?.trim() || !/^\d{10}$/.test(formData.companyPhone))
       newErrors.companyPhone = "Valid phone number is required.";
-    if (!formData.address) newErrors.address = "Address is required.";
-
+    if (!formData.companyWebsite || !/^https?:\/\/[^\s$.?#].[^\s]*$/.test(formData.companyWebsite))
+      newErrors.companyWebsite = "Valid website URL is required.";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -22,16 +22,18 @@ const CompanyInfo = ({ onNext, formData, setFormData }) => {
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
 
-    // Remove the specific error for the field if it becomes valid
+    // Clear errors for the updated field
     setErrors((prevErrors) => {
-      const newErrors = { ...prevErrors };
-      if (field === "companyName" && value) delete newErrors.companyName;
-      if (field === "companyEmail" && /\S+@\S+\.\S+/.test(value)) delete newErrors.companyEmail;
-      if (field === "contactPerson" && value) delete newErrors.contactPerson;
-      if (field === "country" && value) delete newErrors.country;
-      if (field === "companyPhone" && /^\d+$/.test(value)) delete newErrors.companyPhone;
-      if (field === "address" && value) delete newErrors.address;
-      return newErrors;
+      const updatedErrors = { ...prevErrors };
+      delete updatedErrors[field];
+      return updatedErrors;
+    });
+
+    // Clear server-side duplicate error for the updated field
+    setDuplicatedData((prevDuplicatedData) => {
+      const updatedDuplicatedData = { ...prevDuplicatedData };
+      delete updatedDuplicatedData[field];
+      return updatedDuplicatedData;
     });
   };
 
@@ -49,43 +51,41 @@ const CompanyInfo = ({ onNext, formData, setFormData }) => {
           <label className="block mb-2">Company Name</label>
           <input
             type="text"
-            className={`w-full border rounded p-2 ${errors.companyName ? "border-red-500" : ""}`}
+            className={`w-full border rounded p-2 ${errors.companyName || duplicatedData.companyName ? "border-red-500" : ""}`}
             placeholder="Company name"
             value={formData.companyName}
             onChange={(e) => handleInputChange("companyName", e.target.value)}
             required
           />
-          {errors.companyName && (
-            <p className="text-red-500 text-sm">{errors.companyName}</p>
+          {(errors.companyName || duplicatedData.companyName) && (
+            <p className="text-red-500 text-sm">{errors.companyName || duplicatedData.companyName}</p>
           )}
         </div>
         <div>
           <label className="block mb-2">Company Email</label>
           <input
             type="email"
-            className={`w-full border rounded p-2 ${errors.companyEmail ? "border-red-500" : ""}`}
+            className={`w-full border rounded p-2 ${errors.companyEmail || duplicatedData.companyEmail ? "border-red-500" : ""}`}
             placeholder="Email"
             value={formData.companyEmail}
             onChange={(e) => handleInputChange("companyEmail", e.target.value)}
             required
           />
-          {errors.companyEmail && (
-            <p className="text-red-500 text-sm">{errors.companyEmail}</p>
+          {(errors.companyEmail || duplicatedData.companyEmail) && (
+            <p className="text-red-500 text-sm">{errors.companyEmail || duplicatedData.companyEmail}</p>
           )}
         </div>
         <div>
           <label className="block mb-2">Contact Person</label>
           <input
             type="text"
-            className={`w-full border rounded p-2 ${errors.contactPerson ? "border-red-500" : ""}`}
+            className={`w-full border rounded p-2`}
             placeholder="Name"
             value={formData.contactPerson}
             onChange={(e) => handleInputChange("contactPerson", e.target.value)}
             required
           />
-          {errors.contactPerson && (
-            <p className="text-red-500 text-sm">{errors.contactPerson}</p>
-          )}
+          {errors.contactPerson && <p className="text-red-500 text-sm">{errors.contactPerson}</p>}
         </div>
         <div>
           <label className="block mb-2">Country</label>
@@ -99,9 +99,7 @@ const CompanyInfo = ({ onNext, formData, setFormData }) => {
             <option value="India">India</option>
             {/* Add more countries */}
           </select>
-          {errors.country && (
-            <p className="text-red-500 text-sm">{errors.country}</p>
-          )}
+          {errors.country && <p className="text-red-500 text-sm">{errors.country}</p>}
         </div>
         <div>
           <label className="block mb-2">Company Phone</label>
@@ -113,33 +111,29 @@ const CompanyInfo = ({ onNext, formData, setFormData }) => {
             onChange={(e) => handleInputChange("companyPhone", e.target.value)}
             required
           />
-          {errors.companyPhone && (
-            <p className="text-red-500 text-sm">{errors.companyPhone}</p>
-          )}
+          {errors.companyPhone && <p className="text-red-500 text-sm">{errors.companyPhone}</p>}
         </div>
         <div>
           <label className="block mb-2">Address</label>
           <textarea
-            className={`w-full border rounded p-2 ${errors.address ? "border-red-500" : ""}`}
+            className="w-full border rounded p-2"
             placeholder="Address"
             rows={3}
             value={formData.address}
             onChange={(e) => handleInputChange("address", e.target.value)}
-            required
           ></textarea>
-          {errors.address && (
-            <p className="text-red-500 text-sm">{errors.address}</p>
-          )}
         </div>
         <div>
           <label className="block mb-2">Company Website</label>
           <input
             type="url"
+            className={`w-full border rounded p-2 ${errors.companyWebsite ? "border-red-500" : ""}`}
             placeholder="Website"
             value={formData.companyWebsite}
             onChange={(e) => handleInputChange("companyWebsite", e.target.value)}
             required
           />
+          {errors.companyWebsite && <p className="text-red-500 text-sm">{errors.companyWebsite}</p>}
         </div>
       </div>
       <button
@@ -151,4 +145,5 @@ const CompanyInfo = ({ onNext, formData, setFormData }) => {
     </div>
   );
 };
-export default CompanyInfo
+
+export default CompanyInfo;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const UserInfo = ({ onNext, onPrevious, formData, setFormData }) => {
+const UserInfo = ({ onNext, onPrevious, formData, setFormData, duplicatedData, setDuplicatedData }) => {
   const [errors, setErrors] = useState({});
 
   const validateForm = () => {
@@ -22,6 +22,12 @@ const UserInfo = ({ onNext, onPrevious, formData, setFormData }) => {
   const handleFieldChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
     setErrors((prevErrors) => ({ ...prevErrors, [field]: "" })); // Clear error for the specific field
+
+    setDuplicatedData((prevDuplicatedData) => {
+      const updatedDuplicatedData = { ...prevDuplicatedData };
+      delete updatedDuplicatedData[field];
+      return updatedDuplicatedData;
+    });
   };
 
   const handleNext = () => {
@@ -62,26 +68,30 @@ const UserInfo = ({ onNext, onPrevious, formData, setFormData }) => {
           <label className="block mb-2">Username</label>
           <input
             type="text"
-            className={`w-full border rounded p-2 ${errors.username ? "border-red-500" : ""}`}
+            className={`w-full border rounded p-2 ${errors.username || duplicatedData.username ? "border-red-500" : ""}`}
             placeholder="Username"
             value={formData.username || ""}
             onChange={(e) => handleFieldChange("username", e.target.value)}
             required
           />
-          {errors.username && <p className="text-red-500 text-sm mt-1">{errors.username}</p>}
-        </div>
+          {(errors.username || duplicatedData.username) && (
+            <p className="text-red-500 text-sm">{errors.username || duplicatedData.username}</p>
+          )}        
+          </div>
         <div>
           <label className="block mb-2">Email</label>
           <input
             type="email"
-            className={`w-full border rounded p-2 ${errors.userEmail ? "border-red-500" : ""}`}
+            className={`w-full border rounded p-2 ${errors.userEmail || duplicatedData.userEmail ? "border-red-500" : ""}`}
             placeholder="User Email"
             value={formData.userEmail || ""}
             onChange={(e) => handleFieldChange("userEmail", e.target.value)}
             required
           />
-          {errors.userEmail && <p className="text-red-500 text-sm mt-1">{errors.userEmail}</p>}
-        </div>
+          {(errors.userEmail || duplicatedData.userEmail) && (
+            <p className="text-red-500 text-sm">{errors.userEmail || duplicatedData.userEmail}</p>
+          )}         
+          </div>
         <div>
           <label className="block mb-2">Phone</label>
           <input
@@ -108,19 +118,19 @@ const UserInfo = ({ onNext, onPrevious, formData, setFormData }) => {
         </div>
       </div>
       <div className="flex justify-between">
-      <button
-        onClick={onPrevious}
-        className="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-      >
-        Previous
-      </button>
+        <button
+          onClick={onPrevious}
+          className="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Previous
+        </button>
 
-      <button
-        onClick={handleNext}
-        className="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-      >
-        Submit
-      </button>
+        <button
+          onClick={handleNext}
+          className="mt-6 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+        >
+          Submit
+        </button>
       </div>
     </div>
   );

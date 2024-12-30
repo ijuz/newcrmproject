@@ -56,6 +56,7 @@ const StepIndicator = ({ currentStep }) => {
 
 const MultiStepForm = () => {
   const navigate = useNavigate()
+  const [duplicatedData, setDuplicatedData] = useState({})
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     companyName: "",
@@ -83,24 +84,37 @@ const MultiStepForm = () => {
   const handleSubmit = async () => {
     try {
       console.log("Submitting form with data:", formData);
-      const response = await axios.post("https://backend.cloudqlobe.com/v3/api/customers", formData, {
+      const response = await axiosInstance.post("v3/api/customers", formData, {
         headers: {
           "Content-Type": "application/json",
         },
-      });
+      });      
 alert('Form submitted successfully')
       navigate("/signIn");
     } catch (error) {
-      console.error("Error submitting form:", error);
+      if (error.response && error.response.data.duplicateFields) {
+        // Map duplicate fields to server-side errors
+        const duplicateFields = error.response.data.duplicateFields;
+        const newServerErrors = {};
+        duplicateFields.forEach((field) => {
+          if (field === "companyName") newServerErrors.companyName = "Company Name is already taken.";
+          if (field === "companyEmail") newServerErrors.companyEmail = "Email is already in use.";
+          if (field === "username") newServerErrors.contactPerson = "Username is already in use.";
+          if (field === "userEmail") newServerErrors.contactPerson = "user Email is already in use.";
+        });
+        setDuplicatedData(newServerErrors);
+        alert(`DuplicatedData : ${duplicateFields}`)
+      }
+      
     }
   };
 
   return (
     <div className="container mx-auto px-4">
       <StepIndicator currentStep={step} />
-      {step === 1 && <CompanyInfo onNext={nextStep} formData={formData} setFormData={setFormData} />}
+      {step === 1 && <CompanyInfo duplicatedData={duplicatedData} setDuplicatedData={setDuplicatedData} onNext={nextStep} formData={formData} setFormData={setFormData} />}
       {step === 2 && <TechnicalInfo onPrevious={Previous} onNext={nextStep} formData={formData} setFormData={setFormData} />}
-      {step === 3 && <UserInfo onPrevious={Previous} onNext={handleSubmit} formData={formData} setFormData={setFormData} />}
+      {step === 3 && <UserInfo duplicatedData={duplicatedData} setDuplicatedData={setDuplicatedData} onPrevious={Previous} onNext={handleSubmit} formData={formData} setFormData={setFormData} />}
     </div>
   );
 };
