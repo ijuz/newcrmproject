@@ -5,6 +5,10 @@ import MultiStepForm from "./MultiLevelForm";
 const SignUpPage = () => {
 
   return (
+    <>
+    <div className="pt-6">
+      <Header/>
+    </div>
     <div className="flex flex-col md:flex-row bg-[#F7F5F4] p-8 rounded-lg shadow-md max-w-6xl mx-auto mt-24 mb-8">
       {/* Left Column */}
       <div className="md:w-1/2 flex flex-col justify-between px-16">
@@ -24,8 +28,9 @@ const SignUpPage = () => {
       <div className="md:w-1/2 mt-10" style={{marginLeft:"50%", marginTop:"-49%"}}>
         <MultiStepForm />
       </div>
-      <Footer />
     </div>
+          <Footer />
+          </>
   );
 };
 
