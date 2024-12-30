@@ -47,12 +47,10 @@ const SignInPage = () => {
         password,
       });
 
-      const data = response.data;
- console.log(data);
- 
+      const data = response.data; 
       // Store the JWT token
       localStorage.setItem("token", data.token);
-
+alert("login Successfully")
       // Redirect to dashboard
      navigate("/dash-board");
     } catch (err) {

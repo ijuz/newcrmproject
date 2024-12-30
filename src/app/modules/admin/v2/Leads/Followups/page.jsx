@@ -8,6 +8,9 @@ const FollowUp = () => {
   const [customerData, setCustomerData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+console.log(followUpData);
+console.log(customerData);
+
 
   // Navigate to the add follow-up page
   const handleAddFollowUpClick = () => {
@@ -24,10 +27,12 @@ const FollowUp = () => {
 
         // Step 2: Prepare a list of customer IDs to fetch
         const customerIds = [...new Set(followUpsResponse.data.map(item => item.customerId))];
+        const validIds = customerIds.filter(id => id && id.trim() !== "");
+        console.log(validIds);
 
         // Step 3: Fetch customer data for each customerId
         const customers = {};
-        for (const customerId of customerIds) {
+        for (const customerId of validIds) {
           const response = await axiosInstance.get(`v3/api/customers/${customerId}`);
           customers[customerId] = response.data;
         }
