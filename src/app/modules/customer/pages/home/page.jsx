@@ -51,6 +51,7 @@ const Dashboard = () => {
           const decoded = jwtDecode(token);
           const customerId = decoded.id;
           const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
+          console.log(response.data,"data profile")
           setProfileData(response.data);
         }
       } catch (error) {
@@ -61,7 +62,6 @@ const Dashboard = () => {
     };
     fetchProfileData();
   }, []);
-
   const company = {
     id: profileData?.customerId || "NA",
     name: profileData?.companyName || "NA",

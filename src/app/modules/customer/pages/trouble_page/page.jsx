@@ -4,6 +4,7 @@ import { Ticket, Plus, Loader2, Building2 } from "lucide-react";
 import { jwtDecode } from "jwt-decode";
 import DashboardLayout from "../dash_layout/page";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 // Tab Button component for selecting different views
@@ -173,7 +174,7 @@ const FollowUp = () => {
   };
 
   const filteredTickets = getFilteredTickets();
-
+  const navigate = useNavigate('/add-ticket')
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-gray-50">
@@ -204,7 +205,7 @@ const FollowUp = () => {
                 className="bg-emerald-600 text-white px-6 py-3 rounded-xl flex items-center space-x-2 shadow-sm hover:bg-emerald-700 transition-all"
               >
                 <Plus className="w-5 h-5" />
-                <span className="font-bold">Create Ticket</span>
+                <span onClick={()=>navigate("/add-ticket")} className="font-bold">Create Ticket</span>
               </motion.button>
             </div>
 
