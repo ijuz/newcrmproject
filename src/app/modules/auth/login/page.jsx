@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode';
+import { ToastContainer, toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 const SignInPage = () => {
@@ -39,31 +41,47 @@ const SignInPage = () => {
   const handleSignIn = async (e) => {
     e.preventDefault();
     setLoading(true); // Start loading
-
+  
     try {
-      // Make the login request using axiosInstance
+      // Make the login request
       const response = await axios.post("https://backend.cloudqlobe.com/v3/api/customers/login", {
         username,
         password,
       });
 
-      const data = response.data; 
+      const data = response.data;
+ console.log(data);
+ 
       // Store the JWT token
       localStorage.setItem("token", data.token);
-alert("login Successfully")
+
       // Redirect to dashboard
      navigate("/dash-board");
     } catch (err) {
-      // Handle error response
-      // setError(err.response?.data?.error || "Login failed. Please try again.");
-      console.log(err)
+      if (err.response) {
+        // Check the status code and show the corresponding toast message
+        if (err.response.status === 404) {
+          toast.error("Customer not found");
+        } else if (err.response.status === 400) {
+          console.log(err.response,"kkk");
+          
+          toast.error("Invalid password");
+        } else {
+          toast.error("An error occurred. Please try again.");
+        }
+      } else {
+        // Network error or other issues
+        toast.error("Failed to connect. Please check your internet connection.");
+      }
     } finally {
       setLoading(false); // Stop loading
     }
   };
+  
 
   return (
     <div className="flex flex-col md:flex-row bg-[#F7F5F4] p-8 rounded-lg bg-gray-100 shadow-md max-w-6xl mx-auto mt-24 mb-8">
+    <ToastContainer/>
       <div className="md:w-1/2 mb-8 md:mb-0 px-16  ">
         <h1 className="text-3xl font-semibold mb-6">Sign In</h1>
         <img

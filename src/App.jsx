@@ -76,63 +76,53 @@ function App() {
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/signUp" element={<SignUpFrame />} />
         <Route path="/signIn" element={<LoginFrame />} />
+        <Route path="/dash-board" element={<Dashboard/>}/>
+        <Route path="/Profile_page" element={<ProfilePage/>}/>
+        <Route path="/Payment_page" element={<PaymentsPage/>}/>
+        <Route path="/Home_page" element={<HomePage/>}/>
+        <Route path="/Support_page" element={<FollowUp/>}/>
+        <Route path="/admin/settings_page" element={<SettingsPage/>}/>
+        <Route path="/CCRates_page" element={<NormalRatesPage/>}/>
+        <Route path="/MyRates_page" element={<MyRates/>}/>
+        <Route path="/PrivateRate_page" element={<PrivateRates/>}/>
+        <Route path="/CliRates_page" element={<CliRates/>}/>
+        <Route path="/SpecilaRate_page" element={<SpecialRates/>}/>
+        <Route path="/admin_dashboard" element={<AdminDahboard/>}/>
+        <Route path="/newLeads" element={<Newleads/>}/>
+        <Route path="/notification" element={<Notification/>}/>
+        <Route path="/sales_leads" element={<Leads/>}/>
+        <Route path="/sales_customer" element={<Customer/>}/>
+        <Route path="/sales_followups" element={<Followups/>}/>
+        <Route path="/sales_email" element={<Emails/>}/>
+        <Route path="/sales_Report" element={<Report/>}/>
+        <Route path="/sales_message" element={<Message/>}/>
+        <Route path="/sales_Assitance" element={<Assistance/>}/>
+        <Route path="/carrier_Leads" element={<Carrier/>}/>
+        <Route path="/carrier_carrier" element={<Carriers/>}/>
+        <Route path="/carrier_folloup" element={<CFollowups/>}/>
+        <Route path="/NewLeads/:customerId" element={<CnewLeads/>}/>
+        <Route path="/Addlead" element={<AddLead/>}/>
+        <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
+        <Route path="/SaleLead/:customerId" element={<SaleLead/>}/>
+        <Route path="/customermanagement" element={<CustomersPage/>}/>
+        <Route path="/settings_page" element={<CSettingsPage/>}/>
+        <Route path="/admin/ccrates" element={<RatesPage/>}/>
+        <Route path="/admin/clirates" element={<AdminCli/>}/>
+        <Route path="/admin/privaterates" element={<AdminPrivateRates/>}/>
+        <Route path="/admin/specialrates" element={<AdminSpecialRates/>}/>
+        <Route path="/admin/support/troubleTickets" element={<TroubleTickets/>}/>
+        <Route path="/admin/support/followups" element={<AdminFollowUp/>}/>
+        <Route path="/admin/support/testing" element={<TestingPage/>}/>
+        <Route path="/admin/support/task" element={<Admintask/>}/>
+        <Route path="/admin/support/messages" element={<PageUnderDevelopment/>}/>
+        <Route path="/admin/support/internalassistence" element={<InternalAssistence/>}/>
+        <Route path="/cliratestable" element={<RateTableCli/>}/>
+        <Route path="/specialrates" element={<RateTableSpecial/>}/>
+        <Route path="/addrates" element={<RateTableAdd/>}/>
 
-{/* 
-        <Route path="/*" element={
-          <PrivateRoute>
-            <Routes> */}
-              <Route path="/dash-board" element={<Dashboard />} />
-              <Route path="/Profile_page" element={<ProfilePage />} />
-              <Route path="/Payment_page" element={<PaymentsPage />} />
-              <Route path="/Home_page" element={<HomePage />} />
-              <Route path="/Support_page" element={<FollowUp />} />
-              <Route path="/admin/settings_page" element={<SettingsPage />} />
-              <Route path="/CCRates_page" element={<NormalRatesPage />} />
-              <Route path="/MyRates_page" element={<MyRates />} />
-              <Route path="/PrivateRate_page" element={<PrivateRates />} />
-              <Route path="/CliRates_page" element={<CliRates />} />
-              <Route path="/SpecilaRate_page" element={<SpecialRates />} />
-              <Route path="/admin_dashboard" element={<AdminDahboard />} />
-              <Route path="/newLeads" element={<Newleads />} />
-              <Route path="/notification" element={<Notification />} />
-              <Route path="/sales_leads" element={<Leads />} />
-              <Route path="/sales_customer" element={<Customer />} />
-              <Route path="/sales_followups" element={<Followups />} />
-              <Route path="/sales_email" element={<Emails />} />
-              <Route path="/sales_Report" element={<Report />} />
-              <Route path="/sales_message" element={<Message />} />
-              <Route path="/sales_Assitance" element={<Assistance />} />
-              <Route path="/carrier_Leads" element={<Carrier />} />
-              <Route path="/carrier_carrier" element={<Carriers />} />
-              <Route path="/carrier_folloup" element={<CFollowups />} />
-              <Route path="/NewLeads/:customerId" element={<CnewLeads />} />
-              <Route path="/Addlead" element={<AddLead />} />
-              <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
-              <Route path="/SaleLead/:customerId" element={<SaleLead />} />
-              <Route path="/customermanagement" element={<CustomersPage />} />
-              <Route path="/settings_page" element={<CSettingsPage />} />
-            {/* </Routes>
-          </PrivateRoute>
-        } /> */}
-
-
-        <Route path="/admin/ccrates" element={<RatesPage />} />
-        <Route path="/admin/clirates" element={<AdminCli />} />
-        <Route path="/admin/privaterates" element={<AdminPrivateRates />} />
-        <Route path="/admin/specialrates" element={<AdminSpecialRates />} />
-        <Route path="/admin/support/troubleTickets" element={<TroubleTickets />} />
-        <Route path="/admin/support/followups" element={<AdminFollowUp />} />
-        <Route path="/admin/support/testing" element={<TestingPage />} />
-        <Route path="/admin/support/task" element={<Admintask />} />
-        <Route path="/admin/support/messages" element={<PageUnderDevelopment />} />
-        <Route path="/admin/support/internalassistence" element={<InternalAssistence />} />
-        <Route path="/cliratestable" element={<RateTableCli />} />
-        <Route path="/specialrates" element={<RateTableSpecial />} />
-        <Route path="/addrates" element={<RateTableAdd />} />
-
-        <Route path="/TechnicalInfo" element={<TechnicalInfo />} />
-        <Route path="/Register" element={<CompanyInfo />} />
-        <Route path="/Registers" element={<SignUpPage />} />
+        <Route path="/TechnicalInfo" element={<TechnicalInfo/>}/>
+        <Route path="/Register" element={<CompanyInfo/>}/>
+        <Route path="/Registers" element={<SignUpPage/>}/>
 
       </Routes>
 

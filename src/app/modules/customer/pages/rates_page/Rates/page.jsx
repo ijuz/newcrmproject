@@ -2,11 +2,19 @@ import React, { useState, useEffect } from "react";
 import { PlusIcon, FunnelIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import DashboardLayout from "../../dash_layout/page";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import styles2 from "../../../../../components/RatesNavbar.module.css";
+import {  faChartLine, faStar, faCheckCircle, faPlusCircle, faFilter, faUserCircle } from "@fortawesome/free-solid-svg-icons";
+import Header from "../../../../../components/Header";
+import Footer from "../../../../../components/Footer";
 
 const NormalRatesPage = () => {
+
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [customerId, setCustomerId] = useState("");
   const [sort, setSort] = useState("countryCode");
   const [normalRatesData, setNormalRatesData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,10 +25,14 @@ const NormalRatesPage = () => {
 
   const getCustomerIdFromToken = () => {
     const token = localStorage.getItem("token");
-    if (!token) return null;
+    if (!token) return null
     const decoded = jwtDecode(token);
     return decoded.id;
   };
+
+
+
+
 
   useEffect(() => {
     const fetchCustomerAndRates = async () => {
@@ -30,11 +42,14 @@ const NormalRatesPage = () => {
         if (customerId) {
           const customerResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
           setCustomerData(customerResponse.data);
-
           const ratesResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
           const specialRates = ratesResponse.data.filter(rate => rate.category === "specialrate");
           setNormalRatesData(specialRates);
         }
+        const ratesResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
+        const specialRates = ratesResponse.data.filter(rate => rate.category === "specialrate");
+        setNormalRatesData(specialRates);
+        
       } catch (error) {
         console.error("Error fetching customer or rates:", error);
       } finally {
@@ -44,6 +59,9 @@ const NormalRatesPage = () => {
 
     fetchCustomerAndRates();
   }, []);
+
+
+
 
   const handleAddSelectedToMyRates = async () => {
     const id = getCustomerIdFromToken();
@@ -102,8 +120,52 @@ const NormalRatesPage = () => {
     );
   }
 
+  const navigateToRatesPage = () => {
+    navigate("/specialrates");
+  };
+
   return (
-    <DashboardLayout>
+    <>
+   <Header/>
+        <header className={styles2.header}>
+        <nav className={styles2.navbar}>
+          <div className={styles2.navbarLeft}>
+            <div className={styles2.navbarItem} onClick={() => navigate("/cliratestable")}>
+              <div className={styles2.navbarItemIcon}>
+                <FontAwesomeIcon icon={faChartLine} size="lg" />
+              </div>
+              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>CLI Rates</div>
+            </div>
+            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
+              <div className={styles2.navbarItemIcon} >
+                <FontAwesomeIcon icon={faStar} size="lg" />
+              </div>
+              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Special Rates</div>
+            </div>
+            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
+              <div className={styles2.navbarItemIcon}>
+                <FontAwesomeIcon icon={faCheckCircle} size="lg" />
+              </div>
+              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Select Rates</div>
+            </div>
+            <div className={styles2.navbarItem} onClick={() => navigate("/addrates")}>
+              <div className={styles2.navbarItemIcon}>
+                <FontAwesomeIcon icon={faPlusCircle} size="lg" />
+              </div>
+              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Add Rates</div>
+            </div>
+            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
+              <div className={styles2.navbarItemIcon}>
+                <FontAwesomeIcon icon={faFilter} size="lg" />
+              </div>
+              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Filter Rates</div>
+            </div>
+          </div>
+          <div className={styles2.navbarProfile}>
+            {customerId} &ensp;<FontAwesomeIcon icon={faUserCircle} size="lg" />
+          </div>
+        </nav>
+      </header> 
       <div className="p-6 bg-gray-100 text-gray-800">
         <div className="mt-6 flex items-center justify-between space-x-4">
           <div className="flex w-2/3 ml-5 space-x-2">
@@ -200,7 +262,9 @@ const NormalRatesPage = () => {
           </table>
         </div>
       </div>
-    </DashboardLayout>
+      <Footer/>
+   
+      </>
   );
 };
 
