@@ -3,8 +3,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 import { Calendar, Phone, Mail, MessageSquare, User, Briefcase } from 'lucide-react';
-import axiosInstance from "@/app/modules/admin/v2/utils/axiosinstance";
 import DashboardLayout from "../../dash_layout/page";
+import axios from "axios";
 
 const AddFollowUp = () => {
   const [customers, setCustomers] = useState([]);
@@ -35,7 +35,7 @@ const AddFollowUp = () => {
         const customerId = decodedToken.id;
 
         // Fetch customer by customerId
-        const response = await axiosInstance.get(`/v3/api/customers/${customerId}`);
+        const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
         setCustomers([response.data]); // Assuming you want to set customer data in the array
       } catch (error) {
         console.error("Error fetching customer by ID:", error);
@@ -56,10 +56,10 @@ const AddFollowUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosInstance.post("v3/api/followups", followUpDetails);
+      const response = await axios.post("https://backend.cloudqlobe.com/v3/api/followups", followUpDetails);
       if (response.status === 201) {
         alert("Follow-up added successfully!");
-        window.location.href = "/modules/customer/pages/trouble_page"; // Redirect after successful submission
+        window.location.href = "/Support_page"; // Redirect after successful submission
       } else {
         alert("Error adding follow-up.");
       }

@@ -56,7 +56,7 @@ import RateTableAdd from "./app/modules/customer/pages/rates_page/Rates/page.jsx
 import TechnicalInfo from "./app/modules/auth/signup/TechnicalInfo.jsx";
 import CompanyInfo from "./app/modules/auth/signup/CompanyInfo.jsx";
 import SignUpPage from "./app/modules/auth/signup/page.jsx";
-
+import AddTicket from './app/modules/customer/pages/trouble_page/Addfollowup/page.jsx'
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -76,10 +76,11 @@ function App() {
         <Route path="/faq" element={<FAQPage />} />
         <Route path="/signUp" element={<SignUpFrame />} />
         <Route path="/signIn" element={<LoginFrame />} />
-
+        <Route path="/notification" element={<Notification />} />
+        <Route path="/admin_dashboard" element={<AdminDahboard />} />
 
         <Route path="/*" element={
-          <PrivateRoute>
+          // <PrivateRoute>
             <Routes>
               <Route path="/dash-board" element={<Dashboard />} />
               <Route path="/Profile_page" element={<ProfilePage />} />
@@ -92,9 +93,9 @@ function App() {
               <Route path="/PrivateRate_page" element={<PrivateRates />} />
               <Route path="/CliRates_page" element={<CliRates />} />
               <Route path="/SpecilaRate_page" element={<SpecialRates />} />
-              <Route path="/admin_dashboard" element={<AdminDahboard />} />
+            
               <Route path="/newLeads" element={<Newleads />} />
-              <Route path="/notification" element={<Notification />} />
+  
               <Route path="/sales_leads" element={<Leads />} />
               <Route path="/sales_customer" element={<Customer />} />
               <Route path="/sales_followups" element={<Followups />} />
@@ -111,8 +112,9 @@ function App() {
               <Route path="/SaleLead/:customerId" element={<SaleLead />} />
               <Route path="/customermanagement" element={<CustomersPage />} />
               <Route path="/settings_page" element={<CSettingsPage />} />
+              <Route path="/add-ticket" element={<AddTicket />} />
             </Routes>
-          </PrivateRoute>
+          // </PrivateRoute>
         } />
 
 
