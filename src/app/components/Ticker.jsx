@@ -7,7 +7,7 @@ const CurrencyTicker = () => {
   const [error, setError] = useState(null);
   const containerRef = useRef(null);
   const [cloneCount, setCloneCount] = useState(2);
-console.log(tickerData);
+  console.log(tickerData);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,14 +16,14 @@ console.log(tickerData);
         if (!cctResponse.ok) throw new Error("Failed to fetch rate IDs");
         const cctData = await cctResponse.json();
         console.log(cctData);
-        
-        const uniqueRateIds = [...new Set(cctData.flatMap(item => item.rateids))];
-        const rateResponses = await Promise.all(
-          uniqueRateIds.map(id =>
-            fetch(`https://backend.cloudqlobe.com/v3/api/clirates/${id}`).then(res => res.json())
-          )
-        );
-        setTickerData(rateResponses);
+
+        // const uniqueRateIds = [...new Set(cctData.flatMap(item => item.rateids))];
+        // const rateResponses = await Promise.all(
+        //   uniqueRateIds.map(id =>
+        //     fetch(`https://backend.cloudqlobe.com/v3/api/clirates/${id}`).then(res => res.json())
+        //   )
+        // );
+        setTickerData(cctData);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -56,39 +56,43 @@ console.log(tickerData);
   const RateCard = ({ data }) => (
     <div className="rate-card flex-shrink-0 bg-white rounded-lg shadow-md p-4 mx-2 min-w-[200px] border border-orange-100">
       <div className="w-full space-y-2">
-      <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center">
           <h2 className="text-base font-bold text-gray-800">{data.country}</h2>
-          <span className={`px-2 py-0.5 rounded-full text-xs font-medium
-            ${data.status === 'Active'
+          <span className={`px-2 py-0.5 rounded-full text-xs font-medium 
+    ${data.status?.toLowerCase() === 'active'
               ? 'bg-green-100 text-green-700'
-              : 'bg-orange-100 text-orange-700'}`}>
+              : 'bg-orange-100 text-orange-700'}`}
+          >
             {data?.status?.charAt(0)?.toUpperCase() + data.status?.slice(1)}
           </span>
+
         </div>
         <div className="space-y-1.5">
-          <div className="flex justify-between items-center bg-orange-50/50 rounded-md p-1.5">
-            <span className="text-sm text-gray-600">Outbound</span>
-            <span className="font-medium flex items-center text-sm">
-              {data.rate} {data.currency || 'USD'}
-              {data.status === 'active' ? (
-                <ArrowUpIcon className="h-3 w-3 text-orange-500 ml-1" />
-              ) : (
-                <ArrowDownIcon className="h-3 w-3 text-green-500 ml-1" />
-              )}
-            </span>
-          </div>
-          <div className="flex justify-between items-center bg-orange-50/50 rounded-md p-1.5">
-            <span className="text-sm text-gray-600">IVR</span>
-            <span className="font-medium flex items-center text-sm">
-              {data.profile === 'IVR' ? data.rate : 'N/A'} {data.currency || 'USD'}
-              {data.profile === 'IVR' && data.status === 'active' ? (
-                <ArrowUpIcon className="h-3 w-3 text-orange-500 ml-1" />
-              ) : (
-                <ArrowDownIcon className="h-3 w-3 text-green-500 ml-1" />
-              )}
-            </span>
-          </div>
-        </div>
+  <div className="flex justify-between items-center bg-orange-50/50 rounded-md p-1.5">
+    <span className="text-sm text-gray-600">Outbound</span>
+    <span className="font-medium flex items-center text-sm">
+      {data.profile.Outbound ? data.profile.Outbound : 'N/A'} {data.currency || 'USD'}
+      {data.status?.toLowerCase() === 'active' && data.profile.Outbound ? (
+        <ArrowUpIcon className="h-3 w-3 text-green-500 ml-1" />
+      ) : (
+        <ArrowDownIcon className="h-3 w-3 text-orange-500 ml-1" />
+      )}
+    </span>
+  </div>
+  
+  <div className="flex justify-between items-center bg-orange-50/50 rounded-md p-1.5">
+    <span className="text-sm text-gray-600">IVR</span>
+    <span className="font-medium flex items-center text-sm">
+      {data.profile.IVR ? data.profile.IVR : 'N/A'} {data.currency || 'USD'}
+      {data.status?.toLowerCase() === 'active' && data.profile.IVR ? (
+        <ArrowUpIcon className="h-3 w-3 text-green-500 ml-1" />
+      ) : (
+        <ArrowDownIcon className="h-3 w-3 text-orange-500 ml-1" />
+      )}
+    </span>
+  </div>
+</div>
+
       </div>
     </div>
   );

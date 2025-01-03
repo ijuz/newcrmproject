@@ -128,7 +128,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
             value={newLead.profile.Outbound}
             onChange={(e) => handleInputChange("Outbound", e.target.value)}
             className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg"
-            required
+            
           />
         <input
           type="text"
@@ -136,7 +136,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
           value={newLead.profile.IVR}
           onChange={(e) => handleInputChange("IVR", e.target.value)}
           className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg"
-          required
+          
         />
 
           <label className="flex items-center mb-4">
