@@ -69,7 +69,6 @@ const MultiStepForm = () => {
     supportEmail: "",
     sipSupport: "",
     switchIps: [],
-    codex: "",
     userFirstname: "",
     userLastname: "",
     username: "",

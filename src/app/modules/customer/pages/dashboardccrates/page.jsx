@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { PlusIcon, FunnelIcon } from "@heroicons/react/24/outline"; // FunnelIcon for filter
-import { motion } from "framer-motion"; // for animation
-import { jwtDecode } from "jwt-decode";
-import DashboardLayout from "../../dash_layout/page"; // Replace with the correct path for DashboardLayout
+import { PlusIcon, FunnelIcon } from "@heroicons/react/24/outline";
+import { motion } from "framer-motion";
 import axios from "axios";
+import {jwtDecode} from "jwt-decode";
+import DashboardLayout from "../dash_layout/page";
 
 const NormalRatesPage = () => {
   const [search, setSearch] = useState("");
@@ -12,34 +12,31 @@ const NormalRatesPage = () => {
   const [loading, setLoading] = useState(true);
   const [selectedRates, setSelectedRates] = useState([]);
   const [customerData, setCustomerData] = useState(null);
-  const [showSelectColumn, setShowSelectColumn] = useState(false); // Default to hidden
-  const [showOnlySelected, setShowOnlySelected] = useState(false); // Toggle to show only selected
+  const [showSelectColumn, setShowSelectColumn] = useState(false);
+  const [showOnlySelected, setShowOnlySelected] = useState(false);
 
-  // Extract customerId from token
   const getCustomerIdFromToken = () => {
     const token = localStorage.getItem("token");
     if (!token) return null;
-
     const decoded = jwtDecode(token);
     return decoded.id;
   };
 
-  // Fetch customer details and rates on component mount
   useEffect(() => {
     const fetchCustomerAndRates = async () => {
       setLoading(true);
       try {
         const customerId = getCustomerIdFromToken();
         if (customerId) {
-          // Fetch customer details
           const customerResponse = await axios.get(
             `https://backend.cloudqlobe.com/v3/api/customers/${customerId}`
           );
           setCustomerData(customerResponse.data);
 
-          // Fetch rates
           const ratesResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
-          const specialRates = ratesResponse.data.filter((rate) => rate.category === "specialrate");
+          const specialRates = ratesResponse.data.filter(
+            (rate) => rate.category === "specialrate"
+          );
           setNormalRatesData(specialRates);
         }
       } catch (error) {
@@ -52,7 +49,6 @@ const NormalRatesPage = () => {
     fetchCustomerAndRates();
   }, []);
 
-  // Add selected rates to My Rates
   const handleAddSelectedToMyRates = async () => {
     const id = getCustomerIdFromToken();
     if (!id) {
@@ -78,7 +74,6 @@ const NormalRatesPage = () => {
     }
   };
 
-  // Check if a rate is disabled based on customer's data
   const isRateDisabled = (rateId) => {
     if (!customerData) return false;
     const { myRatesId, rateAddedtotest, rateTested, rateTesting } = customerData;
@@ -91,7 +86,6 @@ const NormalRatesPage = () => {
     );
   };
 
-  // Filter and sort rates
   const filteredData = normalRatesData.filter((item) =>
     item.country.toLowerCase().includes(search.toLowerCase())
   );
@@ -102,10 +96,8 @@ const NormalRatesPage = () => {
       : a.countryCode.localeCompare(b.countryCode);
   });
 
-  // If "showOnlySelected" is active, show only selected rates
   const displayedData = showOnlySelected ? selectedRates : sortedData;
 
-  // Loading spinner
   if (loading) {
     return (
       <div className="min-h-screen bg-orange-50 flex items-center justify-center">
@@ -121,15 +113,11 @@ const NormalRatesPage = () => {
   return (
     <DashboardLayout>
       <div className="p-6 bg-gray-100 text-gray-800">
-        {/* Page Header */}
-        <div className="text-left my-6"></div>
-
-        {/* Search and Sort Section */}
         <div className="mt-6 flex items-center justify-between space-x-4">
           <div className="flex w-2/3 ml-5 space-x-2">
             <input
               type="text"
-              placeholder="Search by coun name..."
+              placeholder="Search by country name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="flex-grow bg-white text-gray-800 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -140,7 +128,6 @@ const NormalRatesPage = () => {
           </div>
 
           <div className="flex items-center space-x-1">
-            {/* Button to toggle "Select" column */}
             <button
               onClick={() => setShowSelectColumn(!showSelectColumn)}
               className="px-6 py-2 bg-green-600 text-white font-regular mr-5 rounded-lg hover:bg-orange-700 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -148,9 +135,8 @@ const NormalRatesPage = () => {
               {showSelectColumn ? "Hide Select Rates" : "Select Rates"}
             </button>
 
-            {/* Filter Icon Button to show only selected rates */}
             <button
-              style={{marginRight:"2em"}}
+              style={{ marginRight: "2em" }}
               onClick={() => setShowOnlySelected(!showOnlySelected)}
               className="w-10 h-10 bg-[#005F73] text-white rounded-full hover:bg-orange-700 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center"
             >
@@ -171,8 +157,7 @@ const NormalRatesPage = () => {
           </div>
         )}
 
-        {/* Rates Table */}
-        <div className="tableContainer overflow-x-auto p-5 rounded-lg">
+        <div className="tableContainer overflow-x-auto py-5 rounded-lg">
           <table className="rateTable w-full border-collapse bg-white shadow-lg rounded-lg">
             <thead>
               <tr className="bg-[#005F73] text-white uppercase tracking-wider rounded-lg">
@@ -184,6 +169,7 @@ const NormalRatesPage = () => {
                 <th className="p-2 text-center border border-gray-300">Quality Description</th>
                 <th className="p-2 text-center border border-gray-300">Rate</th>
                 <th className="p-2 text-center border border-gray-300">Profile</th>
+                <th className="p-2 text-center border border-gray-300">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -217,6 +203,7 @@ const NormalRatesPage = () => {
                   <td className="p-2 text-center border border-gray-300">{item.qualityDescription}</td>
                   <td className="p-2 text-center border border-gray-300">{item.rate}</td>
                   <td className="p-2 text-center border border-gray-300">{item.profile}</td>
+                  <td className="p-2 text-center border border-gray-300">{item.status}</td>
                 </tr>
               ))}
             </tbody>

@@ -27,6 +27,8 @@ const RateTable = ({ className }) => {
   const rowsPerPage = 7;
   const [customerId, setCustomerId] = useState("");
   const [countryOptions, setCountryOptions] = useState([]);
+  const [tickerRates, setTickerRates] = useState([]);
+  
   const [selectingRates, setSelectingRates] = useState(false);
   const [selectedRates, setSelectedRates] = useState({});
 
@@ -72,18 +74,23 @@ const RateTable = ({ className }) => {
 
   const handleFilter = () => {
     const countryFilteredRates =
-      selectedCountry === "All"
-        ? rates
-        : rates.filter((rate) => rate.country === selectedCountry);
-
+      selectedCountry === "All" ? rates : rates.filter((rate) => rate.country === selectedCountry);
+  
     const selectedRatesFilter = Object.keys(selectedRates)
       .filter((id) => selectedRates[id])
       .map((id) => countryFilteredRates.find((rate) => rate._id === id))
       .filter(Boolean);
-
-    setFilteredRates(selectedRatesFilter.length ? selectedRatesFilter : countryFilteredRates);
+  
+    const filtered = selectedRatesFilter.length ? selectedRatesFilter : countryFilteredRates;
+    console.log(filtered,"filtered");
+    
+    setFilteredRates(filtered);
+    setTickerRates(filtered); // Update ticker data
     setCurrentPage(1);
   };
+
+
+
 
   const toggleRateSelection = (id) => {
     setSelectedRates((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -161,7 +168,7 @@ const RateTable = ({ className }) => {
           </div>
         )}
 
-        <Ticker />
+        <Ticker FiltertickerData={tickerRates} />
 
         <div
           className={styles.container}

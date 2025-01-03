@@ -1,26 +1,43 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowUpIcon, ArrowDownIcon, Globe } from "lucide-react";
 
-const CurrencyTicker = () => {
+const CurrencyTicker = ({ FiltertickerData }) => {
+
   const [tickerData, setTickerData] = useState([]);
+ 
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const containerRef = useRef(null);
   const [cloneCount, setCloneCount] = useState(2);
 
   useEffect(() => {
+    if (tickerData?.length > 0) {
+      setCloneCount(tickerData.length * 2); // Example: Adjust clone count based on data length
+    }
+  }, [tickerData]);
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        const cctResponse = await fetch("https://backend.cloudqlobe.com/v3/api/clt");
-        if (!cctResponse.ok) throw new Error("Failed to fetch rate IDs");
-        const cctData = await cctResponse.json();
-        const uniqueRateIds = [...new Set(cctData.flatMap(item => item.rateids))];
-        const rateResponses = await Promise.all(
-          uniqueRateIds.map(id =>
-            fetch(`https://backend.cloudqlobe.com/v3/api/clirates/${id}`).then(res => res.json())
-          )
-        );
-        setTickerData(rateResponses);
+        if (!FiltertickerData) {
+          const cctResponse = await fetch("https://backend.cloudqlobe.com/v3/api/clt");
+          if (!cctResponse.ok) throw new Error("Failed to fetch rate IDs");
+          const cctData = await cctResponse.json();
+          const uniqueRateIds = [
+            ...new Set(cctData.flatMap((item) => item.rateids)),
+          ];
+          const rateResponses = await Promise.all(
+            uniqueRateIds.map((id) =>
+              fetch(`https://backend.cloudqlobe.com/v3/api/clirates/${id}`).then((res) =>
+                res.json()
+              )
+            )
+          );
+          setTickerData(rateResponses);
+        } else {
+          setTickerData(FiltertickerData);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -29,7 +46,10 @@ const CurrencyTicker = () => {
     };
 
     fetchData();
-  }, []);
+  }, [FiltertickerData, tickerData]);
+
+
+  
 
   useEffect(() => {
     if (!loading && tickerData.length > 0) {
@@ -45,57 +65,71 @@ const CurrencyTicker = () => {
       };
 
       updateCloneCount();
-      window.addEventListener('resize', updateCloneCount);
-      return () => window.removeEventListener('resize', updateCloneCount);
+      window.addEventListener("resize", updateCloneCount);
+      return () => window.removeEventListener("resize", updateCloneCount);
     }
   }, [loading, tickerData]);
 
-  const RateCard = ({ data }) => (
-    <div className="relative rate-card flex-shrink-0 rounded-xl p-4 mx-3 min-w-[260px] bg-white/40 backdrop-blur-sm border border-orange-100 hover:border-orange-200">
-      <div className="w-full space-y-3">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-800">{data.country}</h2>
-          <span className={`px-3 py-1 rounded-full text-xs font-medium transition-colors
-            ${data.status === "active" 
-              ? "bg-orange-100 text-orange-700 hover:bg-orange-200" 
-              : "bg-green-100 text-green-700 hover:bg-green-200"}`}>
-            {data.status}
-          </span>
-        </div>
+  const RateCard = ({ data }) => {
+    console.log(data, "far");
 
-        <div className="space-y-2">
-          <div className="flex justify-between items-center bg-white/60 rounded-lg p-3 transition-all hover:bg-white/80">
-            <span className="font-medium text-sm text-gray-800">{data.qualityDescription || "N/A"}</span>
+    return (
+      <div className="relative rate-card flex-shrink-0 rounded-xl p-4 mx-3 min-w-[260px] bg-white/40 backdrop-blur-sm border border-orange-100 hover:border-orange-200">
+        <div className="w-full space-y-3">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-gray-800">
+              {data.country}
+            </h2>
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-medium transition-colors
+            ${
+              data.status === "active"
+                ? "bg-orange-100 text-orange-700 hover:bg-orange-200"
+                : "bg-green-100 text-green-700 hover:bg-green-200"
+            }`}
+            >
+              {data.status}
+            </span>
           </div>
 
-          <div className="flex justify-between items-center bg-white/60 rounded-lg p-3 transition-all hover:bg-white/80">
-            <span className="text-sm text-gray-600">Rate</span>
-            <span className="font-medium flex items-center text-sm">
-              {data.rate} {data.currency || "USD"}
-              {data.status === "active" ? (
-                <ArrowUpIcon className="h-4 w-4 text-orange-500 ml-2" />
-              ) : (
-                <ArrowDownIcon className="h-4 w-4 text-green-500 ml-2" />
-              )}
-            </span>
+          <div className="space-y-2">
+            <div className="flex justify-between items-center bg-white/60 rounded-lg p-3 transition-all hover:bg-white/80">
+              <span className="font-medium text-sm text-gray-800">
+                {data.qualityDescription || "N/A"}
+              </span>
+            </div>
+
+            <div className="flex justify-between items-center bg-white/60 rounded-lg p-3 transition-all hover:bg-white/80">
+              <span className="text-sm text-gray-600">Rate</span>
+              <span className="font-medium flex items-center text-sm">
+                {data.rate} {data.currency || "USD"}
+                {data.status === "active" ? (
+                  <ArrowUpIcon className="h-4 w-4 text-orange-500 ml-2" />
+                ) : (
+                  <ArrowDownIcon className="h-4 w-4 text-green-500 ml-2" />
+                )}
+              </span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
-  if (loading) return (
-    <div className="flex items-center justify-center p-6 space-x-3">
-      <Globe className="animate-spin h-6 w-6 text-orange-500" />
-      <span className="text-gray-600 font-medium">Loading rates...</span>
-    </div>
-  );
+  if (loading)
+    return (
+      <div className="flex items-center justify-center p-6 space-x-3">
+        <Globe className="animate-spin h-6 w-6 text-orange-500" />
+        <span className="text-gray-600 font-medium">Loading rates...</span>
+      </div>
+    );
 
-  if (error) return (
-    <div className="p-4 bg-red-50 text-red-500 rounded-lg border border-red-100">
-      Error: {error}
-    </div>
-  );
+  if (error)
+    return (
+      <div className="p-4 bg-red-50 text-red-500 rounded-lg border border-red-100">
+        Error: {error}
+      </div>
+    );
 
   const cardWidth = 280;
   const totalWidth = tickerData.length * cardWidth;
@@ -131,9 +165,9 @@ const CurrencyTicker = () => {
           {Array.from({ length: cloneCount }).map((_, cloneIndex) => (
             <div key={`clone-${cloneIndex}`} className="flex">
               {tickerData.map((data, index) => (
-                <RateCard 
-                  key={`${cloneIndex}-${data._id || index}`} 
-                  data={data} 
+                <RateCard
+                  key={`${cloneIndex}-${data._id || index}`}
+                  data={data}
                 />
               ))}
             </div>

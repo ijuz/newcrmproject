@@ -4,6 +4,7 @@ const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
   const [ips, setIps] = useState(formData.switchIps || []);
   const [currentIp, setCurrentIp] = useState("");
   const [errors, setErrors] = useState({});
+  const [error, setError] = useState('');
 
   const validateIp = (ip) => {
     const ipRegex = /^(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[0-1]?[0-9][0-9]?)$/;
@@ -20,13 +21,8 @@ const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
     if (!formData.sipSupport || formData.sipSupport.trim() === "") {
       newErrors.sipSupport = "SIP Port is required.";
     }
-
-    if (!formData.codex || formData.codex.trim() === "") {
-      newErrors.codex = "Codex is required.";
-    }
-
     if (ips.length === 0) {
-      newErrors.switchIps = "At least one Switch IP is required.";
+      setError("At least one Switch IP is required.");
     }
 
     setErrors(newErrors);
@@ -57,23 +53,12 @@ const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
         setIps(updatedIps);
         setCurrentIp("");
         setFormData({ ...formData, switchIps: updatedIps });
-
-        setErrors((prevErrors) => {
-          const newErrors = { ...prevErrors };
-          delete newErrors.switchIps;
-          return newErrors;
-        });
+        setError('')
       } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          switchIps: "IP address must be unique and limited to 30 entries.",
-        }));
+        setError("IP address must be unique and limited to 30 entries.")
       }
     } else {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        switchIps: "Please enter a valid IP address.",
-      }));
+      setError("Please enter a valid IP address.")
     }
   };
 
@@ -88,18 +73,40 @@ const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
       if (field === "sipSupport" && value.trim() !== "") {
         delete newErrors.sipSupport;
       }
-      if (field === "codex" && value.trim() !== "") {
-        delete newErrors.codex;
-      }
       return newErrors;
     });
   };
 
   const handleNext = () => {
+    let updatedIps = [...ips];
+
+    // Validate and add the current IP if it's present
+    if (currentIp) {
+      if (validateIp(currentIp)) {
+        if (!ips.includes(currentIp) && ips.length < 30) {
+          updatedIps = [...ips, currentIp];
+          setIps(updatedIps);
+          setFormData({ ...formData, switchIps: updatedIps });
+          setCurrentIp(""); // Clear the input
+          setError('')
+
+        } else {
+          setError("IP address must be unique and limited to 30 entries.")
+        }
+      } else {
+        setError("Please enter a valid IP address.")
+      }
+    }
+
+    // Update formData.switchIps with the updated IP list
+    setFormData({ ...formData, switchIps: updatedIps });
+
+    // Validate the rest of the form
     if (validate()) {
-      onNext();
+      onNext(); // Navigate to the next page
     }
   };
+
 
   return (
     <div className="max-w-2xl mx-auto p-6">
@@ -132,7 +139,7 @@ const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
           <div className="flex items-center">
             <input
               type="text"
-              className={`w-full border rounded p-2 ${errors.switchIps ? "border-red-500" : ""}`}
+              className={`w-full border rounded p-2 ${error ? "border-red-500" : ""}`}
               placeholder="Enter Switch IP"
               value={currentIp}
               onChange={(e) => setCurrentIp(e.target.value)}
@@ -146,7 +153,7 @@ const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
               Add IP
             </button>
           </div>
-          {errors.switchIps && <p className="text-red-500 text-sm mt-2">{errors.switchIps}</p>}
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
           <div className="mt-2 flex flex-wrap">
             {ips.map((ip, index) => (
               <span
@@ -164,17 +171,6 @@ const TechnicalInfo = ({ onPrevious, onNext, formData, setFormData }) => {
               </span>
             ))}
           </div>
-        </div>
-        <div>
-          <label className="block mb-2">Codex</label>
-          <input
-            type="text"
-            className={`w-full border rounded p-2 ${errors.codex ? "border-red-500" : ""}`}
-            placeholder="Codex"
-            value={formData.codex}
-            onChange={(e) => handleInputChange("codex", e.target.value)}
-          />
-          {errors.codex && <p className="text-red-500 text-sm">{errors.codex}</p>}
         </div>
       </div>
       <div className="flex justify-between">

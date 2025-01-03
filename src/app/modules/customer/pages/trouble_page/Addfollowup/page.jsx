@@ -121,7 +121,7 @@ const AddFollowUp = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                  <label className="block mb-2 font-semibold text-gray-700">Follow-Up Method</label>
+                  <label className="block mb-2 font-semibold text-gray-700">Ticket Priority</label>
                   <div className="relative">
                     <select
                       name="followupMethod"
@@ -129,9 +129,9 @@ const AddFollowUp = () => {
                       onChange={handleInputChange}
                       className="w-full p-3 border border-gray-300 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out"
                     >
-                      <option value="call">Call</option>
-                      <option value="email">Email</option>
-                      <option value="chat">Chat</option>
+                      <option value="call">Low</option>
+                      <option value="email">Medium</option>
+                      <option value="chat">high</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                       {followUpDetails.followupMethod === 'call' && <Phone className="h-5 w-5 text-blue-500" />}

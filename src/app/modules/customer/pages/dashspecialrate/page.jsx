@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PlusIcon, FunnelIcon } from "@heroicons/react/24/outline"; // FunnelIcon for filter
 import { motion } from "framer-motion"; // for animation
 import { jwtDecode } from "jwt-decode";
-import DashboardLayout from "../../dash_layout/page"; // Replace with the correct path for DashboardLayout
+import DashboardLayout from "../dash_layout/page";
 import axios from "axios";
 
 const NormalRatesPage = () => {
@@ -129,7 +129,7 @@ const NormalRatesPage = () => {
           <div className="flex w-2/3 ml-5 space-x-2">
             <input
               type="text"
-              placeholder="Search by coun name..."
+              placeholder="Search by country name..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="flex-grow bg-white text-gray-800 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
