@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import styles from "./RateTable.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Ticker from "./Ticker";
 import {  faChartLine, faStar, faCheckCircle, faPlusCircle, faFilter, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import styles2 from "./RatesNavbar.module.css";
+import CurrencyTicker from "./TickerCC";
 
 const RateTable = ({ className }) => {
   const navigate = useNavigate();
@@ -20,6 +20,11 @@ const RateTable = ({ className }) => {
   const [countryOptions, setCountryOptions] = useState([]);
   const [selectingRates, setSelectingRates] = useState(false);
   const [selectedRates, setSelectedRates] = useState({});
+  const [disabledRates, setDisabledRates] = useState(false);
+
+console.log("disbl",disabledRates);
+console.log("select",selectedRates);
+
 
   useEffect(() => {
     const fetchRates = async () => {
@@ -43,6 +48,11 @@ const RateTable = ({ className }) => {
     setCustomerId(id);
     fetchRates();
   }, []);
+
+  // useEffect(() => {
+  //   <Ticker Data={currentRows}/>
+
+  // },[currentRows])
 
   const getCustomerIdFromToken = () => {
     const token = localStorage.getItem("token");
@@ -75,6 +85,7 @@ const RateTable = ({ className }) => {
 
     setFilteredRates(selectedRatesFilter.length ? selectedRatesFilter : countryFilteredRates);
     setCurrentPage(1);
+
   };
 
   const toggleRateSelection = (id) => {
@@ -83,15 +94,23 @@ const RateTable = ({ className }) => {
 
   const handleSelectRatesClick = () => {
     setSelectingRates((prev) => !prev);
+    setDisabledRates(true)
   };
 
   const navigateToRatesPage = () => {
-    navigate("/specialrates");
+    navigate("/specialrates", { state: selectedRates });
   };
 
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  const handleFIlterData = () => {
+    const filtered = currentRows.filter((rate) => selectedRates[rate._id]);
+    console.log("Filtered Data:", filtered);
+    navigate("/specialrates", { state: filtered });
+  };
+  
 
   return (
     <>
@@ -101,36 +120,42 @@ const RateTable = ({ className }) => {
       <header className={styles2.header}>
         <nav className={styles2.navbar}>
           <div className={styles2.navbarLeft}>
+            
             <div className={styles2.navbarItem} onClick={() => navigate("/cliratestable")}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faChartLine} size="lg" />
               </div>
               <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>CLI Rates</div>
             </div>
+
             <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
               <div className={styles2.navbarItemIcon} >
                 <FontAwesomeIcon icon={faStar} size="lg" />
               </div>
               <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Special Rates</div>
             </div>
-            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
+
+            <div className={styles2.navbarItem} onClick={handleSelectRatesClick}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faCheckCircle} size="lg" />
               </div>
               <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Select Rates</div>
             </div>
+
+            <div className={styles2.navbarItem} onClick={handleFIlterData}>
+              <div className={styles2.navbarItemIcon}>
+                <FontAwesomeIcon icon={faFilter} size="lg" />
+              </div>
+              <div className={`${styles2.navbarItemText} ${!disabledRates ? styles2.disabled : ""}`}>Filter Rates</div>
+            </div>
+
             <div className={styles2.navbarItem} onClick={() => navigate("/addrates")}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faPlusCircle} size="lg" />
               </div>
               <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Add Rates</div>
             </div>
-            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
-              <div className={styles2.navbarItemIcon}>
-                <FontAwesomeIcon icon={faFilter} size="lg" />
-              </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Filter Rates</div>
-            </div>
+
           </div>
           <div className={styles2.navbarProfile}>
             {customerId} &ensp;<FontAwesomeIcon icon={faUserCircle} size="lg" />
@@ -144,8 +169,7 @@ const RateTable = ({ className }) => {
             <p>{error}</p>
           </div>
         )}
-
-        <Ticker />
+   <CurrencyTicker Data={currentRows}/>
 
         <div className={styles.container} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div className="flex items-center" style={{ marginLeft: "3.5em" }}>

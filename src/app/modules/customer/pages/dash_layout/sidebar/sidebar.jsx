@@ -40,7 +40,7 @@ const getMenuItems =(customerType)=> [
     label: "Rates",
     color: "blue",
     submenu: [
-      { id: "ccRates", label: "CC Rates", icon: LineChart, path: `/CCRates_page` },
+      { id: "ccRates", label: "CC Rates", icon: LineChart, path: `/dashboardccrates` },
       { id: "myRates", label: "My Rates", icon: PieChart, path: `/MyRates_page` },
       ...(customerType === "CarrierLead" || customerType === "Customer"
         ? [
@@ -52,7 +52,9 @@ const getMenuItems =(customerType)=> [
             },
           ]
         : []),
-      { id: "cliRates", label: "CLI Rates", icon: Monitor, path: `/cliRates` },
+      { id: "cliRates", label: "CLI Rates", icon: Monitor, path: `/dashclirates` },
+      { id: "SpecialRates", label: "Specil Rates", icon: Monitor, path: `/dashspecial` }
+
     ],
   },
 
