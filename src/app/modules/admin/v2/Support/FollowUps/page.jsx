@@ -22,29 +22,29 @@ const FollowUp = () => {
         const followUpsResponse = await axios.get('https://backend.cloudqlobe.com/v3/api/followups'); // Adjust the endpoint as necessary
         setFollowUpData(followUpsResponse.data);
 
-        // Step 2: Prepare a list of customer IDs to fetch
-        const customerIds = [...new Set(
-          followUpsResponse.data
-            .map(item => item.customerId)
-            .filter(customerId => customerId) // Remove undefined or null IDs
-        )];
+          // Step 2: Prepare a list of customer IDs to fetch
+          const customerIds = [...new Set(
+            followUpsResponse.data
+              .map(item => item.customerId)
+              .filter(customerId => customerId) // Remove undefined or null IDs
+          )];
 
-        // Step 3: Fetch customer data for each customerId
-        const customers = {};
-        for (const customerId of customerIds) {
-          const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`); // Assuming this endpoint fetches a single customer by ID
-          customers[customerId] = response.data;
+          // Step 3: Fetch customer data for each customerId
+          const customers = {};
+          for (const customerId of customerIds) {
+            const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`); // Assuming this endpoint fetches a single customer by ID
+            customers[customerId] = response.data;
+          }
+          setCustomerData(customers);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
         }
-        setCustomerData(customers);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
-    fetchData();
-  }, []);
+      fetchData();
+    }, []);
 
   const renderTabContent = () => {
     if (loading) return <div className="text-center py-4 text-gray-600">Loading...</div>;
@@ -155,11 +155,11 @@ const FollowUp = () => {
           ))}
         </div>
 
-        {/* Tab Content */}
-        <div className="overflow-x-auto">{renderTabContent()}</div>
-      </div>
-    </Layout>
-  );
-};
+          {/* Tab Content */}
+          <div className="overflow-x-auto">{renderTabContent()}</div>
+        </div>
+      </Layout>
+    );
+  };
 
 export default FollowUp;
