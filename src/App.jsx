@@ -141,7 +141,6 @@ function App() {
       <Route path="/dashspecial" element={<DashSpecial />} />
 
       <Route path="/TechnicalInfo" element={<TechnicalInfo />} />
-      <Route path="/Register" element={<CompanyInfo />} />
       <Route path="/Registers" element={<SignUpPage />} />
 
     </Routes>

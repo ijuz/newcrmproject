@@ -16,7 +16,7 @@ const NormalRatesPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [search, setSearch] = useState("");
-  const [customerId, setCustomerId] = useState("");
+  const [customerId, setCustomerId] = useState(false);
   const [sort, setSort] = useState("countryCode");
   const [normalRatesData, setNormalRatesData] = useState([]);
   const [loading, setLoading] = useState(true);
