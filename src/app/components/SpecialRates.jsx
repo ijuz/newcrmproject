@@ -110,6 +110,7 @@ console.log("select",selectedRates);
     console.log("Filtered Data:", filtered);
     navigate("/specialrates", { state: filtered });
   };
+  console.log(currentRows);
   
 
   return (

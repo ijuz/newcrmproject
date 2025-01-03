@@ -8,15 +8,15 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     countryCode: '',
     country: '',
     qualityDescription: '',
-    rate: '',
     status: 'inactive',
-    testStatus: 'na',
-    profile: '',
-    testControl: 'na',
+    profile: {
+      Outbound: '',
+      IVR: '',
+    },
     category: '',
     specialRate: false,
-    addToTicker: false, // New field to handle ticker option
-  });
+    addToTicker: false,
+  });  
 
   useEffect(() => {
     if (initialData) {
@@ -26,36 +26,50 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         countryCode: '',
         country: '',
         qualityDescription: '',
-        rate: '',
-        status: 'inactive', 
-        testStatus: 'na',
-        profile: '',
-        testControl: 'na',
-        category: 'na',
+        status: 'inactive',
+        profile: {
+          Outbound: '',
+          IVR: '',
+        },
+        category:'',
         specialRate: false,
-        addToTicker: false, // Set to false initially
+        addToTicker: false,
       });
     }
   }, [initialData]);
+
+
+  const handleInputChange = (profileType, value) => {
+    setNewLead((prev) => ({
+      ...prev,
+      profile: {
+        ...prev.profile,
+        [profileType]: value, // Update the corresponding profile type
+      },
+    }));
+  };
+
 
   const handleAddLead = async (e) => {
     e.preventDefault();
 
     const leadData = { ...newLead };
+    
     if (leadData.specialRate) {
       leadData.category = 'specialrate';
     } else {
-      leadData.category = newLead.category; 
+      leadData.category = newLead.category;
     }
+    console.log(leadData);
 
     await onSubmit(leadData);
+    console.log(leadData);
+    
 
     // If "Add to Ticker" is selected, update the cct API with this rate's ID
     if (leadData.addToTicker) {
       try {
-        await axios.post('https://backend.cloudqlobe.com/v3/api/cct', {
-          rateids: [leadData._id],
-        });
+        await axiosInstance.post('/v3/api/cct', leadData);
         console.log("Added to ticker");
       } catch (error) {
         console.error("Failed to add rate to ticker:", error);
@@ -66,12 +80,12 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
       countryCode: '',
       country: '',
       qualityDescription: '',
-      rate: '',
       status: 'inactive',
-      testStatus: 'na',
-      profile: '',
-      testControl: 'na',
-      category: 'na',
+      profile: {
+        Outbound: '',
+        IVR: '',
+      },
+      category:'',
       specialRate: false,
       addToTicker: false,
     });
@@ -109,21 +123,22 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
             required
           />
           <input
-            type="number"
-            placeholder="Rate"
-            value={newLead.rate}
-            onChange={(e) => setNewLead({ ...newLead, rate: e.target.value })}
-            className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg"
-            required
-          />
-          <input
             type="text"
-            placeholder="Profile"
-            value={newLead.profile}
-            onChange={(e) => setNewLead({ ...newLead, profile: e.target.value })}
+            placeholder="Enter OutBound value"
+            value={newLead.profile.Outbound}
+            onChange={(e) => handleInputChange("Outbound", e.target.value)}
             className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg"
             required
           />
+        <input
+          type="text"
+          placeholder="Enter IVR value"
+          value={newLead.profile.IVR}
+          onChange={(e) => handleInputChange("IVR", e.target.value)}
+          className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg"
+          required
+        />
+
           <label className="flex items-center mb-4">
             <input
               type="checkbox"
@@ -183,6 +198,7 @@ const RatesPage = () => {
   const [currentRate, setCurrentRate] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+console.log(rateData);
 
   useEffect(() => {
     const fetchRates = async () => {
@@ -197,6 +213,7 @@ const RatesPage = () => {
   }, []);
 
   const handleAddLead = async (leadData) => {
+    
     try {
       let response;
       if (isUpdateMode) {
@@ -204,9 +221,9 @@ const RatesPage = () => {
       } else {
         response = await axiosInstance.post('v3/api/rates', leadData);
       }
-      setRateData((prev) => 
-        isUpdateMode 
-          ? prev.map(rate => (rate._id === currentRate._id ? response.data : rate)) 
+      setRateData((prev) =>
+        isUpdateMode
+          ? prev.map(rate => (rate._id === currentRate._id ? response.data : rate))
           : [...prev, response.data]
       );
       setSuccessMessage(isUpdateMode ? 'Rate updated successfully!' : 'Lead added successfully!');
@@ -283,46 +300,54 @@ const RatesPage = () => {
               <th className="py-2 px-4 border">Country Code</th>
               <th className="py-2 px-4 border">Country</th>
               <th className="py-2 px-4 border">Quality Description</th>
-              <th className="py-2 px-4 border">Rate</th>
+              {/* <th className="py-2 px-4 border">Rate</th> */}
               <th className="py-2 px-4 border">Status</th>
               <th className="py-2 px-4 border">Profile</th>
               <th className="py-2 px-4 border">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {rateData
-              .filter((rate) => rate.country.toLowerCase().includes(search.toLowerCase()) || rate.profile.toLowerCase().includes(search.toLowerCase()))
-              .sort((a, b) => {
-                if (sort === 'country') return a.country.localeCompare(b.country);
-                if (sort === 'rate') return a.rate - b.rate;
-                if (sort === 'status') return a.status.localeCompare(b.status);
-                return 0;
-              })
-              .map((rate) => (
-                <tr key={rate._id}>
-                  <td className="py-2 px-4 border">{rate.countryCode}</td>
-                  <td className="py-2 px-4 border">{rate.country}</td>
-                  <td className="py-2 px-4 border">{rate.qualityDescription}</td>
-                  <td className="py-2 px-4 border">{rate.rate}</td>
-                  <td className="py-2 px-4 border">{rate.status}</td>
-                  <td className="py-2 px-4 border">{rate.profile}</td>
-                  <td className="py-2 px-4 border">
-                    <button
-                      onClick={() => handleUpdateClick(rate)}
-                      className="text-blue-500 hover:text-blue-700"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteClick(rate._id)}
-                      className="text-red-500 hover:text-red-700 ml-2"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
+  {rateData
+    .filter((rate) =>
+      rate.country.toLowerCase().includes(search.toLowerCase()) ||
+      Object.values(rate.profile).some((value) =>
+        value.toLowerCase().includes(search.toLowerCase())
+      )
+    )
+    .sort((a, b) => {
+      if (sort === 'country') return a.country.localeCompare(b.country);
+      if (sort === 'rate') return a.rate - b.rate;
+      if (sort === 'status') return a.status.localeCompare(b.status);
+      return 0;
+    })
+    .map((rate) => (
+      <tr key={rate._id}>
+        <td className="py-2 px-4 border">{rate.countryCode}</td>
+        <td className="py-2 px-4 border">{rate.country}</td>
+        <td className="py-2 px-4 border">{rate.qualityDescription}</td>
+        {/* <td className="py-2 px-4 border">{rate.rate}</td> */}
+        <td className="py-2 px-4 border">{rate.status}</td>
+        <td className="py-2 px-4 border">
+          {`Outbound: ${rate.profile?.Outbound || 'N/A'}, IVR: ${rate.profile?.IVR || 'N/A'}`}
+        </td>
+        <td className="py-2 px-4 border">
+          <button
+            onClick={() => handleUpdateClick(rate)}
+            className="text-blue-500 hover:text-blue-700"
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => handleDeleteClick(rate._id)}
+            className="text-red-500 hover:text-red-700 ml-2"
+          >
+            Delete
+          </button>
+        </td>
+      </tr>
+    ))}
+</tbody>
+
         </table>
       </div>
 

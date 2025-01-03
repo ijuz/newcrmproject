@@ -71,7 +71,6 @@ const CurrencyTicker = ({ FiltertickerData }) => {
   }, [loading, tickerData]);
 
   const RateCard = ({ data }) => {
-    console.log(data, "far");
 
     return (
       <div className="relative rate-card flex-shrink-0 rounded-xl p-4 mx-3 min-w-[260px] bg-white/40 backdrop-blur-sm border border-orange-100 hover:border-orange-200">
