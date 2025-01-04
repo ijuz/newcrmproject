@@ -8,7 +8,6 @@ import CLI_Voice_Termination from "./app/services/CLI-Voice-Termination/page.jsx
 import DID_Voice_Solutions from "./app/services/DID-Voice-Solutions/page.jsx";
 import VoIPRates from "./app/pricing/page.jsx";
 import FAQPage from "./app/faq/page.jsx";
-import SignUpFrame from "./app/modules/auth/Base/Signup/page.jsx";
 import LoginFrame from "./app/modules/auth/Base/login/page.jsx";
 import Dashboard from "./app/modules/customer/pages/home/page.jsx";
 import ProfilePage from "./app/modules/customer/pages/profile-page/page.jsx";
@@ -54,8 +53,9 @@ import RateTableCli from "./app/clirates/page.jsx";
 import RateTableSpecial from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
 import RateTableAdd from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
 import TechnicalInfo from "./app/modules/auth/signup/TechnicalInfo.jsx";
-import CompanyInfo from "./app/modules/auth/signup/CompanyInfo.jsx";
-import SignUpPage from "./app/modules/auth/signup/page.jsx";
+import SignUpPage from "./app/modules/auth/signup/page.jsx";   //gh
+import SignUpFrame from "./app/modules/auth/Base/Signup/page.jsx";//
+
 import AddTicket from './app/modules/customer/pages/trouble_page/Addfollowup/page.jsx'
 
 import Dashccrates from './app/modules/customer/pages/dashboardccrates/page.jsx';
@@ -78,7 +78,7 @@ function App() {
       <Route path="/services/DID-Voice-Solutions" element={<DID_Voice_Solutions />} />
       <Route path="/pricing" element={<VoIPRates />} />
       <Route path="/faq" element={<FAQPage />} />
-      <Route path="/signUp" element={<SignUpFrame />} />
+      <Route path="/Registers" element={<SignUpPage />} />
       <Route path="/signIn" element={<LoginFrame />} />
       <Route path="/notification" element={<Notification />} />
       <Route path="/admin_dashboard" element={<AdminDahboard />} />
@@ -141,7 +141,7 @@ function App() {
       <Route path="/dashspecial" element={<DashSpecial />} />
 
       <Route path="/TechnicalInfo" element={<TechnicalInfo />} />
-      <Route path="/Registers" element={<SignUpPage />} />
+      {/* <Route path="/Registers" element={<SignUpPage />} /> */}
 
     </Routes>
 

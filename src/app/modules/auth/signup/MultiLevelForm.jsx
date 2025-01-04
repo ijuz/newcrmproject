@@ -82,32 +82,36 @@ const MultiStepForm = () => {
 
   const handleSubmit = async () => {
     try {
-      console.log("Submitting form with data:", formData);
-      const response = await axios.post("https://backend.cloudqlobe.com/v3/api/customers", formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });     
-      console.log(response);
-alert('Form submitted successfully')
-      navigate("/signIn");
-    } catch (error) {
-      if (error.response && error.response.data.duplicateFields) {
-        // Map duplicate fields to server-side errors
-        const duplicateFields = error.response.data.duplicateFields;
-        const newServerErrors = {};
-        duplicateFields.forEach((field) => {
-          if (field === "companyName") newServerErrors.companyName = "Company Name is already taken.";
-          if (field === "companyEmail") newServerErrors.companyEmail = "Email is already in use.";
-          if (field === "username") newServerErrors.contactPerson = "Username is already in use.";
-          if (field === "userEmail") newServerErrors.contactPerson = "user Email is already in use.";
+        console.log("Submitting form with data:", formData);
+        const response = await axios.post("http://localhost:5000/v3/api/customers", formData, {
+            headers: {
+                "Content-Type": "application/json",
+            },
         });
-        setDuplicatedData(newServerErrors);
-        alert(`DuplicatedData : ${duplicateFields}`)
-      }
-      
+        console.log(response);
+        alert('Form submitted successfully');
+        navigate("/signIn");
+    } catch (error) {
+        if (error.response && error.response.data.duplicateFields) {
+            // Map duplicate fields to user-friendly messages
+            const duplicateFields = error.response.data.duplicateFields;
+            const newServerErrors = {};
+            duplicateFields.forEach((field) => {
+                if (field === "companyName") newServerErrors.companyName = "Company Name is already taken.";
+                if (field === "companyEmail") newServerErrors.companyEmail = "Email is already in use.";
+                if (field === "companyWebsite") newServerErrors.companyWebsite = "Company Website is already in use.";
+                if (field === "username") newServerErrors.username = "Username is already in use.";
+                if (field === "userEmail") newServerErrors.userEmail = "User Email is already in use.";
+            });
+            setDuplicatedData(newServerErrors);
+            alert(`Duplicate fields: ${duplicateFields.join(", ")}`);
+        } else {
+            console.error("Error submitting form:", error.message);
+            alert("An unexpected error occurred. Please try again.");
+        }
     }
-  };
+};
+
 
   return (
     <div className="container mx-auto px-4">

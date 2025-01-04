@@ -123,7 +123,9 @@ const CompanyInfo = ({ onNext, formData, setFormData, duplicatedData, setDuplica
               onChange={(e) => handleInputChange("companyWebsite", e.target.value)}
               required
             />
-            {errors.companyWebsite && <p className="text-red-500 text-sm">{errors.companyWebsite}</p>}
+            {(errors.companyWebsite || duplicatedData.companyWebsite) && (
+              <p className="text-red-500 text-sm">{errors.companyWebsite || duplicatedData.companyWebsite}</p>
+            )}
           </div>
         </div>
         <div className="ml-2">
