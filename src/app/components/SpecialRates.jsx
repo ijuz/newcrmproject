@@ -32,7 +32,7 @@ useEffect(() => {
   const fetchRates = async () => {
     setLoading(true); // Ensure loading state is set
     try {
-      const response = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
+      const response = await axios.get("http://localhost:5000/v3/api/rates");
       console.log("API Response:", response);
 
       // Validate response status

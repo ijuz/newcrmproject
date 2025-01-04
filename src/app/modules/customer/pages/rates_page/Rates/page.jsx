@@ -136,6 +136,7 @@ const NormalRatesPage = () => {
           addedTime: rate.addedTime,
         });
       }
+      navigate('/pricing')
       alert("All rates added successfully.");
       filterData = ''
     } catch (error) {
@@ -267,7 +268,7 @@ const NormalRatesPage = () => {
                   <td className="p-2 text-center border border-gray-300">{item.country}</td>
                   <td className="p-2 text-center border border-gray-300">{item.qualityDescription}</td>
                   <td className="p-2 text-center border border-gray-300">{item.rate}</td>
-                  <td className="p-2 text-center border border-gray-300">{item.profile}</td>
+                  <td>{` OutBound : ${item.profile?.Outbound || ''}   IVR : ${item.profile?.IVR || ''}`}</td>
                   <td className="p-2 text-center border border-gray-300">{item.status}</td>
                 </tr>
               ))}
