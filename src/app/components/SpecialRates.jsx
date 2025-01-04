@@ -32,7 +32,7 @@ useEffect(() => {
   const fetchRates = async () => {
     setLoading(true); // Ensure loading state is set
     try {
-      const response = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
+      const response = await axios.get("http://localhost:5000/v3/api/rates");
       console.log("API Response:", response);
 
       // Validate response status
@@ -225,6 +225,7 @@ useEffect(() => {
                 <th>Country Name</th>
                 <th className="special-header">Quality Description</th>
                 <th>Profile</th>
+                <th>Rate</th>
                 <th>Status</th>
               </tr>
             </thead>
@@ -250,7 +251,8 @@ useEffect(() => {
                     <td>{rate.countryCode}</td>
                     <td>{rate.country}</td>
                     <td>{rate.qualityDescription}</td>
-                    <td>{` OutBound : ${rate.profile?.Outbound || ''}   IVR : ${rate.profile?.IVR || ''}`}</td>
+                    <td>{rate.profile}</td>
+                    <td>{rate.rate}</td>
                     <td className={`${rate.status.toLowerCase() === "active" ? "text-green-600" : "text-red-600"}`}>
                       {rate.status?.charAt(0).toUpperCase() + rate.status.slice(1)}
                     </td>

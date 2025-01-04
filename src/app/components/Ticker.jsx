@@ -14,22 +14,48 @@ const CurrencyTicker = () => {
     const fetchData = async () => {
       try {
         const cctResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/cct");
-        console.log(cctResponse);
-        
-        if (!cctResponse.status === '200') throw new Error("Failed to fetch rate IDs");
-        const cctData = await cctResponse.data;
-        console.log(cctData);
-
-        setTickerData(cctData);
+        if (cctResponse.status !== 200) throw new Error("Failed to fetch rate IDs");
+        const cctData = cctResponse.data;
+  
+        // Group data by countryCode
+        const groupedData = cctData.reduce((acc, item) => {
+          const countryCode = item.countryCode;
+  
+          if (!acc[countryCode]) {
+            acc[countryCode] = {
+              country: item.country,
+              countryCode: item.countryCode,
+              status: item.status,
+              currency: item.currency || 'USD',
+              profile: {
+                Outbound: null,
+                IVR: null,
+              },
+            };
+          }
+  
+          // Add profile data (Outbound or IVR)
+          if (item.profile === 'Outbound') {
+            acc[countryCode].profile.Outbound = item.rate;
+          } else if (item.profile === 'IVR') {
+            acc[countryCode].profile.IVR = item.rate;
+          }
+  
+          return acc;
+        }, {});
+  
+        // Convert grouped data to an array
+        setTickerData(Object.values(groupedData));
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   useEffect(() => {
     if (!loading && tickerData.length > 0) {
