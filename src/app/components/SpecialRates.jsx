@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  faChartLine, faStar, faCheckCircle, faPlusCircle, faFilter, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import styles2 from "./RatesNavbar.module.css";
 import CurrencyTicker from "./Ticker";
+import axiosInstance from "../modules/admin/utils/axiosinstance";
+import axios from "axios";
 
 const RateTable = ({ className }) => {
   const navigate = useNavigate();
@@ -22,38 +24,42 @@ const RateTable = ({ className }) => {
   const [selectedRates, setSelectedRates] = useState({});
   const [disabledRates, setDisabledRates] = useState(false);
 
-console.log("disbl",disabledRates);
-console.log("select",selectedRates);
+// console.log("disbl",disabledRates);
+console.log("select",rates);
 
 
-  useEffect(() => {
-    const fetchRates = async () => {
-      try {
-        const response = await fetch("http://localhost:5000/v3/api/rates");
-        if (!response.ok) throw new Error("Failed to fetch rates");
-        const data = await response.json();
-        setRates(data);
-        setFilteredRates(data);
-console.log(data);
+useEffect(() => {
+  const fetchRates = async () => {
+    setLoading(true); // Ensure loading state is set
+    try {
+      const response = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
+      console.log("API Response:", response);
 
-        const uniqueCountries = Array.from(new Set(data.map((rate) => rate.country)));
-        setCountryOptions(["All", ...uniqueCountries]);
-      } catch (err) {
-        setError("Error fetching rates.");
-      } finally {
-        setLoading(false);
-      }
-    };
+      // Validate response status
+      if (response.status !== 200) throw new Error("Failed to fetch rates");
 
-    const id = getCustomerIdFromToken();
-    setCustomerId(id);
-    fetchRates();
-  }, []);
+      const rates = response.data; // Use parsed response directly
+      setRates(rates);
+      setFilteredRates(rates);
 
-  // useEffect(() => {
-  //   <Ticker Data={currentRows}/>
+      // Extract unique country options
+      const uniqueCountries = Array.from(new Set(rates.map((rate) => rate.country)));
+      setCountryOptions(["All", ...uniqueCountries]);
 
-  // },[currentRows])
+      console.log("Rates Data:", rates);
+    } catch (err) {
+      console.error("Error fetching rates:", err);
+      setError("Error fetching rates.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const id = getCustomerIdFromToken();
+  setCustomerId(id);
+
+  fetchRates();
+}, []);
 
   const getCustomerIdFromToken = () => {
     const token = localStorage.getItem("token");
