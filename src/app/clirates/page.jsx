@@ -107,6 +107,8 @@ const RateTable = ({ className }) => {
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+  console.log(tickerRates);
+  
 
   return (
     <>
@@ -168,7 +170,7 @@ const RateTable = ({ className }) => {
           </div>
         )}
 
-        <Ticker FiltertickerData={tickerRates} />
+        <Ticker FiltertickerData={filteredRates} />
 
         <div
           className={styles.container}
