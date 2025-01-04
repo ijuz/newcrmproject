@@ -13,7 +13,7 @@ const CurrencyTicker = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const cctResponse = await axios.get("http://localhost:5000/v3/api/cct");
+        const cctResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/cct");
         console.log(cctResponse);
         
         if (!cctResponse.status === '200') throw new Error("Failed to fetch rate IDs");

@@ -70,7 +70,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     // If "Add to Ticker" is selected, update the cct API with this rate's ID
     if (leadData.addToTicker) {
       try {
-        await axios.post('http://localhost:5000//v3/api/cct', leadData);
+        await axios.post('https://backend.cloudqlobe.com/v3/api/cct', leadData);
         console.log("Added to ticker");
       } catch (error) {
         console.error("Failed to add rate to ticker:", error);
@@ -205,7 +205,7 @@ console.log(rateData);
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/v3/api/rates');
+        const response = await axios.get('https://backend.cloudqlobe.com/v3/api/rates');
         setRateData(response.data);
         console.log("res",response);
       } catch (error) {
@@ -220,9 +220,9 @@ console.log(rateData);
     try {
       let response;
       if (isUpdateMode) {
-        response = await axios.put(`http://localhost:5000/v3/api/rates/${currentRate._id}`, leadData);
+        response = await axios.put(`https://backend.cloudqlobe.com/v3/api/rates/${currentRate._id}`, leadData);
       } else {
-        response = await axios.post('http://localhost:5000/v3/api/rates', leadData);
+        response = await axios.post('https://backend.cloudqlobe.com/v3/api/rates', leadData);
       }
       setRateData((prev) =>
         isUpdateMode
@@ -249,7 +249,7 @@ console.log(rateData);
 
   const handleDeleteClick = async (rateId) => {
     try {
-      await axios.delete(`http://localhost:5000/v3/api/rates/${rateId}`);
+      await axios.delete(`https://backend.cloudqlobe.com/v3/api/rates/${rateId}`);
       setRateData(rateData.filter((rate) => rate._id !== rateId));
       setSuccessMessage('Rate deleted successfully!');
       setErrorMessage('');
