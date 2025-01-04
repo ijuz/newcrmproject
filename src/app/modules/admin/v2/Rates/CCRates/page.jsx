@@ -125,7 +125,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
           <input
             type="text"
             placeholder="Enter OutBound value"
-            value={newLead.profile.Outbound}
+            value={newLead.profile?.Outbound || ''} // Provide a fallback empty string
             onChange={(e) => handleInputChange("Outbound", e.target.value)}
             className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg"
             
@@ -133,7 +133,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         <input
           type="text"
           placeholder="Enter IVR value"
-          value={newLead.profile.IVR}
+          value={newLead.profile?.IVR || ''}
           onChange={(e) => handleInputChange("IVR", e.target.value)}
           className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg"
           

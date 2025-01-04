@@ -47,7 +47,7 @@ const CompanyInfo = ({ onNext, formData, setFormData, duplicatedData, setDuplica
     <div className="max-w-2xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">Company Info</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
+        <div className="mr-2">
           <label className="block mb-2">Company Name</label>
           <input
             type="text"
@@ -61,7 +61,7 @@ const CompanyInfo = ({ onNext, formData, setFormData, duplicatedData, setDuplica
             <p className="text-red-500 text-sm">{errors.companyName || duplicatedData.companyName}</p>
           )}
         </div>
-        <div>
+        <div className="ml-2">
           <label className="block mb-2">Company Email</label>
           <input
             type="email"
@@ -75,11 +75,11 @@ const CompanyInfo = ({ onNext, formData, setFormData, duplicatedData, setDuplica
             <p className="text-red-500 text-sm">{errors.companyEmail || duplicatedData.companyEmail}</p>
           )}
         </div>
-        <div>
+        <div className="mr-2">
           <label className="block mb-2">Contact Person</label>
           <input
             type="text"
-            className={`w-full border rounded p-2`}
+            className="w-full border rounded p-2"
             placeholder="Name"
             value={formData.contactPerson}
             onChange={(e) => handleInputChange("contactPerson", e.target.value)}
@@ -87,7 +87,7 @@ const CompanyInfo = ({ onNext, formData, setFormData, duplicatedData, setDuplica
           />
           {errors.contactPerson && <p className="text-red-500 text-sm">{errors.contactPerson}</p>}
         </div>
-        <div>
+        <div className="ml-2">
           <label className="block mb-2">Country</label>
           <select
             className={`w-full border rounded p-2 ${errors.country ? "border-red-500" : ""}`}
@@ -101,7 +101,7 @@ const CompanyInfo = ({ onNext, formData, setFormData, duplicatedData, setDuplica
           </select>
           {errors.country && <p className="text-red-500 text-sm">{errors.country}</p>}
         </div>
-        <div>
+        <div className="mr-2">
           <label className="block mb-2">Company Phone</label>
           <input
             type="tel"
@@ -112,10 +112,24 @@ const CompanyInfo = ({ onNext, formData, setFormData, duplicatedData, setDuplica
             required
           />
           {errors.companyPhone && <p className="text-red-500 text-sm">{errors.companyPhone}</p>}
+
+          <div className="mt-4">
+            <label className="block mb-2">Company Website</label>
+            <input
+              type="url"
+              className={`w-full border rounded p-2 ${errors.companyWebsite ? "border-red-500" : ""}`}
+              placeholder="Website"
+              value={formData.companyWebsite}
+              onChange={(e) => handleInputChange("companyWebsite", e.target.value)}
+              required
+            />
+            {errors.companyWebsite && <p className="text-red-500 text-sm">{errors.companyWebsite}</p>}
+          </div>
         </div>
-        <div>
+        <div className="ml-2">
           <label className="block mb-2">Address</label>
           <textarea
+            style={{ height: "79%" }}
             className="w-full border rounded p-2"
             placeholder="Address"
             rows={3}
@@ -123,19 +137,9 @@ const CompanyInfo = ({ onNext, formData, setFormData, duplicatedData, setDuplica
             onChange={(e) => handleInputChange("address", e.target.value)}
           ></textarea>
         </div>
-        <div>
-          <label className="block mb-2">Company Website</label>
-          <input
-            type="url"
-            className={`w-full border rounded p-2 ${errors.companyWebsite ? "border-red-500" : ""}`}
-            placeholder="Website"
-            value={formData.companyWebsite}
-            onChange={(e) => handleInputChange("companyWebsite", e.target.value)}
-            required
-          />
-          {errors.companyWebsite && <p className="text-red-500 text-sm">{errors.companyWebsite}</p>}
-        </div>
+        <div></div>
       </div>
+
       <button
         onClick={handleNext}
         className="mt-6 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
