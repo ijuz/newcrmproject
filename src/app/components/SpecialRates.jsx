@@ -29,11 +29,12 @@ console.log("select",selectedRates);
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const response = await fetch("https://backend.cloudqlobe.com/v3/api/rates");
+        const response = await fetch("http://localhost:5000/v3/api/rates");
         if (!response.ok) throw new Error("Failed to fetch rates");
         const data = await response.json();
         setRates(data);
         setFilteredRates(data);
+console.log(data);
 
         const uniqueCountries = Array.from(new Set(data.map((rate) => rate.country)));
         setCountryOptions(["All", ...uniqueCountries]);
@@ -217,7 +218,6 @@ console.log("select",selectedRates);
                 <th>Country Code</th>
                 <th>Country Name</th>
                 <th className="special-header">Quality Description</th>
-                <th>Rate ($)</th>
                 <th>Profile</th>
                 <th>Status</th>
               </tr>
@@ -244,8 +244,7 @@ console.log("select",selectedRates);
                     <td>{rate.countryCode}</td>
                     <td>{rate.country}</td>
                     <td>{rate.qualityDescription}</td>
-                    <td>{rate.rate}</td>
-                    <td>{rate.profile}</td>
+                    <td>{` OutBound : ${rate.profile?.Outbound || ''}   IVR : ${rate.profile?.IVR || ''}`}</td>
                     <td className={`${rate.status.toLowerCase() === "active" ? "text-green-600" : "text-red-600"}`}>
                       {rate.status?.charAt(0).toUpperCase() + rate.status.slice(1)}
                     </td>

@@ -7,7 +7,7 @@ const CurrencyTicker = () => {
   const [error, setError] = useState(null);
   const containerRef = useRef(null);
   const [cloneCount, setCloneCount] = useState(2);
-  console.log(tickerData);
+  // console.log(tickerData);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -15,7 +15,7 @@ const CurrencyTicker = () => {
         const cctResponse = await fetch("https://backend.cloudqlobe.com/v3/api/cct");
         if (!cctResponse.ok) throw new Error("Failed to fetch rate IDs");
         const cctData = await cctResponse.json();
-        console.log(cctData);
+        // console.log(cctData);
 
         // const uniqueRateIds = [...new Set(cctData.flatMap(item => item.rateids))];
         // const rateResponses = await Promise.all(

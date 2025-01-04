@@ -63,7 +63,6 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     console.log(leadData);
 
     await onSubmit(leadData);
-    console.log(leadData);
     
 
     // If "Add to Ticker" is selected, update the cct API with this rate's ID
@@ -203,8 +202,9 @@ console.log(rateData);
   useEffect(() => {
     const fetchRates = async () => {
       try {
-        const response = await axios.get('https://backend.cloudqlobe.com/v3/api/rates');
+        const response = await axiosInstance.get('v3/api/rates');
         setRateData(response.data);
+        console.log("res",response);
       } catch (error) {
         console.error('Error fetching rates:', error);
       }
