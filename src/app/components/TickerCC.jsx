@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowUpIcon, ArrowDownIcon, Globe } from "lucide-react";
 
-const CurrencyTicker = ({ Data }) => {
+const CCTicker = ({ Data }) => {
     const containerRef = useRef(null);
     const [cloneCount, setCloneCount] = useState(1);
     const cardWidth = 280;
@@ -127,4 +127,4 @@ const CurrencyTicker = ({ Data }) => {
     );
 };
 
-export default CurrencyTicker;
+export default CCTicker;

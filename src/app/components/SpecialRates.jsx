@@ -5,7 +5,7 @@ import styles from "./RateTable.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  faChartLine, faStar, faCheckCircle, faPlusCircle, faFilter, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import styles2 from "./RatesNavbar.module.css";
-import CurrencyTicker from "./TickerCC";
+import CurrencyTicker from "./Ticker";
 
 const RateTable = ({ className }) => {
   const navigate = useNavigate();
@@ -170,8 +170,8 @@ console.log("select",selectedRates);
             <p>{error}</p>
           </div>
         )}
-   <CurrencyTicker Data={currentRows}/>
-
+   
+<CurrencyTicker/>
         <div className={styles.container} style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div className="flex items-center" style={{ marginLeft: "3.5em" }}>
             <div className="bg-orange-500 text-2xl rounded-lg text-white p-2 mr-2" style={{ paddingTop: ".25em", paddingLeft: ".8em", paddingRight: ".8em", paddingBottom: ".25em" }}>
