@@ -118,7 +118,7 @@ const CCRateTable = ({ className }) => {
   const handleFIlterData = () => {
     const filtered = currentRows.filter((rate) => selectedRates[rate._id]);
     console.log("Filtered Data:", filtered);
-    navigate("/specialrates", { state: filtered });
+    navigate("/specialrates", { state: { filtered, isDisabled: disabledRates } });
     // <NormalRatesPage filterData={filtered}/>
   };
   console.log(currentRows);

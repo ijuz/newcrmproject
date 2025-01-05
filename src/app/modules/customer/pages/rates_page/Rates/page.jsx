@@ -27,7 +27,7 @@ const NormalRatesPage = () => {
   const [showOnlySelected, setShowOnlySelected] = useState(false);
   const [filterMyRate, setFilterMyRate] = useState()
   const [disabledRate, setDisabledRate] = useState(false)
-  const filterData = location.state || {};
+  const { filtered, isDisabled } = location.state || {}; // Destructure state properties
 
   // console.log("disabled",disabledRate);
 
@@ -63,8 +63,9 @@ const NormalRatesPage = () => {
 
     fetchCustomerAndRates();
 
-    if (filterData) {
-      setFilterMyRate(filterData);
+    if (filtered) {
+      setFilterMyRate(filtered);
+      setDisabledRate(isDisabled)
     }
   }, []);
 
@@ -157,7 +158,7 @@ const NormalRatesPage = () => {
   }
 
   console.log(selectedRates);
-  console.log(filterData);
+  console.log(filtered);
 
 
   return (
