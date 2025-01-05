@@ -30,7 +30,7 @@ const RateTable = ({ className }) => {
   const [customerId, setCustomerId] = useState("");
   const [countryOptions, setCountryOptions] = useState([]);
   const [tickerRates, setTickerRates] = useState([]);
-  
+  const [disabledRates, setDisabledRates] = useState(false);
   const [selectingRates, setSelectingRates] = useState(false);
   const [selectedRates, setSelectedRates] = useState({});
 
@@ -40,6 +40,8 @@ const RateTable = ({ className }) => {
         const response = await fetch("https://backend.cloudqlobe.com/v3/api/clirates");
         if (!response.ok) throw new Error("Failed to fetch rates");
         const data = await response.json();
+        console.log(data);
+        
         setRates(data);
         setFilteredRates(data);
 
@@ -100,6 +102,7 @@ const RateTable = ({ className }) => {
 
   const handleSelectRatesClick = () => {
     setSelectingRates((prev) => !prev);
+    setDisabledRates(true)
   };
 
   const navigateToRatesPage = () => {
@@ -111,15 +114,21 @@ const RateTable = ({ className }) => {
   };
   console.log(tickerRates);
   
+  const handleFIlterData = () => {
+    const filtered = currentRows.filter((rate) => selectedRates[rate._id]);
+    console.log("Filtered Data:", filtered);
+    navigate("/clirates", { state: { filtered, isDisabled: disabledRates } });
+    // <NormalRatesPage filterData={filtered}/>
+  };
 
   return (
     <>
     <Header />
       <header className={styles2.header}>
         <nav className={styles2.navbar}>
-          <div className={styles2.navbarLeft}>
-
-          <NavbarButton
+        <div className={styles2.navbarLeft}>
+            {/* Dynamic CLI/CC Button */}
+            <NavbarButton
               icon={faChartLine}
               text={location.pathname === "/cliratestable" ? "CC Rates" : "CLI Rates"}
               isDisabled={!customerId}
@@ -130,39 +139,35 @@ const RateTable = ({ className }) => {
               }
             />
 
-            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
-              <div className={styles2.navbarItemIcon}>
-                <FontAwesomeIcon icon={faStar} size="lg" />
-              </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>
-                Special Rates
-              </div>
-            </div>
-            <div className={styles2.navbarItem} onClick={handleSelectRatesClick}>
-              <div className={styles2.navbarItemIcon}>
-                <FontAwesomeIcon icon={faCheckCircle} size="lg" />
-              </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>
-                Select Rates
-              </div>
-            </div>
-            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
-              <div className={styles2.navbarItemIcon}>
-                <FontAwesomeIcon icon={faFilter} size="lg" />
-              </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>
-                Filter Rates
-              </div>
-            </div>
-            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
-              <div className={styles2.navbarItemIcon}>
-                <FontAwesomeIcon icon={faPlusCircle} size="lg" />
-              </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>
-                Add Rates
-              </div>
-            </div>
+            {/* Special Rates Button */}
+            <NavbarButton
+              icon={faStar}
+              text="Special Rates"
+              onClick={navigateToRatesPage}
+            />
 
+            {/* Select Rates Button */}
+            <NavbarButton
+              icon={faCheckCircle}
+              text="Select Rates"
+              onClick={handleSelectRatesClick}
+            />
+
+            {/* Filter Rates Button */}
+            <NavbarButton
+              icon={faFilter}
+              text="Filter Rates"
+              isDisabled={!disabledRates}
+              onClick={handleFIlterData}
+            />
+
+            {/* Add Rates Button */}
+            <NavbarButton
+              icon={faPlusCircle}
+              text="Add Rates"
+              isDisabled={!disabledRates}
+              onClick={() => navigate("/addrates")}
+            />
           </div>
           <div className={styles2.navbarProfile}>
             {customerId} &ensp;<FontAwesomeIcon icon={faUserCircle} size="lg" />
@@ -237,9 +242,10 @@ const RateTable = ({ className }) => {
             <thead>
               <tr>
                 {selectingRates && <th>Select</th>}
+                {/* <th>Country Code</th> */}
                 <th>Country</th>
                 <th>Quality Description</th>
-                <th style={{ width: "15%" }}>RTP</th>
+                <th>RTP</th>
                 <th>ASR</th>
                 <th>ACD</th>
                 <th>Rate ($)</th>
@@ -265,7 +271,8 @@ const RateTable = ({ className }) => {
                         />
                       </td>
                     )}
-                    <td className="w-20">{rate.country}</td>
+                    {/* <td >{rate.countryCode}</td> */}
+                    <td>{rate.country}</td>
                     <td>{rate.qualityDescription}</td>
                     <td>{rate.rtp}</td>
                     <td>{rate.asr}</td>

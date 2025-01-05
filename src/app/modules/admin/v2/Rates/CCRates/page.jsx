@@ -55,7 +55,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     // If "Add to Ticker" is selected, update the cct API with this rate's ID
     if (leadData.addToTicker) {
       try {
-        await axios.post('https://backend.cloudqlobe.com/v3/api/cct', leadData);
+        await axios.post('http://localhost:5000/v3/api/cct', leadData);
         console.log("Added to ticker");
       } catch (error) {
         console.error("Failed to add rate to ticker:", error);
@@ -140,8 +140,8 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
               onChange={(e) => setNewLead({ ...newLead, status: e.target.value })}
               className="border border-gray-300 rounded-lg px-2 py-1"
             >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
             </select>
           </label>
           <label className="flex items-center mb-4">
@@ -203,9 +203,9 @@ const RatesPage = () => {
     try {
       let response;
       if (isUpdateMode) {
-        response = await axios.put(`https://backend.cloudqlobe.com/v3/api/rates/${currentRate._id}`, leadData);
+        response = await axios.put(`http://localhost:5000/v3/api/rates/${currentRate._id}`, leadData);
       } else {
-        response = await axios.post('https://backend.cloudqlobe.com/v3/api/rates', leadData);
+        response = await axios.post('http://localhost:5000/v3/api/rates', leadData);
       }
       setRateData((prev) =>
         isUpdateMode

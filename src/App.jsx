@@ -61,6 +61,7 @@ import Dashccrates from './app/modules/customer/pages/dashboardccrates/page.jsx'
 import Dashcli from './app/modules/customer/pages/dashclirates/page.jsx';
 import DashSpecial from './app/modules/customer/pages/dashspecialrate/page.jsx'
 import CCRateTable from "./app/components/CCRates.jsx";
+import CLIRatesPage from "./app/modules/customer/pages/rates_page/CLIRates/page.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -132,8 +133,9 @@ function App() {
       <Route path="/admin/support/messages" element={<PageUnderDevelopment />} />
       <Route path="/admin/support/internalassistence" element={<InternalAssistence />} />
       <Route path="/cliratestable" element={<RateTableCli />} />
-
+      {/* CLIRatesPage */}
       <Route path="/specialrates" element={<RateTableSpecial />} />
+      <Route path="/clirates" element={<CLIRatesPage />} />
 
       <Route path="/addrates" element={<RateTableAdd />} />
 
