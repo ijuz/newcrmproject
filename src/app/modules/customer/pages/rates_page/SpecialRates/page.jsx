@@ -145,7 +145,7 @@ const NormalRatesPage = () => {
               onClick={() => setShowSelectColumn(!showSelectColumn)}
               className="px-6 py-2 bg-green-600 text-white font-regular mr-5 rounded-lg hover:bg-orange-700 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {showSelectColumn ? "Hide Select Rates" : "Select Rates"}
+              {showSelectColumn ? "Hide  Rates" : "Select Rates"}
             </button>
 
             {/* Filter Icon Button to show only selected rates */}
