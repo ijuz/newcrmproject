@@ -135,7 +135,7 @@ const Navbar = () => {
 
 
   return (
-    <div className="fixed top-16 left-0 w-full bg-white shadow-lg z-50 p-4">
+    <div className="fixed top-16 left-0 w-full bg-white shadow-lg z-8 p-4">
       <div className="flex items-center justify-between gap-x-4">
         {menuItems.map((item) => (
           <div key={item.id} className="relative">
