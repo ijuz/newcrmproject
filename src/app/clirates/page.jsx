@@ -176,8 +176,10 @@ const RateTable = ({ className }) => {
             <p>{error}</p>
           </div>
         )}
+<div className="min-h-[50px] w-full bg-gradient-to-br from-[#323F3F] to-[#83A5A5] flex flex-col items-center justify-center ">
+<Ticker />
 
-        <Ticker FiltertickerData={filteredRates} />
+</div>
 
         <div
           className={styles.container}

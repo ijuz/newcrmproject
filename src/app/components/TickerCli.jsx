@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { ArrowUpIcon, ArrowDownIcon, Globe } from "lucide-react";
 
 const CurrencyTicker = ({ FiltertickerData }) => {
-
+////
   const [tickerData, setTickerData] = useState([]);
  
 
