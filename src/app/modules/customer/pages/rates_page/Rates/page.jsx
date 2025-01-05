@@ -33,7 +33,7 @@ const NormalRatesPage = () => {
     if (filterData) {
       setFilterMyRate(filterData);
     }
-  }, [filterData]);
+  }, []);
 
   const getCustomerIdFromToken = () => {
     const token = localStorage.getItem("token");
@@ -158,7 +158,7 @@ const NormalRatesPage = () => {
               <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>CLI Rates</div>
             </div>
 
-            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
+            <div className={styles2.navbarItem} onClick={()=>navigate('/specialrates')}>
               <div className={styles2.navbarItemIcon} >
                 <FontAwesomeIcon icon={faStar} size="lg" />
               </div>
