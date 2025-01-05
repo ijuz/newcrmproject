@@ -74,13 +74,27 @@ const navigate = useNavigate()
 
 {/* Rates Dropdown */}
 <div className="relative group">
-  <a href="#" className="flex items-center text-gray-600 hover:text-indigo-600 text-base">
+  <a
+    href="#"
+    onClick={() => navigate('/rates')} // Navigate to Rates page
+    className="flex items-center text-gray-600 hover:text-indigo-600 text-base"
+  >
     <DocumentCurrencyBangladeshiIcon className="w-8 h-8 mr-3 text-yellow-500" />
     Accounts
   </a>
   <div className="dropdown absolute left-0 mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10 group-hover:block">
     {/* Rates Dropdown */}
-    <div className="relative group">
+    <div
+      className="relative group"
+      onMouseEnter={() => {
+        // Show the sub-dropdown
+        document.getElementById('ratesSubMenu').style.display = 'block';
+      }}
+      onMouseLeave={() => {
+        // Hide the sub-dropdown
+        document.getElementById('ratesSubMenu').style.display = 'none';
+      }}
+    >
       <a
         href="#"
         onClick={() => navigate('/rates')} // Navigate to Rates page
@@ -88,23 +102,61 @@ const navigate = useNavigate()
       >
         Rates
       </a>
-      <div className="absolute right-0 mt-0 bg-white border border-orange-500 shadow-lg rounded-lg w-56 hidden group-hover:block">
-        <a href="/admin/ccrates" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CC Rates</a>
-        <a href="/admin/clirates" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CLI Rates</a>
-        <a href="/admin/privaterates" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Special Rates</a>
-        <a href="/admin/specialrates" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Targeted  Rates</a>
+      <div
+        id="ratesSubMenu"
+        className="absolute right-0 mt-0 bg-white border border-orange-500 shadow-lg rounded-lg w-56 hidden"
+        style={{
+          right: '-100%', // Adjust the right position to show the sub-dropdown to the right side
+          bottom: '-120px' // Move the sub-dropdown slightly higher
+        }}
+      >
+        <a
+          href="/admin/ccrates"
+          className="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+        >
+          CC Rates
+        </a>
+        <a
+          href="/admin/clirates"
+          className="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+        >
+          CLI Rates
+        </a>
+        <a
+          href="/admin/privaterates"
+          className="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+        >
+          Special Rates
+        </a>
+        <a
+          href="/admin/specialrates"
+          className="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+        >
+          Targeted Rates
+        </a>
       </div>
     </div>
     {/* Other Menu Items */}
-    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Recharge</a>
-    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Requests</a>
-    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
-    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Email</a>
-    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
-    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+      Recharge
+    </a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+      Requests
+    </a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+      Reports
+    </a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+      Email
+    </a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+      Followups
+    </a>
+    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+      Internal Assistance
+    </a>
   </div>
 </div>
-
 
 
       {/* Support Dropdown */}
