@@ -4,7 +4,7 @@ import styles from "./RateTable.module.css"; // Import the CSS module
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Ticker from "./Ticker";
-import RateTable from "./SpecialRates"; // Import the reusable RateTable component
+import RateTable from "./CCRates"; // Import the reusable RateTable component
 
 const VoIPRatesTable = () => {
   // State Variables

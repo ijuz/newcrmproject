@@ -54,13 +54,13 @@ import RateTableSpecial from "./app/modules/customer/pages/rates_page/Rates/page
 import RateTableAdd from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
 import TechnicalInfo from "./app/modules/auth/signup/TechnicalInfo.jsx";
 import SignUpPage from "./app/modules/auth/signup/page.jsx";   //gh
-import SignUpFrame from "./app/modules/auth/Base/Signup/page.jsx";//
 
 import AddTicket from './app/modules/customer/pages/trouble_page/Addfollowup/page.jsx'
 
 import Dashccrates from './app/modules/customer/pages/dashboardccrates/page.jsx';
 import Dashcli from './app/modules/customer/pages/dashclirates/page.jsx';
 import DashSpecial from './app/modules/customer/pages/dashspecialrate/page.jsx'
+import CCRateTable from "./app/components/CCRates.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -82,7 +82,6 @@ function App() {
       <Route path="/signIn" element={<LoginFrame />} />
       <Route path="/notification" element={<Notification />} />
       <Route path="/admin_dashboard" element={<AdminDahboard />} />
-
       <Route path="/*" element={
         // <PrivateRoute>
         <Routes>
@@ -133,7 +132,9 @@ function App() {
       <Route path="/admin/support/messages" element={<PageUnderDevelopment />} />
       <Route path="/admin/support/internalassistence" element={<InternalAssistence />} />
       <Route path="/cliratestable" element={<RateTableCli />} />
+
       <Route path="/specialrates" element={<RateTableSpecial />} />
+
       <Route path="/addrates" element={<RateTableAdd />} />
 
       <Route path='/dashboardccrates' element={<Dashccrates />} />

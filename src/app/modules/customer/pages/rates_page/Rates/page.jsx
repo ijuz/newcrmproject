@@ -11,6 +11,7 @@ import Header from "../../../../../components/Header";
 import Footer from "../../../../../components/Footer";
 import { useLocation } from "react-router-dom";
 import axiosInstance from "../../../../admin/v2/utils/axiosinstance";
+import NavbarButton from "../../../../../components/RatesButton";
 
 const NormalRatesPage = () => {
   const navigate = useNavigate();
@@ -24,16 +25,11 @@ const NormalRatesPage = () => {
   const [customerData, setCustomerData] = useState(null);
   const [showSelectColumn, setShowSelectColumn] = useState(false);
   const [showOnlySelected, setShowOnlySelected] = useState(false);
-  // const [rates, setRates] = useState();
   const [filterMyRate, setFilterMyRate] = useState()
-  const [addMyRates, setAddMyRates] = useState()
-  const filterData = location.state || {};
+  const [disabledRate, setDisabledRate] = useState(false)
+  const { filtered, isDisabled } = location.state || {}; // Destructure state properties
 
-  useEffect(() => {
-    if (filterData) {
-      setFilterMyRate(filterData);
-    }
-  }, [filterData]);
+  // console.log("disabled",disabledRate);
 
   const getCustomerIdFromToken = () => {
     const token = localStorage.getItem("token");
@@ -66,6 +62,11 @@ const NormalRatesPage = () => {
     };
 
     fetchCustomerAndRates();
+
+    if (filtered) {
+      setFilterMyRate(filtered);
+      setDisabledRate(isDisabled)
+    }
   }, []);
 
   const filteredData =
@@ -83,8 +84,6 @@ const NormalRatesPage = () => {
 
   const displayedData = showOnlySelected ? selectedRates : sortedData;
 
-  // console.log(selectedRates);
-
   if (loading) {
     return (
       <div className="min-h-screen bg-orange-50 flex items-center justify-center">
@@ -97,26 +96,29 @@ const NormalRatesPage = () => {
     );
   }
 
-    // Check if a rate is disabled based on customer's data
-    const isRateDisabled = (rateId) => {
-      if (!customerData) return false;
-      const { myRatesId, rateAddedtotest, rateTested, rateTesting } = customerData;
-  
-      return (
-        myRatesId.includes(rateId) ||
-        rateAddedtotest.includes(rateId) ||
-        rateTested.includes(rateId) ||
-        rateTesting.includes(rateId)
-      );
-    };
+  // Check if a rate is disabled based on customer's data
+  const isRateDisabled = (rateId) => {
+    if (!customerData) return false;
+    const { myRatesId, rateAddedtotest, rateTested, rateTesting } = customerData;
+
+    return (
+      myRatesId.includes(rateId) ||
+      rateAddedtotest.includes(rateId) ||
+      rateTested.includes(rateId) ||
+      rateTesting.includes(rateId)
+    );
+  };
 
   const navigateToRatesPage = () => {
     navigate("/pricing");
   };
 
+
   const handleMyRates = async () => {
-    if (!Array.isArray(filterData) || filterData.length === 0) {
+    if (!Array.isArray(filterMyRate) || filterMyRate.length === 0) {
       console.error("No rates to add.");
+      alert('No rates to add')
+
       return;
     }
 
@@ -128,7 +130,7 @@ const NormalRatesPage = () => {
     }
 
     try {
-      for (const rate of filterData) {
+      for (const rate of filterMyRate) {
         await axiosInstance.post("v3/api/myrates", {
           customerId,
           rateId: rate._id,
@@ -138,12 +140,25 @@ const NormalRatesPage = () => {
       }
       navigate('/pricing')
       alert("All rates added successfully.");
-      filterData = ''
+      filterMyRate = ''
     } catch (error) {
       console.error("Error adding rates:", error);
     }
   };
 
+  const filterSpecialRate = () => {
+    setFilterMyRate(selectedRates)
+
+    setShowSelectColumn(!showSelectColumn)
+  }
+
+  const handleDisabled = () => {
+    setDisabledRate(!disabledRate)
+    setShowSelectColumn(!showSelectColumn)
+  }
+
+  console.log(selectedRates);
+  console.log(filtered);
 
 
   return (
@@ -152,40 +167,43 @@ const NormalRatesPage = () => {
       <header className={styles2.header}>
         <nav className={styles2.navbar}>
           <div className={styles2.navbarLeft}>
-            <div className={styles2.navbarItem} onClick={() => navigate("/cliratestable")}>
-              <div className={styles2.navbarItemIcon}>
-                <FontAwesomeIcon icon={faChartLine} size="lg" />
-              </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>CLI Rates</div>
-            </div>
 
             <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
               <div className={styles2.navbarItemIcon} >
-                <FontAwesomeIcon icon={faStar} size="lg" />
+                <FontAwesomeIcon icon={faChartLine} size="lg" />
               </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Special Rates</div>
+              <div className={`${styles2.navbarItemText}`}>CC Rates</div>
             </div>
 
-            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
+            <div className={styles2.navbarItem}>
+              <div className={styles2.navbarItemIcon} >
+                <FontAwesomeIcon icon={faStar} size="lg" />
+              </div>
+              <div className={`${styles2.navbarItemText}`}>Special Rates</div>
+            </div>
+
+            <div className={styles2.navbarItem} onClick={handleDisabled}>
               <div className={styles2.navbarItemIcon}>
                 <FontAwesomeIcon icon={faCheckCircle} size="lg" />
               </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Select Rates</div>
+              <div className={`${styles2.navbarItemText}`}>Select Rates</div>
             </div>
 
-            <div className={styles2.navbarItem} onClick={navigateToRatesPage}>
-              <div className={styles2.navbarItemIcon}>
-                <FontAwesomeIcon icon={faFilter} size="lg" />
-              </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Filter Rates</div>
-            </div>
+            {/* Filter Rates Button */}
+            <NavbarButton
+              icon={faFilter}
+              text="Filter Rates"
+              isDisabled={!disabledRate}
+              onClick={filterSpecialRate}
+            />
 
-            <div className={styles2.navbarItem} onClick={handleMyRates}>
-              <div className={styles2.navbarItemIcon}>
-                <FontAwesomeIcon icon={faPlusCircle} size="lg" />
-              </div>
-              <div className={`${styles2.navbarItemText} ${!customerId ? styles2.disabled : ""}`}>Add Rates</div>
-            </div>
+            {/* Add Rates Button */}
+            <NavbarButton
+              icon={faPlusCircle}
+              text="Add Rates"
+              isDisabled={!disabledRate}
+              onClick={handleMyRates}
+            />
 
           </div>
           <div className={styles2.navbarProfile}>
@@ -219,9 +237,9 @@ const NormalRatesPage = () => {
               onClick={() => setShowOnlySelected(!showOnlySelected)}
               className="w-10 h-10 bg-[#005F73] text-white rounded-full hover:bg-orange-700 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center"
             >
-              <FunnelIcon className="w-5 h-5" />
+              <FunnelIcon className="w-5 h-5" onClick={filterSpecialRate} />
             </button>
-          </div>
+          </div >
         </div>
 
         <div className="tableContainer overflow-x-auto py-5 rounded-lg">
@@ -268,7 +286,7 @@ const NormalRatesPage = () => {
                   <td className="p-2 text-center border border-gray-300">{item.country}</td>
                   <td className="p-2 text-center border border-gray-300">{item.qualityDescription}</td>
                   <td className="p-2 text-center border border-gray-300">{item.rate}</td>
-                  <td>{` OutBound : ${item.profile?.Outbound || ''}   IVR : ${item.profile?.IVR || ''}`}</td>
+                  <td className="p-2 text-center border border-gray-300">{item.profile}</td>
                   <td className="p-2 text-center border border-gray-300">{item.status}</td>
                 </tr>
               ))}

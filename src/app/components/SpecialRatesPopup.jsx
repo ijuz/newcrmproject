@@ -89,7 +89,7 @@ const CountryRatesTable = ({ isVisible }) => {
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-6 py-3">{item.country}</td>
                   <td className="px-6 py-3 text-sm text-blue-500">{item.qualityDescription}</td>
-                  <td className="px-6 py-3">${item.rate.toFixed(3)}</td>
+                  <td className="px-6 py-3">${item.rate}</td>
                 </tr>
               ))}
             </tbody>

@@ -141,6 +141,7 @@ const SignInPage = () => {
               {loading ? "Signing In..." : "Sign In"}
             </button>
             <button
+            onClick={() => navigate('/Registers')}
               type="button"
               className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
             >

@@ -14,7 +14,9 @@ const MyRatesPage = () => {
   const [showCheckboxes, setShowCheckboxes] = useState(false); // Controls whether checkboxes are visible
   const [loading, setLoading] = useState(true); // Initialize loading state
   const [dataNotFound, setDataNotFound] = useState(false); // Track if no data is found
-console.log(myRatesData);
+  const [rates, setRates] = useState([]); 
+
+// console.log(customerData);
 
   // Fetch customer details
   useEffect(() => {
@@ -54,23 +56,64 @@ console.log(myRatesData);
 
   // Fetch rates based on myRatesId from customer data
   useEffect(() => {
-    const fetchMyRates = async () => {
-      if (customerData && customerData.myRatesId.length) {
+    const fetchRates =  async() => {
+      if (customerData) {
         try {
-          const rateFetchPromises = customerData.myRatesId.map(async (rateId) => {
-            const ratesResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/myrates/${rateId}`);
+            const ratesResponse = await axios.get(`http://localhost:5000/v3/api/myrates`);
+          // console.log(ratesResponse.data);
+
+          const ratesDataArray = ratesResponse.data.filter(rate => rate.customerId === customerData._id);
+          console.log(ratesDataArray);
+          
+          setRates(ratesResponse);
+        } catch (error) {
+          console.error('Error fetching rates:', error);
+        }
+      }
+    };
+    fetchRates();
+  }, [customerData]);
+
+  useEffect(() => {
+    const fetchMyRates =  async() => {
+      if (rates?.length) {
+        try {
+          const rateFetchPromises = rates.rateId.map(async (rateId) => {
+
+            const ratesResponse = await axios.get(`http://localhost:5000/v3/api/rates${rateId}`);
             return ratesResponse.data;
           });
-
           const ratesDataArray = await Promise.all(rateFetchPromises);
-          setMyRatesData(ratesDataArray.flat());
+
+          console.log("my rates",ratesDataArray);
+          
+          // setMyRatesData(ratesResponse);
         } catch (error) {
           console.error('Error fetching rates:', error);
         }
       }
     };
     fetchMyRates();
-  }, [customerData]);
+  }, [rates]);
+
+  // useEffect(() => {
+  //   const fetchMyRates = async () => {
+  //     if (customerData && customerData.myRatesId.length) {
+  //       try {
+  //         const rateFetchPromises = customerData.myRatesId.map(async (rateId) => {
+  //           const ratesResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/myrates/${rateId}`);
+  //           return ratesResponse.data;
+  //         });
+
+  //         const ratesDataArray = await Promise.all(rateFetchPromises);
+  //         setMyRatesData(ratesDataArray.flat());
+  //       } catch (error) {
+  //         console.error('Error fetching rates:', error);
+  //       }
+  //     }
+  //   };
+  //   fetchMyRates();
+  // }, [customerData]);
 
   // Loading state handling
   useEffect(() => {
