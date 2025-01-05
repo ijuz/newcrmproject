@@ -197,15 +197,15 @@ const RatesPage = () => {
     };
     fetchRates();
   }, []);
-  
+
   const handleAddLead = async (leadData) => {
 
     try {
       let response;
       if (isUpdateMode) {
-        response = await axios.put(`http://localhost:5000/v3/api/rates/${currentRate._id}`, leadData);
+        response = await axios.put(`https://backend.cloudqlobe.com/v3/api/rates/${currentRate._id}`, leadData);
       } else {
-        response = await axios.post('http://localhost:5000/v3/api/rates', leadData);
+        response = await axios.post('https://backend.cloudqlobe.com/v3/api/rates', leadData);
       }
       setRateData((prev) =>
         isUpdateMode
