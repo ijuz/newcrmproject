@@ -10,7 +10,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     qualityDescription: '',
     status: 'inactive',
     profile: '',
-    profileRate: '',
+    profilerate: '',
     category: '',
     testStatus: 'as',
     specialRate: false,
@@ -27,7 +27,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         qualityDescription: '',
         status: 'inactive',
         profile: '',
-        profileRate: '',
+        profilerate: '',
         category: '',
         testStatus: 'as',
         specialRate: false,
@@ -47,7 +47,6 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     } else {
       leadData.category = newLead.category;
     }
-    console.log(leadData);
 
     await onSubmit(leadData);
 
@@ -56,7 +55,6 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     if (leadData.addToTicker) {
       try {
         await axios.post('https://backend.cloudqlobe.com/v3/api/cct', leadData);
-        console.log("Added to ticker");
       } catch (error) {
         console.error("Failed to add rate to ticker:", error);
       }
@@ -68,7 +66,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
       qualityDescription: '',
       status: 'inactive',
       profile: '',
-      profileRate: '',
+      profilerate: '',
       category: '',
       testStatus: 'as',
       specialRate: false,
@@ -120,8 +118,8 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
           <input
             type="number"
             placeholder="Enter Rate"
-            value={newLead?.rate || ''}
-            onChange={(e) => setNewLead({ ...newLead, rate: e.target.value })}
+            value={newLead?.profilerate || ''}
+            onChange={(e) => setNewLead({ ...newLead, profilerate: e.target.value })}
             className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg"
           />
           <label className="flex items-center mb-4">
@@ -183,20 +181,18 @@ const RatesPage = () => {
   const [currentRate, setCurrentRate] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  console.log(rateData);
 
   useEffect(() => {
     const fetchRates = async () => {
       try {
         const response = await axios.get('https://backend.cloudqlobe.com/v3/api/rates');
         setRateData(response.data);
-        console.log("res", response);
       } catch (error) {
         console.error('Error fetching rates:', error);
       }
     };
     fetchRates();
-  }, []);
+  }, [rateData]);
 
   const handleAddLead = async (leadData) => {
 
@@ -205,9 +201,9 @@ const RatesPage = () => {
       if (isUpdateMode) {
         response = await axios.put(`https://backend.cloudqlobe.com/v3/api/rates/${currentRate._id}`, leadData);
       } else {
-        // http://localhost:3000
         response = await axios.post('https://backend.cloudqlobe.com/v3/api/rates', leadData);
       }
+      
       setRateData((prev) =>
         isUpdateMode
           ? prev.map(rate => (rate._id === currentRate._id ? response.data : rate))
@@ -312,7 +308,7 @@ const RatesPage = () => {
                   <td className="py-2 px-4 border">{rate.countryCode}</td>
                   <td className="py-2 px-4 border">{rate.country}</td>
                   <td className="py-2 px-4 border">{rate.qualityDescription}</td>
-                  <td className="py-2 px-4 border">{rate.profileRate}</td>
+                  <td className="py-2 px-4 border">{rate.profilerate}</td>
                   <td className="py-2 px-4 border">{rate.status}</td>
                   <td className="py-2 px-4 border">{rate.profile}</td>
                   <td className="py-2 px-4 border">
