@@ -12,10 +12,12 @@ const CountryRatesTable = ({ isVisible }) => {
   const fetchData = async () => {
     setLoading(true); // Set loading to true before fetching
     try {
-      const response = await axios.get("https://cloudqlobe-server.onrender.com/v3/api/rates");
+      const response = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
       const fetchedData = response.data; // Data from the response
       const filteredData = fetchedData.filter((rate) => rate.category === "specialrate"); // Filter based on category
       setData(filteredData);
+      console.log("cloudqlobe-server",response);
+      
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
