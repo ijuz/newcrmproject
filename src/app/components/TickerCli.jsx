@@ -46,8 +46,8 @@ const CurrencyTicker = ({ FiltertickerData }) => {
     };
 
     fetchData();
-  }, [FiltertickerData, tickerData]);
-
+  }, [FiltertickerData, ]);
+  // tickerData
 
   
 

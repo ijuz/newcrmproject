@@ -8,9 +8,9 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     countryCode: '',
     country: '',
     qualityDescription: '',
-    status: 'inactive',
+    status: 'Inactive',
     profile: '',
-    profilerate: '',
+    rate: '',
     category: '',
     testStatus: 'as',
     specialRate: false,
@@ -25,9 +25,9 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         countryCode: '',
         country: '',
         qualityDescription: '',
-        status: 'inactive',
+        status: 'Inactive',
         profile: '',
-        profilerate: '',
+        rate: '',
         category: '',
         testStatus: 'as',
         specialRate: false,
@@ -64,9 +64,9 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
       countryCode: '',
       country: '',
       qualityDescription: '',
-      status: 'inactive',
+      status: 'Inactive',
       profile: '',
-      profilerate: '',
+      rate: '',
       category: '',
       testStatus: 'as',
       specialRate: false,
@@ -82,7 +82,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         <h3 className="text-lg font-semibold mb-4">{initialData ? 'Update Rate' : 'Add New Rate'}</h3>
         <form onSubmit={handleAddLead}>
           <input
-            type="number"
+            type="text"
             placeholder="Country Code"
             value={newLead.countryCode}
             onChange={(e) => setNewLead({ ...newLead, countryCode: e.target.value })}
@@ -118,8 +118,8 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
           <input
             type="number"
             placeholder="Enter Rate"
-            value={newLead?.profilerate || ''}
-            onChange={(e) => setNewLead({ ...newLead, profilerate: e.target.value })}
+            value={newLead?.rate || ''}
+            onChange={(e) => setNewLead({ ...newLead, rate: e.target.value })}
             className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg"
           />
           <label className="flex items-center mb-4">
@@ -195,6 +195,7 @@ const RatesPage = () => {
   }, [rateData]);
 
   const handleAddLead = async (leadData) => {
+console.log(leadData);
 
     try {
       let response;
@@ -308,7 +309,7 @@ const RatesPage = () => {
                   <td className="py-2 px-4 border">{rate.countryCode}</td>
                   <td className="py-2 px-4 border">{rate.country}</td>
                   <td className="py-2 px-4 border">{rate.qualityDescription}</td>
-                  <td className="py-2 px-4 border">{rate.profilerate}</td>
+                  <td className="py-2 px-4 border">{rate.rate}</td>
                   <td className="py-2 px-4 border">{rate.status}</td>
                   <td className="py-2 px-4 border">{rate.profile}</td>
                   <td className="py-2 px-4 border">
