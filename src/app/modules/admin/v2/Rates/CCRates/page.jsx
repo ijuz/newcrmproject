@@ -10,7 +10,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     qualityDescription: '',
     status: 'inactive',
     profile: '',
-    rate: '',
+    profileRate: '',
     category: '',
     testStatus: 'as',
     specialRate: false,
@@ -27,7 +27,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         qualityDescription: '',
         status: 'inactive',
         profile: '',
-        rate: '',
+        profileRate: '',
         category: '',
         testStatus: 'as',
         specialRate: false,
@@ -55,7 +55,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     // If "Add to Ticker" is selected, update the cct API with this rate's ID
     if (leadData.addToTicker) {
       try {
-        await axios.post('http://localhost:5000/v3/api/cct', leadData);
+        await axios.post('https://backend.cloudqlobe.com/v3/api/cct', leadData);
         console.log("Added to ticker");
       } catch (error) {
         console.error("Failed to add rate to ticker:", error);
@@ -68,7 +68,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
       qualityDescription: '',
       status: 'inactive',
       profile: '',
-      rate: '',
+      profileRate: '',
       category: '',
       testStatus: 'as',
       specialRate: false,
@@ -205,6 +205,7 @@ const RatesPage = () => {
       if (isUpdateMode) {
         response = await axios.put(`https://backend.cloudqlobe.com/v3/api/rates/${currentRate._id}`, leadData);
       } else {
+        // http://localhost:3000
         response = await axios.post('https://backend.cloudqlobe.com/v3/api/rates', leadData);
       }
       setRateData((prev) =>
@@ -311,7 +312,7 @@ const RatesPage = () => {
                   <td className="py-2 px-4 border">{rate.countryCode}</td>
                   <td className="py-2 px-4 border">{rate.country}</td>
                   <td className="py-2 px-4 border">{rate.qualityDescription}</td>
-                  <td className="py-2 px-4 border">{rate.rate}</td>
+                  <td className="py-2 px-4 border">{rate.profileRate}</td>
                   <td className="py-2 px-4 border">{rate.status}</td>
                   <td className="py-2 px-4 border">{rate.profile}</td>
                   <td className="py-2 px-4 border">

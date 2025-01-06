@@ -62,10 +62,8 @@ const MyRatesPage = () => {
             const ratesResponse = await axios.get(`http://localhost:5000/v3/api/myrates`);
           // console.log(ratesResponse.data);
 
-          const ratesDataArray = ratesResponse.data.filter(rate => rate.customerId === customerData._id);
-          console.log(ratesDataArray);
-          
-          setRates(ratesResponse);
+          const ratesDataArray = ratesResponse.data.filter(rate => rate.customerId === customerData._id);          
+          setRates(ratesResponse.data);
         } catch (error) {
           console.error('Error fetching rates:', error);
         }
@@ -73,14 +71,18 @@ const MyRatesPage = () => {
     };
     fetchRates();
   }, [customerData]);
+  console.log("rates",rates);
+
 
   useEffect(() => {
     const fetchMyRates =  async() => {
-      if (rates?.length) {
+      console.log("start myrate");
+      
+      if (rates) {
         try {
-          const rateFetchPromises = rates.rateId.map(async (rateId) => {
+          const rateFetchPromises = rates.rates.map(async (rateId) => {
 
-            const ratesResponse = await axios.get(`http://localhost:5000/v3/api/rates${rateId}`);
+            const ratesResponse = await axios.get(`http://localhost:5000/v3/api/rates/${rateId}`);
             return ratesResponse.data;
           });
           const ratesDataArray = await Promise.all(rateFetchPromises);
@@ -95,25 +97,6 @@ const MyRatesPage = () => {
     };
     fetchMyRates();
   }, [rates]);
-
-  // useEffect(() => {
-  //   const fetchMyRates = async () => {
-  //     if (customerData && customerData.myRatesId.length) {
-  //       try {
-  //         const rateFetchPromises = customerData.myRatesId.map(async (rateId) => {
-  //           const ratesResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/myrates/${rateId}`);
-  //           return ratesResponse.data;
-  //         });
-
-  //         const ratesDataArray = await Promise.all(rateFetchPromises);
-  //         setMyRatesData(ratesDataArray.flat());
-  //       } catch (error) {
-  //         console.error('Error fetching rates:', error);
-  //       }
-  //     }
-  //   };
-  //   fetchMyRates();
-  // }, [customerData]);
 
   // Loading state handling
   useEffect(() => {
