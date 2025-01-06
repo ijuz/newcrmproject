@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowUpIcon, ArrowDownIcon, Globe } from "lucide-react";
 
-const CurrencyTicker = ({ Data }) => {
+const CCTicker = ({ Data }) => {
     const containerRef = useRef(null);
     const [cloneCount, setCloneCount] = useState(1);
     const cardWidth = 280;
@@ -37,6 +37,49 @@ const CurrencyTicker = ({ Data }) => {
     const shouldScroll = Data.length >= 6; // Scroll only if there are 6 or more items
     const totalWidth = Data.length * cardWidth * cloneCount;
 
+    const RateCard = ({ data }) => (
+        <div className="rate-card flex-shrink-0 bg-white rounded-lg shadow-md p-4 mx-2 min-w-[200px] border border-orange-100">
+            <div className="w-full space-y-2">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-base font-bold text-gray-800">{data.country}</h2>
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium 
+        ${data.status?.toLowerCase() === 'active'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-orange-100 text-orange-700'}`}
+                    >
+                        {data?.status?.charAt(0)?.toUpperCase() + data.status?.slice(1)}
+                    </span>
+
+                </div>
+                <div className="space-y-1.5">
+                    <div className="flex justify-between items-center bg-orange-50/50 rounded-md p-1.5">
+                        <span className="text-sm text-gray-600">Outbound</span>
+                        <span className="font-medium flex items-center text-sm">
+                            {data.profile.Outbound ? data.profile.Outbound : 'N/A'} {data.currency || 'USD'}
+                            {data.status?.toLowerCase() === 'active' && data.profile.Outbound ? (
+                                <ArrowUpIcon className="h-3 w-3 text-green-500 ml-1" />
+                            ) : (
+                                <ArrowDownIcon className="h-3 w-3 text-orange-500 ml-1" />
+                            )}
+                        </span>
+                    </div>
+
+                    <div className="flex justify-between items-center bg-orange-50/50 rounded-md p-1.5">
+                        <span className="text-sm text-gray-600">IVR</span>
+                        <span className="font-medium flex items-center text-sm">
+                            {data.profile.IVR ? data.profile.IVR : 'N/A'} {data.currency || 'USD'}
+                            {data.status?.toLowerCase() === 'active' && data.profile.IVR ? (
+                                <ArrowUpIcon className="h-3 w-3 text-green-500 ml-1" />
+                            ) : (
+                                <ArrowDownIcon className="h-3 w-3 text-orange-500 ml-1" />
+                            )}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <div className="relative w-full overflow-hidden bg-gradient-to-r from-orange-50 to-white" ref={containerRef}>
             <style>
@@ -50,15 +93,19 @@ const CurrencyTicker = ({ Data }) => {
             will-change: transform;
             display: flex;
           }
+
           .ticker-container:hover .ticker-content {
             animation-play-state: paused;
           }
+
           .rate-card {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.2s ease;
           }
+
           .rate-card:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 12px 24px -8px rgba(255, 153, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px -4px rgba(255, 153, 0, 0.1);
+            border-color: rgba(255, 153, 0, 0.3);
           }
         `}
             </style>
@@ -66,41 +113,11 @@ const CurrencyTicker = ({ Data }) => {
                 <div className="ticker-content">
                     {Array.from({ length: shouldScroll ? cloneCount : 1 }).map((_, cloneIndex) => (
                         <div key={`clone-${cloneIndex}`} className="flex">
-                            {Data.map((item, index) => (
-                                <div
-                                    key={`${cloneIndex}-${item._id || index}`}
-                                    className="rate-card flex-shrink-0 bg-white rounded-lg shadow-md p-4 mx-2 min-w-[260px] border border-orange-100"
-                                >
-                                    <div className="w-full space-y-3">
-                                        <div className="flex justify-between items-center">
-                                            <h2 className="text-base font-bold text-gray-800">{item.country || "Unknown"}</h2>
-                                            <span className={`px-3 py-1 rounded-full text-xs font-medium transition-colors
-                        ${item.status === "active"
-                                                    ?
-                                                    "bg-green-100 text-green-700 hover:bg-green-200"
-                                                    : "bg-orange-100 text-orange-700 hover:bg-orange-200"
-                                                }`}>
-                                                {item.status}
-                                            </span>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <div className="flex justify-between items-center bg-white/60 rounded-lg p-3 transition-all hover:bg-white/80">
-                                                <span className="font-medium text-sm text-gray-800">{item.qualityDescription || "N/A"}</span>
-                                            </div>
-                                            <div className="flex justify-between items-center bg-white/60 rounded-lg p-3 transition-all hover:bg-white/80">
-                                                <span className="text-sm text-gray-600">Rate</span>
-                                                <span className="font-medium flex items-center text-sm">
-                                                    {item.rate} {item.currency || "USD"}
-                                                    {item.status === "active" ? (
-                                                        <ArrowDownIcon className="h-4 w-4 text-green-500 ml-2" />
-                                                    ) : (
-                                                        <ArrowUpIcon className="h-4 w-4 text-orange-500 ml-2" />
-                                                    )}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                            {Data.map((data, index) => (
+                                <RateCard
+                                    key={`${cloneIndex}-${data._id || index}`}
+                                    data={data}
+                                />
                             ))}
                         </div>
                     ))}
@@ -110,4 +127,4 @@ const CurrencyTicker = ({ Data }) => {
     );
 };
 
-export default CurrencyTicker;
+export default CCTicker;

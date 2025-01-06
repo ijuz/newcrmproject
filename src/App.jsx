@@ -8,7 +8,6 @@ import CLI_Voice_Termination from "./app/services/CLI-Voice-Termination/page.jsx
 import DID_Voice_Solutions from "./app/services/DID-Voice-Solutions/page.jsx";
 import VoIPRates from "./app/pricing/page.jsx";
 import FAQPage from "./app/faq/page.jsx";
-import SignUpFrame from "./app/modules/auth/Base/Signup/page.jsx";
 import LoginFrame from "./app/modules/auth/Base/login/page.jsx";
 import Dashboard from "./app/modules/customer/pages/home/page.jsx";
 import ProfilePage from "./app/modules/customer/pages/profile-page/page.jsx";
@@ -54,13 +53,15 @@ import RateTableCli from "./app/clirates/page.jsx";
 import RateTableSpecial from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
 import RateTableAdd from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
 import TechnicalInfo from "./app/modules/auth/signup/TechnicalInfo.jsx";
-import CompanyInfo from "./app/modules/auth/signup/CompanyInfo.jsx";
-import SignUpPage from "./app/modules/auth/signup/page.jsx";
+import SignUpPage from "./app/modules/auth/signup/page.jsx";   //gh
+
 import AddTicket from './app/modules/customer/pages/trouble_page/Addfollowup/page.jsx'
 
 import Dashccrates from './app/modules/customer/pages/dashboardccrates/page.jsx';
 import Dashcli from './app/modules/customer/pages/dashclirates/page.jsx';
 import DashSpecial from './app/modules/customer/pages/dashspecialrate/page.jsx'
+import CCRateTable from "./app/components/CCRates.jsx";
+import CLIRatesPage from "./app/modules/customer/pages/rates_page/CLIRates/page.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -78,11 +79,10 @@ function App() {
       <Route path="/services/DID-Voice-Solutions" element={<DID_Voice_Solutions />} />
       <Route path="/pricing" element={<VoIPRates />} />
       <Route path="/faq" element={<FAQPage />} />
-      <Route path="/signUp" element={<SignUpFrame />} />
+      <Route path="/Registers" element={<SignUpPage />} />
       <Route path="/signIn" element={<LoginFrame />} />
       <Route path="/notification" element={<Notification />} />
       <Route path="/admin_dashboard" element={<AdminDahboard />} />
-
       <Route path="/*" element={
         // <PrivateRoute>
         <Routes>
@@ -133,7 +133,10 @@ function App() {
       <Route path="/admin/support/messages" element={<PageUnderDevelopment />} />
       <Route path="/admin/support/internalassistence" element={<InternalAssistence />} />
       <Route path="/cliratestable" element={<RateTableCli />} />
+      {/* CLIRatesPage */}
       <Route path="/specialrates" element={<RateTableSpecial />} />
+      <Route path="/clirates" element={<CLIRatesPage />} />
+
       <Route path="/addrates" element={<RateTableAdd />} />
 
       <Route path='/dashboardccrates' element={<Dashccrates />} />
@@ -141,7 +144,7 @@ function App() {
       <Route path="/dashspecial" element={<DashSpecial />} />
 
       <Route path="/TechnicalInfo" element={<TechnicalInfo />} />
-      <Route path="/Registers" element={<SignUpPage />} />
+      {/* <Route path="/Registers" element={<SignUpPage />} /> */}
 
     </Routes>
 

@@ -164,13 +164,13 @@ const Header = () => {
           </>
         ) : (
           <>
-            <a href="Registers">
+            <a href="/Registers">
               <button className={`${buttonBaseClasses} bg-green-600 hover:bg-green-700`}>
                 <UserPlus size={18} />
                 <span>SIGN UP</span>
               </button>
             </a>
-            <a href="signIn">
+            <a href="/signIn">
               <button className={`${buttonBaseClasses} bg-orange-400 hover:bg-orange-500`}>
                 <LogIn size={18} />
                 <span>LOGIN</span>

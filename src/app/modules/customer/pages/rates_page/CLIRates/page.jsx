@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { PlusIcon, FunnelIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -10,10 +9,9 @@ import { faChartLine, faStar, faCheckCircle, faPlusCircle, faFilter, faUserCircl
 import Header from "../../../../../components/Header";
 import Footer from "../../../../../components/Footer";
 import { useLocation } from "react-router-dom";
-import axiosInstance from "../../../../admin/v2/utils/axiosinstance";
 import NavbarButton from "../../../../../components/RatesButton";
 
-const NormalRatesPage = () => {
+const CLIRatesPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [search, setSearch] = useState("");
@@ -46,14 +44,7 @@ const NormalRatesPage = () => {
         if (customerId) {
           const customerResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
           setCustomerData(customerResponse.data);
-          const ratesResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
-          const specialRates = ratesResponse.data.filter(rate => rate.category === "specialrate");
-          setNormalRatesData(specialRates);
         }
-        const ratesResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
-        const specialRates = ratesResponse.data.filter(rate => rate.category === "specialrate");
-        setNormalRatesData(specialRates);
-
       } catch (error) {
         console.error("Error fetching customer or rates:", error);
       } finally {
@@ -131,14 +122,14 @@ const NormalRatesPage = () => {
     // https://backend.cloudqlobe.com
     try {
       for (const rate of filterMyRate) {
-        await axios.post("http://localhost:5000/v3/api/myrates", {
+        await axios.post("https://backend.cloudqlobe.com/v3/api/myrates", {
           customerId,
           rateId: rate._id,
           testStatus: rate.testStatus,
           addedTime: rate.addedTime,
         });
       }
-      navigate('/pricing')
+      navigate('/cliratestable')
       alert("All rates added successfully.");
       filterMyRate = ''
     } catch (error) {
@@ -212,36 +203,6 @@ const NormalRatesPage = () => {
         </nav>
       </header>
       <div className="p-6 bg-gray-100 text-gray-800">
-        <div className="mt-6 flex items-center justify-between space-x-4">
-          <div className="flex w-2/3 ml-5 space-x-2">
-            <input
-              type="text"
-              placeholder="Search by country name..."
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="flex-grow bg-white text-gray-800 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button className="px-4 py-2 bg-orange-600 text-white font-regular rounded-lg hover:bg-orange-700 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500">
-              Search
-            </button>
-          </div>
-          <div className="flex items-center space-x-1">
-            <button
-              onClick={() => setShowSelectColumn(!showSelectColumn)}
-              className="px-6 py-2 bg-green-600 text-white font-regular mr-5 rounded-lg hover:bg-orange-700 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {showSelectColumn ? "Hide Select Rates" : "Select Rates"}
-            </button>
-            <button
-              style={{ marginRight: "2em" }}
-              onClick={() => setShowOnlySelected(!showOnlySelected)}
-              className="w-10 h-10 bg-[#005F73] text-white rounded-full hover:bg-orange-700 transition duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center justify-center"
-            >
-              <FunnelIcon className="w-5 h-5" onClick={filterSpecialRate} />
-            </button>
-          </div >
-        </div>
-
         <div className="tableContainer overflow-x-auto py-5 rounded-lg">
           <table className="rateTable w-full border-collapse bg-white shadow-lg rounded-lg">
             <thead>
@@ -249,12 +210,14 @@ const NormalRatesPage = () => {
                 {showSelectColumn && (
                   <th className="p-2 text-center border border-gray-300">Select</th>
                 )}
-                <th className="p-2 text-center border border-gray-300 w-1/6">Country Code</th>
-                <th className="p-2 text-center border border-gray-300 w-1/4">Country Name</th>
-                <th className="p-2 text-center border border-gray-300">Quality Description</th>
-                <th className="p-2 text-center border border-gray-300">Rate</th>
-                <th className="p-2 text-center border border-gray-300">Profile</th>
-                <th className="p-2 text-center border border-gray-300">Status</th>
+               {/* <th>Country Code</th> */}
+                <th>Country</th>
+                <th>Quality Description</th>
+                <th>RTP</th>
+                <th>ASR</th>
+                <th>ACD</th>
+                <th>Rate ($)</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -282,11 +245,13 @@ const NormalRatesPage = () => {
                       />
                     </td>
                   )}
-                  <td className="p-2 text-center border border-gray-300">{item.countryCode}</td>
+                {/* <td className="p-2 text-center border border-gray-300">{item.countryCode}</td> */}
                   <td className="p-2 text-center border border-gray-300">{item.country}</td>
                   <td className="p-2 text-center border border-gray-300">{item.qualityDescription}</td>
+                  <td className="p-2 text-center border border-gray-300">{item.rtp}</td>
+                  <td className="p-2 text-center border border-gray-300">{item.asr}</td>
+                  <td className="p-2 text-center border border-gray-300">{item.acd}</td>
                   <td className="p-2 text-center border border-gray-300">{item.rate}</td>
-                  <td className="p-2 text-center border border-gray-300">{item.profile}</td>
                   <td className="p-2 text-center border border-gray-300">{item.status}</td>
                 </tr>
               ))}
@@ -300,4 +265,4 @@ const NormalRatesPage = () => {
   );
 };
 
-export default NormalRatesPage;
+export default CLIRatesPage;

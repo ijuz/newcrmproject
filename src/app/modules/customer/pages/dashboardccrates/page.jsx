@@ -34,10 +34,10 @@ const NormalRatesPage = () => {
           setCustomerData(customerResponse.data);
 
           const ratesResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
-          const specialRates = ratesResponse.data.filter(
-            (rate) => rate.category === "specialrate"
-          );
-          setNormalRatesData(specialRates);
+          // const specialRates = ratesResponse.data.filter(
+          //   (rate) => rate.category === "specialrate"
+          // );
+          setNormalRatesData(ratesResponse.data);
         }
       } catch (error) {
         console.error("Error fetching customer or rates:", error);

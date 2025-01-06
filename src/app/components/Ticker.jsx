@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ArrowUpIcon, ArrowDownIcon, Globe } from "lucide-react";
+import axios from "axios";
 
 const CurrencyTicker = () => {
   const [tickerData, setTickerData] = useState([]);
@@ -7,32 +8,54 @@ const CurrencyTicker = () => {
   const [error, setError] = useState(null);
   const containerRef = useRef(null);
   const [cloneCount, setCloneCount] = useState(2);
-  console.log(tickerData);
+  // console.log(tickerData);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const cctResponse = await fetch("https://backend.cloudqlobe.com/v3/api/cct");
-        if (!cctResponse.ok) throw new Error("Failed to fetch rate IDs");
-        const cctData = await cctResponse.json();
-        console.log(cctData);
-
-        // const uniqueRateIds = [...new Set(cctData.flatMap(item => item.rateids))];
-        // const rateResponses = await Promise.all(
-        //   uniqueRateIds.map(id =>
-        //     fetch(`https://backend.cloudqlobe.com/v3/api/clirates/${id}`).then(res => res.json())
-        //   )
-        // );
-        setTickerData(cctData);
+        const cctResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/cct");
+        if (cctResponse.status !== 200) throw new Error("Failed to fetch rate IDs");
+        const cctData = cctResponse.data;
+  
+        // Group data by countryCode
+        const groupedData = cctData.reduce((acc, item) => {
+          const countryCode = item.countryCode;
+  
+          if (!acc[countryCode]) {
+            acc[countryCode] = {
+              country: item.country,
+              countryCode: item.countryCode,
+              status: item.status,
+              currency: item.currency || 'USD',
+              profile: {
+                Outbound: null,
+                IVR: null,
+              },
+            };
+          }
+  
+          // Add profile data (Outbound or IVR)
+          if (item.profile === 'Outbound') {
+            acc[countryCode].profile.Outbound = item.rate;
+          } else if (item.profile === 'IVR') {
+            acc[countryCode].profile.IVR = item.rate;
+          }
+  
+          return acc;
+        }, {});
+  
+        // Convert grouped data to an array
+        setTickerData(Object.values(groupedData));
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   useEffect(() => {
     if (!loading && tickerData.length > 0) {
@@ -71,7 +94,7 @@ const CurrencyTicker = () => {
   <div className="flex justify-between items-center bg-orange-50/50 rounded-md p-1.5">
     <span className="text-sm text-gray-600">Outbound</span>
     <span className="font-medium flex items-center text-sm">
-      {data.profile.Outbound ? data.profile.Outbound : 'N/A'} {data.currency || 'USD'}
+      {data.profile?.Outbound ? data.profile?.Outbound : 'N/A'} {data.currency || 'USD'}
       {data.status?.toLowerCase() === 'active' && data.profile.Outbound ? (
         <ArrowUpIcon className="h-3 w-3 text-green-500 ml-1" />
       ) : (
@@ -83,7 +106,7 @@ const CurrencyTicker = () => {
   <div className="flex justify-between items-center bg-orange-50/50 rounded-md p-1.5">
     <span className="text-sm text-gray-600">IVR</span>
     <span className="font-medium flex items-center text-sm">
-      {data.profile.IVR ? data.profile.IVR : 'N/A'} {data.currency || 'USD'}
+      {data.profile?.IVR ? data.profile?.IVR : 'N/A'} {data.currency || 'USD'}
       {data.status?.toLowerCase() === 'active' && data.profile.IVR ? (
         <ArrowUpIcon className="h-3 w-3 text-green-500 ml-1" />
       ) : (

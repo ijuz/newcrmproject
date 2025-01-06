@@ -9,12 +9,13 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     country: '',
     qualityDescription: '',
     rate: '',
-    status: '',
+    status: 'Inactive',
     billingCycle: '',
     rtp: '',
     asr: '',
     acd: '',
-    ticker: false, // New field for ticker
+    ticker: false, 
+    testStatus: 'na',
   });
 
   useEffect(() => {
@@ -26,11 +27,12 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         country: '',
         qualityDescription: '',
         rate: '',
-        status: '',
+        status: 'Inactive',
         billingCycle: '',
         rtp: '',
         asr: '',
         acd: '',
+        testStatus: 'na',
         ticker: false, // Reset ticker field
       });
     }
@@ -44,11 +46,12 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
       country: '',
       qualityDescription: '',
       rate: '',
-      status: '',
+      status: 'Inactive',
       billingCycle: '',
       rtp: '',
       asr: '',
       acd: '',
+      testStatus: 'na',
       ticker: false, // Reset ticker field
     });
   };
@@ -60,16 +63,25 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h3 className="text-lg font-semibold mb-4">{initialData ? 'Update Rate' : 'Add New Rate'}</h3>
         <form onSubmit={handleAddLead}>
-          <input type="text" placeholder="Country Code" value={newLead.countryCode} onChange={(e) => setNewLead({ ...newLead, countryCode: e.target.value })} className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg" required />
+          <input type="number" placeholder="Country Code" value={newLead.countryCode} onChange={(e) => setNewLead({ ...newLead, countryCode: e.target.value })} className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg" required />
           <input type="text" placeholder="Country" value={newLead.country} onChange={(e) => setNewLead({ ...newLead, country: e.target.value })} className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg" required />
           <input type="text" placeholder="Quality Description" value={newLead.qualityDescription} onChange={(e) => setNewLead({ ...newLead, qualityDescription: e.target.value })} className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg" required />
           <input type="number" placeholder="Rate" value={newLead.rate} onChange={(e) => setNewLead({ ...newLead, rate: e.target.value })} className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg" required />
-          <input type="text" placeholder="Status" value={newLead.status} onChange={(e) => setNewLead({ ...newLead, status: e.target.value })} className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg" />
           <input type="text" placeholder="Billing Cycle" value={newLead.billingCycle} onChange={(e) => setNewLead({ ...newLead, billingCycle: e.target.value })} className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg" />
           <input type="text" placeholder="RTP" value={newLead.rtp} onChange={(e) => setNewLead({ ...newLead, rtp: e.target.value })} className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg" />
           <input type="text" placeholder="ASR" value={newLead.asr} onChange={(e) => setNewLead({ ...newLead, asr: e.target.value })} className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg" />
           <input type="text" placeholder="ACD" value={newLead.acd} onChange={(e) => setNewLead({ ...newLead, acd: e.target.value })} className="mb-2 w-full px-4 py-2 border border-gray-300 rounded-lg" />
-          
+          <label className="flex items-center mb-4">
+            <span className="mr-2">Status:</span>
+            <select
+              value={newLead.status}
+              onChange={(e) => setNewLead({ ...newLead, status: e.target.value })}
+              className="border border-gray-300 rounded-lg px-2 py-1"
+            >
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </label>
           {/* New Ticker Toggle */}
           <div className="mb-4">
             <label className="inline-flex items-center">
