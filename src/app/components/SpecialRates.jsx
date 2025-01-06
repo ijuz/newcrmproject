@@ -10,6 +10,7 @@
 // import axios from "axios";
 // import NavbarButton from "./RatesButton";
 // import NormalRatesPage from "../modules/customer/pages/rates_page/Rates/page";
+// import Header from "./Header";
 
 // const SpecialRateTable = ({ className }) => {
 //   const location = useLocation()
@@ -126,6 +127,7 @@
 
 //   return (
 //     <>
+//         <Header />
 //       <Helmet>
 //         <title>My Rates Page</title>
 //       </Helmet>

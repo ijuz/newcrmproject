@@ -62,10 +62,10 @@ const MyRatesPage = () => {
             const ratesResponse = await axios.get(`http://localhost:5000/v3/api/myrates`);
           // console.log(ratesResponse.data);
 
-          const ratesDataArray = ratesResponse.data.filter(rate => rate.customerId === customerData._id);
-          console.log(ratesDataArray);
-          
-          setRates(ratesResponse);
+          const ratesDataArray = ratesResponse.data.filter(rate => rate.customerId === customerData._id);      
+          // console.log("myrates",ratesDataArray);
+              
+          setRates(ratesDataArray);
         } catch (error) {
           console.error('Error fetching rates:', error);
         }
@@ -73,47 +73,42 @@ const MyRatesPage = () => {
     };
     fetchRates();
   }, [customerData]);
+  console.log("rates",rates);
+
 
   useEffect(() => {
-    const fetchMyRates =  async() => {
-      if (rates?.length) {
+    const fetchMyRates = async () => {
+      console.log("Start fetching rates");
+  
+      if (rates && rates.length > 0) { // Check if rates exist and are not empty
         try {
-          const rateFetchPromises = rates.rateId.map(async (rateId) => {
-
-            const ratesResponse = await axios.get(`http://localhost:5000/v3/api/rates${rateId}`);
-            return ratesResponse.data;
+          // Extract rateId from each object and create an array of promises
+          const rateFetchPromises = rates.map(async (rate) => {
+            console.log("Fetching rate with ID:", rate.rateId);
+  
+            // Fetch the rate details for the current rateId
+            const ratesResponse = await axios.get(`http://localhost:5000/v3/api/rates/${rate.rateId}`);
+            return ratesResponse.data; // Return the response data
           });
+  
+          // Wait for all promises to resolve
           const ratesDataArray = await Promise.all(rateFetchPromises);
-
-          console.log("my rates",ratesDataArray);
-          
-          // setMyRatesData(ratesResponse);
+  
+          console.log("Fetched rates:", ratesDataArray);
+  
+          // Uncomment this line if you want to save the fetched rates to state
+          setMyRatesData(ratesDataArray);
         } catch (error) {
           console.error('Error fetching rates:', error);
         }
+      } else {
+        console.log("No rates available to fetch");
       }
     };
+  
     fetchMyRates();
-  }, [rates]);
-
-  // useEffect(() => {
-  //   const fetchMyRates = async () => {
-  //     if (customerData && customerData.myRatesId.length) {
-  //       try {
-  //         const rateFetchPromises = customerData.myRatesId.map(async (rateId) => {
-  //           const ratesResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/myrates/${rateId}`);
-  //           return ratesResponse.data;
-  //         });
-
-  //         const ratesDataArray = await Promise.all(rateFetchPromises);
-  //         setMyRatesData(ratesDataArray.flat());
-  //       } catch (error) {
-  //         console.error('Error fetching rates:', error);
-  //       }
-  //     }
-  //   };
-  //   fetchMyRates();
-  // }, [customerData]);
+  }, [rates]); // Dependency array to trigger useEffect when `rates` changes
+  
 
   // Loading state handling
   useEffect(() => {

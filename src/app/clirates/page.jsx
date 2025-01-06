@@ -16,8 +16,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import styles2 from "../components/RatesNavbar.module.css";
 import NavbarButton from "../components/RatesButton";
+import CustomizedQuotesForm from "../components/DIDQuotation";
 
-const RateTable = ({ className }) => {
+const CLIRateTable = ({ className }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [rates, setRates] = useState([]);
@@ -143,7 +144,7 @@ const RateTable = ({ className }) => {
             <NavbarButton
               icon={faStar}
               text="Special Rates"
-              onClick={navigateToRatesPage}
+              onClick={() => navigate("/specialrates")}
             />
 
             {/* Select Rates Button */}
@@ -313,8 +314,10 @@ const RateTable = ({ className }) => {
           ))}
         </div>
       </div>
+      <CustomizedQuotesForm />
+
     </>
   );
 };
 
-export default RateTable;
+export default CLIRateTable;

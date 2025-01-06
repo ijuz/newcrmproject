@@ -148,7 +148,7 @@ const CCRateTable = ({ className }) => {
             <NavbarButton
               icon={faStar}
               text="Special Rates"
-              onClick={navigateToRatesPage}
+              onClick={() => navigate("/specialrates")}
             />
 
             {/* Select Rates Button */}

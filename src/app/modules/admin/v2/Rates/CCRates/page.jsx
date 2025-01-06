@@ -8,7 +8,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     countryCode: '',
     country: '',
     qualityDescription: '',
-    status: 'inactive',
+    status: 'Inactive',
     profile: '',
     rate: '',
     category: '',
@@ -25,7 +25,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         countryCode: '',
         country: '',
         qualityDescription: '',
-        status: 'inactive',
+        status: 'Inactive',
         profile: '',
         rate: '',
         category: '',
@@ -47,7 +47,6 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     } else {
       leadData.category = newLead.category;
     }
-    console.log(leadData);
 
     await onSubmit(leadData);
 
@@ -55,8 +54,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     // If "Add to Ticker" is selected, update the cct API with this rate's ID
     if (leadData.addToTicker) {
       try {
-        await axios.post('http://localhost:5000/v3/api/cct', leadData);
-        console.log("Added to ticker");
+        await axios.post('https://backend.cloudqlobe.com/v3/api/cct', leadData);
       } catch (error) {
         console.error("Failed to add rate to ticker:", error);
       }
@@ -66,7 +64,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
       countryCode: '',
       country: '',
       qualityDescription: '',
-      status: 'inactive',
+      status: 'Inactive',
       profile: '',
       rate: '',
       category: '',
@@ -84,7 +82,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         <h3 className="text-lg font-semibold mb-4">{initialData ? 'Update Rate' : 'Add New Rate'}</h3>
         <form onSubmit={handleAddLead}>
           <input
-            type="number"
+            type="text"
             placeholder="Country Code"
             value={newLead.countryCode}
             onChange={(e) => setNewLead({ ...newLead, countryCode: e.target.value })}
@@ -183,22 +181,21 @@ const RatesPage = () => {
   const [currentRate, setCurrentRate] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  console.log(rateData);
 
   useEffect(() => {
     const fetchRates = async () => {
       try {
         const response = await axios.get('https://backend.cloudqlobe.com/v3/api/rates');
         setRateData(response.data);
-        console.log("res", response);
       } catch (error) {
         console.error('Error fetching rates:', error);
       }
     };
     fetchRates();
-  }, []);
+  }, [rateData]);
 
   const handleAddLead = async (leadData) => {
+console.log(leadData);
 
     try {
       let response;
@@ -207,6 +204,7 @@ const RatesPage = () => {
       } else {
         response = await axios.post('https://backend.cloudqlobe.com/v3/api/rates', leadData);
       }
+      
       setRateData((prev) =>
         isUpdateMode
           ? prev.map(rate => (rate._id === currentRate._id ? response.data : rate))

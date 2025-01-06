@@ -6,14 +6,17 @@ import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles2 from "../../../../../components/RatesNavbar.module.css";
+import styles from "../../../../../components/RateTable.module.css";
 import { faChartLine, faStar, faCheckCircle, faPlusCircle, faFilter, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../../../../components/Header";
 import Footer from "../../../../../components/Footer";
 import { useLocation } from "react-router-dom";
 import axiosInstance from "../../../../admin/v2/utils/axiosinstance";
 import NavbarButton from "../../../../../components/RatesButton";
+import CustomizedQuotesForm from "../../../../../components/DIDQuotation";
 
 const NormalRatesPage = () => {
+
   const navigate = useNavigate();
   const location = useLocation();
   const [search, setSearch] = useState("");
@@ -242,19 +245,19 @@ const NormalRatesPage = () => {
           </div >
         </div>
 
-        <div className="tableContainer overflow-x-auto py-5 rounded-lg">
-          <table className="rateTable w-full border-collapse bg-white shadow-lg rounded-lg">
+        <div className={`${styles.tableContainer} `} style={{ marginTop: "0" }}>
+        <table className={styles.rateTable}>
             <thead>
               <tr className="bg-[#005F73] text-white uppercase tracking-wider rounded-lg">
                 {showSelectColumn && (
                   <th className="p-2 text-center border border-gray-300">Select</th>
                 )}
-                <th className="p-2 text-center border border-gray-300 w-1/6">Country Code</th>
-                <th className="p-2 text-center border border-gray-300 w-1/4">Country Name</th>
-                <th className="p-2 text-center border border-gray-300">Quality Description</th>
-                <th className="p-2 text-center border border-gray-300">Rate</th>
-                <th className="p-2 text-center border border-gray-300">Profile</th>
-                <th className="p-2 text-center border border-gray-300">Status</th>
+                <th >Country Code</th>
+                <th >Country Name</th>
+                <th >Quality Description</th>
+                <th >Rate</th>
+                <th >Profile</th>
+                <th >Status</th>
               </tr>
             </thead>
             <tbody>
@@ -294,6 +297,8 @@ const NormalRatesPage = () => {
           </table>
         </div>
       </div>
+      <CustomizedQuotesForm />
+
       <Footer />
 
     </>
