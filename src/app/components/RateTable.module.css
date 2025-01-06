@@ -155,10 +155,13 @@
 }
 
 .rateTable th:nth-child(3) {
-  width: 25%; /* Make the 3rd column wider */
+  width: 15%; /* Make the 3rd column wider */
 }
 .rateTable th:nth-child(2) {
-  width:20%; /* Make the 3rd column wider */
+  width:10%; /* Make the 3rd column wider */
+}
+.rateTable th:nth-child(4) {
+  width:15%; /* Make the 3rd column wider */
 }
 .rateTable th,
 .rateTable td {

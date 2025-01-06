@@ -134,7 +134,7 @@ const NormalRatesPage = () => {
     // https://backend.cloudqlobe.com
     try {
       for (const rate of filterMyRate) {
-        await axios.post("http://localhost:5000/v3/api/myrates", {
+        await axios.post("https://backend.cloudqlobe.com/v3/api/myrates", {
           customerId,
           rateId: rate._id,
           testStatus: rate.testStatus,
