@@ -1,34 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import Layout from '../../layout/page';
-import axiosInstance from '../../../utils/axiosinstance';
+import React, { useState, useEffect } from "react";
+import Layout from "../../layout/page"; // Assuming Layout is a regular React component
+import axiosInstance from "../../../utils/axiosinstance";
+
+
+ // Import only necessary icons
+import { FaArrowAltCircleDown ,PhoneIcon,EnvelopeIcon,ChatBubbleOvalLeftIcon, FaPhone} from "react-icons/fa";
+import { CircleChevronRight, LucideCircleUserRound, Mail, MessageCircleCode, MessageSquare } from "lucide-react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const FollowUp = () => {
-  const [activeTab, setActiveTab] = useState('calls');
+  const [activeTab, setActiveTab] = useState("call");
   const [followUpData, setFollowUpData] = useState([]);
   const [customerData, setCustomerData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Navigate to the add follow-up page
-  const handleAddFollowUpClick = () => {
-    window.location.href = '/modules/admin/v2/Sales/Followups/Addfollowup'; // Using window.location to handle navigation
-  };
-
-  // Fetch follow-up data and then fetch customer data based on customerId
+  const navigate = useNavigate()
+  // Fetch follow-up data and customer data
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Step 1: Fetch follow-up data
-        const followUpsResponse = await axiosInstance.get('v3/api/followups'); // Adjust the endpoint as necessary
+        const followUpsResponse = await axios.get('https://backend.cloudqlobe.com/v3/api/followups');
         setFollowUpData(followUpsResponse.data);
 
         // Step 2: Prepare a list of customer IDs to fetch
         const customerIds = [...new Set(followUpsResponse.data.map(item => item.customerId))];
+        const validIds = customerIds.filter(id => id && id.trim() !== "");
+        console.log(validIds);
 
         // Step 3: Fetch customer data for each customerId
         const customers = {};
-        for (const customerId of customerIds) {
-          const response = await axiosInstance.get(`v3/api/customers/${customerId}`); // Assuming this endpoint fetches a single customer by ID
+        for (const customerId of validIds) {
+          const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
           customers[customerId] = response.data;
         }
         setCustomerData(customers);
@@ -43,59 +47,51 @@ const FollowUp = () => {
   }, []);
 
   const renderTabContent = () => {
-    if (loading) {
-      return <div className="text-center py-4 text-gray-600">Loading...</div>;
-    }
+    if (loading) return <div className="text-center py-4 text-gray-600">Loading...</div>;
+    if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
 
-    if (error) {
-      return <div className="text-center py-4 text-gray-600">Error fetching data: {error}</div>;
-    }
-
-    // Filter follow-ups based on the active tab
-    const filteredFollowUps = followUpData.filter(item => item.followupMethod === activeTab && item.followupCategory === 'Sales');
+    const filteredFollowUps = followUpData.filter(
+      (item) => item.followupMethod === activeTab && item.followupCategory === "Sales"
+    );
 
     if (filteredFollowUps.length === 0) {
       return (
-        <div className="text-center py-4 text-gray-600">
-          No data available for {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}
+        <div className="text-center py-4 text-gray-500">
+          No follow-ups for {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}.
         </div>
       );
     }
-
+    const handleRowClick = (followupId) => navigate(`/sales/detailfollowp/${followupId}`);
     return (
-      <table className="min-w-full mt-4 bg-white border shadow-lg border-gray-300">
+      <table className="min-w-full mt-4 bg-white border border-gray-200 shadow-md">
         <thead>
-          <tr className="bg-blue-500 rounded-lg text-white">
+          <tr className="bg-blue-600 text-white">
             <th className="border px-4 py-2">Customer ID</th>
             <th className="border px-4 py-2">Company Name</th>
             <th className="border px-4 py-2">Follow-Up Type</th>
-            <th className="border px-4 py-2">Follow-Up Status</th>
+            <th className="border px-4 py-2">Status</th>
           </tr>
         </thead>
         <tbody>
           {filteredFollowUps.map((followUp) => {
-            // Find customer details based on customerId
-            const customer = customerData[followUp.customerId] || {}; // Access customer data using customerId
-
+            const customer = customerData[followUp.customerId] || {};
             return (
               <tr
-                key={followUp.id} // Use a unique identifier for the key (e.g., followUp.id)
-                className="cursor-pointer hover:bg-gray-100" // Add hover effect for rows
-                onClick={() => window.location.href = `/modules/admin/v2/Sales/FollowUps/${followUp.id}`} // Navigate to details page
+                key={followUp.id}
+                className="hover:bg-gray-100 cursor-pointer"
+                onClick={() => handleRowClick(followUp._id)}
               >
-                <td className="border px-4 py-2">{customer.customerId || 'N/A'}</td>
+                <td className="border px-4 py-2">{customer.customerId || "N/A"}</td>
                 <td className="border px-4 py-2">
                   <a
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent row click from triggering
-                      window.location.href = `/modules/admin/v2/Sales/FollowUps/${followUp.id}`; // Link to customer details
-                    }}
+                  
                     className="text-blue-600 hover:underline"
+                   
                   >
-                    {customer.companyName || 'N/A'}
+                    {customer.companyName || "N/A"}
                   </a>
                 </td>
-                <td className="border px-4 py-2">{followUp.followupMethod.charAt(0).toUpperCase() + followUp.followupMethod.slice(1)}</td>
+                <td className="border px-4 py-2 capitalize">{followUp.followupMethod}</td>
                 <td className="border px-4 py-2">{followUp.followupStatus}</td>
               </tr>
             );
@@ -108,40 +104,68 @@ const FollowUp = () => {
   return (
     <Layout>
       <div className="p-8 text-gray-900 min-h-screen">
-        <h2 className="text-2xl font-bold mb-4">Follow-up</h2>
-        <p className="text-gray-600 mb-6">View and manage follow-up tasks here.</p>
+        {/* Header with Icon */}
+        <div className="flex items-center space-x-4 mb-6">
+          <div className="bg-orange-500 rounded-full p-3 flex items-center justify-center">
+            <FaArrowAltCircleDown className="text-white w-8 h-8" />
+          </div>
+          <h1 className="text-3xl font-bold text-gray-800">Follow Up</h1>
+        </div>
 
-        {/* Add Follow-up Button */}
-        <div className="mb-6">
-          <button
-            onClick={handleAddFollowUpClick}
-            className="bg-green-600 text-white px-4 py-2 rounded-md shadow hover:bg-blue-500 transition duration-300"
-          >
-            Add Follow-up
+        {/* Filter and Sort By Section */}
+        <div className="flex justify-end items-center space-x-4 mb-6">
+          {/* Sort By */}
+          <div className="relative flex items-center bg-gray-200 px-4 py-2 rounded-lg shadow-md">
+            <span className="text-gray-500 mr-2">🔽</span>
+            <select className="bg-transparent focus:outline-none text-gray-700">
+              <option value="recent">Sort By: Today</option>
+              <option value="oldest">Sort By: Pending</option>
+            </select>
+          </div>
+
+          {/* Filter */}
+          <button className="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-700">
+            <span className="text-white mr-2">⚙️</span>
+            <span>Filter</span>
           </button>
         </div>
 
         {/* Tabs Navigation */}
-        <div className="flex justify-center mb-6">
-          {['call', 'email', 'chat'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`relative flex-1 text-center py-3 transition-colors duration-300 focus:outline-none ${
-                activeTab === tab
-                  ? 'text-black-600 font-bold'
-                  : 'text-white-500 hover:text-orange-600'
-              }`}
-            >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+        <div className="flex justify-center space-x-6 mb-6">
+  {[
+    { tab: "call", icon: <FaPhone className="w-6 h-6 text-orange-500" />, label: "Call" },
+    { tab: "email", icon: <Mail className="w-6 h-6 text-red-500" />, label: "Email" },
+    { tab: "chat", icon: <MessageSquare className="w-6 h-6 text-red-500" />, label: "Chat" },
+  ].map(({ tab, icon, label }) => (
+    <button
+      key={tab}
+      onClick={() => setActiveTab(tab)}
+      className={`py-3 px-8 flex items-center justify-center space-x-3 rounded-lg shadow-lg transition-transform transform ${
+        activeTab === tab
+          ? "scale-105 text-grey"
+          : "hover:bg-gray-300 text-gray-800"
+      } ${
+        tab === "call"
+          ? activeTab === tab
+            ? "bg-orange-200"
+            : "bg-grey-200"
+          : tab === "email"
+          ? activeTab === tab
+            ? "bg-blue-200"
+            : "bg-grey-200"
+          : tab === "chat"
+          ? activeTab === tab
+            ? "bg-pink-200"
+            : "bg-grey-200"
+          : ""
+      }`}
+    >
+      <span className="text-2xl">{icon}</span>
+      <span className="text-lg font-medium">{label}</span>
+    </button>
+  ))}
+</div>
 
-              {/* Active Tab Indicator */}
-              {activeTab === tab && (
-                <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-3/4 h-1 bg-orange-600 rounded-t-lg transition-all duration-300"></span>
-              )}
-            </button>
-          ))}
-        </div>
 
         {/* Tab Content */}
         <div className="overflow-x-auto">{renderTabContent()}</div>

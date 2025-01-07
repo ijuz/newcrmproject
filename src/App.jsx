@@ -62,6 +62,9 @@ import Dashcli from './app/modules/customer/pages/dashclirates/page.jsx';
 import DashSpecial from './app/modules/customer/pages/dashspecialrate/page.jsx'
 import CCRateTable from "./app/components/CCRates.jsx";
 import CLIRatesPage from "./app/modules/customer/pages/rates_page/CLIRates/page.jsx";
+import SalesDetailsFollowUp from "../src/app/modules/admin/v2/Sales/Followups/[id]/page.jsx";
+import CarrierDetailsFollowup from "../src/app/modules/admin/v2/Carriers/Followups/[id]/page.jsx";
+import FollowUpDetailsLeads from "./app/modules/admin/v2/Leads/Followups/[id]/page.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -145,6 +148,9 @@ function App() {
 
       <Route path="/TechnicalInfo" element={<TechnicalInfo />} />
       {/* <Route path="/Registers" element={<SignUpPage />} /> */}
+      <Route path="/sales/detailfollowp/:followupId" element={<SalesDetailsFollowUp />} />
+      <Route path="/carrier/detailfollowp/:followUpId" element={<CarrierDetailsFollowup />} />
+      <Route path="/detailfollowup/:followupId" element={<FollowUpDetailsLeads />} />
 
     </Routes>
 

@@ -33,7 +33,7 @@ const navigate = useNavigate()
         </a>
         <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
           <a href="/newLeads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">New Leads</a>
-          <a href="/notification" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Notifications</a>
+          <a href="/notification" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Follow Up</a>
         </div>
       </div>
 

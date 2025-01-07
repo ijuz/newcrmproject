@@ -4,9 +4,11 @@ import 'react-datepicker/dist/react-datepicker.css';
 import Layout from '../../../layout/page';
 import axiosInstance from '../../../utils/axiosinstance';
 import { Calendar, Phone, Mail, MessageSquare } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
-const FollowUpDetails = ({ match }) => {
-  const { id } = match.params; // Use React Router for route params
+const FollowUpDetails = () => {
+  const { followUpId } = useParams() // Use React Router for route params
   const [followUp, setFollowUp] = useState(null);
   const [customer, setCustomer] = useState(null);
   const [status, setStatus] = useState('');
@@ -16,16 +18,16 @@ const FollowUpDetails = ({ match }) => {
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const id = followUpId
   useEffect(() => {
     const fetchFollowUp = async () => {
       try {
-        const response = await axiosInstance.get(`v3/api/followups/${id}`);
+        const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/followups/${id}`);
         setFollowUp(response.data);
         setStatus(response.data.followupStatus);
 
-        const customerResponse = await axiosInstance.get(
-          `v3/api/customers/${response.data.customerId}`
+        const customerResponse = await axios.get(
+          `https://backend.cloudqlobe.com/v3/api/customers/${response.data.customerId}`
         );
         setCustomer(customerResponse.data);
       } catch (err) {
@@ -54,7 +56,7 @@ const FollowUpDetails = ({ match }) => {
     };
 
     try {
-      await axiosInstance.put(`v3/api/followups/${id}`, updatedFollowUpData);
+      await axios.put(`https://backend.cloudqlobe.com/v3/api/followups/${id}`, updatedFollowUpData);
       setFollowUp(updatedFollowUpData);
       alert('Follow-up updated successfully!');
       setShowDialog(false);

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
-import axiosInstance from '../../../utils/axiosinstance';
 import Layout from '../../../layout/page';
 import { Calendar, Phone, Mail, MessageSquare } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const FollowUpDetails = () => {
   const [followUp, setFollowUp] = useState(null);
@@ -15,15 +16,16 @@ const FollowUpDetails = () => {
   const [showDialog, setShowDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const id = 'sampleId'; // Replace with dynamic ID handling if needed
+  const {followupId} = useParams()
+  const id = followupId; // Replace with dynamic ID handling if needed
 
   useEffect(() => {
     const fetchFollowUp = async () => {
       try {
-        const response = await axiosInstance.get(`v3/api/followups/${id}`);
+        const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/followups/${id}`);
         setFollowUp(response.data);
         setStatus(response.data.followupStatus);
-        const customerResponse = await axiosInstance.get(`v3/api/customers/${response.data.customerId}`);
+        const customerResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${response.data.customerId}`);
         setCustomer(customerResponse.data);
       } catch (err) {
         setError(err.message);
@@ -49,7 +51,7 @@ const FollowUpDetails = () => {
     };
 
     try {
-      await axiosInstance.put(`v3/api/followups/${id}`, updatedFollowUpData);
+      await axios.put(`https://backend.cloudqlobe.com/v3/api/followups/${id}`, updatedFollowUpData);
       setFollowUp(updatedFollowUpData);
       alert('Follow-up updated successfully!');
       setShowDialog(false);
