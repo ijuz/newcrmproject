@@ -243,7 +243,7 @@ const CLIRateTable = ({ className }) => {
             <thead>
               <tr>
                 {selectingRates && <th>Select</th>}
-                {/* <th>Country Code</th> */}
+                <th>Country Code</th>
                 <th>Country</th>
                 <th>Quality Description</th>
                 <th>RTP</th>
@@ -272,7 +272,7 @@ const CLIRateTable = ({ className }) => {
                         />
                       </td>
                     )}
-                    {/* <td >{rate.countryCode}</td> */}
+                    <td >{rate.countryCode}</td>
                     <td>{rate.country}</td>
                     <td>{rate.qualityDescription}</td>
                     <td>{rate.rtp}</td>

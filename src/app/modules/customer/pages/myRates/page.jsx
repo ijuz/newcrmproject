@@ -16,8 +16,6 @@ const MyRatesPage = () => {
   const [dataNotFound, setDataNotFound] = useState(false); // Track if no data is found
   const [rates, setRates] = useState([]); 
 
-// console.log(customerData);
-
   // Fetch customer details
   useEffect(() => {
     const fetchCustomerData = async () => {
@@ -59,11 +57,9 @@ const MyRatesPage = () => {
     const fetchRates =  async() => {
       if (customerData) {
         try {
-            const ratesResponse = await axios.get(`http://localhost:5000/v3/api/myrates`);
-          // console.log(ratesResponse.data);
+            const ratesResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/myrates`);
 
           const ratesDataArray = ratesResponse.data.filter(rate => rate.customerId === customerData._id);      
-          // console.log("myrates",ratesDataArray);
               
           setRates(ratesDataArray);
         } catch (error) {
@@ -78,37 +74,37 @@ const MyRatesPage = () => {
 
   useEffect(() => {
     const fetchMyRates = async () => {
-      console.log("Start fetching rates");
-  
-      if (rates && rates.length > 0) { // Check if rates exist and are not empty
-        try {
-          // Extract rateId from each object and create an array of promises
-          const rateFetchPromises = rates.map(async (rate) => {
-            console.log("Fetching rate with ID:", rate.rateId);
-  
-            // Fetch the rate details for the current rateId
-            const ratesResponse = await axios.get(`http://localhost:5000/v3/api/rates/${rate.rateId}`);
-            return ratesResponse.data; // Return the response data
-          });
-  
-          // Wait for all promises to resolve
-          const ratesDataArray = await Promise.all(rateFetchPromises);
-  
-          console.log("Fetched rates:", ratesDataArray);
-  
-          // Uncomment this line if you want to save the fetched rates to state
-          setMyRatesData(ratesDataArray);
-        } catch (error) {
-          console.error('Error fetching rates:', error);
+        if (rates && rates.length > 0) { // Check if rates exist and are not empty
+            try {
+                const ratesResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/rates`);
+                const fetchedRates = ratesResponse.data; // Assuming this is an array of rate objects
+
+                console.log("Fetched all rates from the API:", fetchedRates);
+
+                const fetchedRatesMap = new Map(rates.map(fetched => [fetched._id, fetched]));
+
+                const matchedRates = fetchedRates.filter(rate => fetchedRatesMap.has(rate.rateId))
+                    .map(rate => ({
+                        ...rate,
+                        fetchedRate: fetchedRatesMap.get(rate.rateId),
+                    }));
+                
+                console.log(matchedRates);
+                
+
+                // Save the filtered rates to state
+                setMyRatesData(matchedRates);
+            } catch (error) {
+                console.error('Error fetching rates:', error);
+            }
+        } else {
+            console.log("No rates available to fetch");
         }
-      } else {
-        console.log("No rates available to fetch");
-      }
     };
-  
+
     fetchMyRates();
-  }, [rates]); // Dependency array to trigger useEffect when `rates` changes
-  
+}, [rates]);
+
 
   // Loading state handling
   useEffect(() => {
@@ -125,7 +121,7 @@ const MyRatesPage = () => {
         const testStatus = correspondingTest ? correspondingTest.testStatus : rate.status;
         const testReason = 'Requested';
 
-        return axios.post(`http://localhost:5000/v3/api/tests`, {
+        return axios.post(`https://backend.cloudqlobe.com/v3/api/tests`, {
           rateId: rate._id,
           customerId: customerData._id,
           rateCustomerId: `${customerData._id}hi${rate._id}`,
@@ -154,13 +150,14 @@ const MyRatesPage = () => {
   // Combine rates and tests data
   const combinedData = myRatesData.map((data) => {
     const rate = data.rate
-    const test = testsData.find((test) => test.rateCustomerId === `${customerData?._id}${rate._id}`);
+    const test = testsData.find((test) => test.customerId === `${customerData?._id}${rate._id}`);
     return {
       ...rate,
       testStatus: test ? test.testStatus : rate.status,
       testReason: test ? test.testReason : "N/A",
     };
   });
+  console.log("combinedData",combinedData);
   
   
 
@@ -179,7 +176,7 @@ const MyRatesPage = () => {
   
 
   const displayedData = sortedData
-  console.log(displayedData)
+  // console.log(displayedData)
   return (
     <DashboardLayout>
       <div className="p-6 text-gray-800">
