@@ -14,7 +14,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     rtp: '',
     asr: '',
     acd: '',
-    ticker: false, 
+    addToTicker: false,
     testStatus: 'na',
   });
 
@@ -33,7 +33,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         asr: '',
         acd: '',
         testStatus: 'na',
-        ticker: false, // Reset ticker field
+        addToTicker: false,
       });
     }
   }, [initialData]);
@@ -52,7 +52,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
       asr: '',
       acd: '',
       testStatus: 'na',
-      ticker: false, // Reset ticker field
+      addToTicker: false,
     });
   };
 
@@ -85,7 +85,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
           {/* New Ticker Toggle */}
           <div className="mb-4">
             <label className="inline-flex items-center">
-              <input type="checkbox" checked={newLead.ticker} onChange={(e) => setNewLead({ ...newLead, ticker: e.target.checked })} className="form-checkbox h-5 w-5 text-blue-600" />
+              <input type="checkbox" checked={newLead.addToTicker} onChange={(e) => setNewLead({ ...newLead, addToTicker: e.target.checked })} className="form-checkbox h-5 w-5 text-blue-600" />
               <span className="ml-2">Add to Ticker</span>
             </label>
           </div>
@@ -135,18 +135,20 @@ const RatesPage = () => {
   });
 
   const handleAddLead = async (leadData) => {
+    console.log(leadData);
+    
     try {
       let response;
       if (isUpdateMode) {
         response = await axiosInstance.put(`v3/api/clirates/${currentRate._id}`, leadData);
       } else {
         response = await axiosInstance.post('v3/api/clirates', leadData);
-        
-        // If the ticker option is enabled, send it to the ticker API
-        if (leadData.ticker) {
-          await axiosInstance.post('/v3/api/clt', { rateids: [response.data._id] });
-        }
       }
+        // If the ticker option is enabled, send it to the ticker API
+        if (leadData.addToTicker) {
+          await axiosInstance.post('/v3/api/clt', { rateids: response.data._id });
+        }
+    
       setRateData((prev) => 
         isUpdateMode 
           ? prev.map(rate => (rate._id === currentRate._id ? response.data : rate)) 

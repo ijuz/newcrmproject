@@ -5,8 +5,7 @@ import styles from "./RateTable.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChartLine, faStar, faCheckCircle, faPlusCircle, faFilter, faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import styles2 from "./RatesNavbar.module.css";
-import CurrencyTicker from "./Ticker";
-import axiosInstance from "../modules/admin/utils/axiosinstance";
+import CurrencyTicker from "./TickerCC";
 import axios from "axios";
 import NavbarButton from "./RatesButton";
 import NormalRatesPage from "../modules/customer/pages/rates_page/Rates/page";
@@ -28,7 +27,7 @@ const CCRateTable = ({ className }) => {
   const [disabledRates, setDisabledRates] = useState(false);
 
   // console.log("disbl",disabledRates);
-  console.log("select", rates);
+  // console.log("select", rates);
 
 
   useEffect(() => {
@@ -36,7 +35,7 @@ const CCRateTable = ({ className }) => {
       setLoading(true); // Ensure loading state is set
       try {
         const response = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
-        console.log("API Response:", response);
+        // console.log("API Response:", response);
 
         // Validate response status
         if (response.status !== 200) throw new Error("Failed to fetch rates");
@@ -49,7 +48,7 @@ const CCRateTable = ({ className }) => {
         const uniqueCountries = Array.from(new Set(rates.map((rate) => rate.country)));
         setCountryOptions(["All", ...uniqueCountries]);
 
-        console.log("Rates Data:", rates);
+        // console.log("Rates Data:", rates);
       } catch (err) {
         console.error("Error fetching rates:", err);
         setError("Error fetching rates.");
@@ -117,11 +116,11 @@ const CCRateTable = ({ className }) => {
 
   const handleFIlterData = () => {
     const filtered = currentRows.filter((rate) => selectedRates[rate._id]);
-    console.log("Filtered Data:", filtered);
+    // console.log("Filtered Data:", filtered);
     navigate("/specialrates", { state: { filtered, isDisabled: disabledRates } });
     // <NormalRatesPage filterData={filtered}/>
   };
-  console.log(currentRows);
+  // console.log(currentRows);
 
 
   return (

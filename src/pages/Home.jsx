@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet";
 import Carousel from "../app/components/Carousel";
 import Services from "../app/components/Services";
 import VoiceOfferings from "../app/components/VoiceOfferings";
-import Ticker from "../app/components/Ticker";
+// import Ticker from "../app/components/Ticker";
 import TickerImages from "../app/components/TickerImages";
 import CliVoiceTerminationSpecialComponent from "../app/components/CLISpecialComponent";
 import BusinessServices from "../app/components/BusinessServices";
@@ -14,6 +14,7 @@ import SocialMediaTabs from "../app/components/SocialMedaPopup";
 import Chatbot from "../app/chatbot/page"; 
 import Header from "../app/components/Header";
 import Footer from "../app/components/Footer";
+import CurrencyTicker from "../app/components/TickerCC";
 
 const imageUrls = [
   "/flags/Austrelia.png",
@@ -50,7 +51,7 @@ export default function HomePage() {
       <div style={{ background: "white" }}>
         <Header />
         <Carousel />
-        <Ticker />
+        <CurrencyTicker />
         <VoiceOfferings />
         <Services />
         <BuisinessAnalitics />

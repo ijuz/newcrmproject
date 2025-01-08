@@ -50,11 +50,15 @@ const NormalRatesPage = () => {
           const customerResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
           setCustomerData(customerResponse.data);
           const ratesResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
-          const specialRates = ratesResponse.data.filter(rate => rate.category === "specialrate");
+          
+          const specialRates = ratesResponse.data.filter(rate => rate.specialRate === true);
+          
           setNormalRatesData(specialRates);
         }
+        console.log(specialRates);
+        
         const ratesResponse = await axios.get("https://backend.cloudqlobe.com/v3/api/rates");
-        const specialRates = ratesResponse.data.filter(rate => rate.category === "specialrate");
+        const specialRates = ratesResponse.data.filter(rate => rate.category === true);
         setNormalRatesData(specialRates);
 
       } catch (error) {

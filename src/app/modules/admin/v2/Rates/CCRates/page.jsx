@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../utils/axiosinstance';
 import Layout from '../../layout/page';
 import axios from 'axios';
 
@@ -11,7 +10,6 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     status: 'Inactive',
     profile: '',
     rate: '',
-    category: '',
     testStatus: 'as',
     specialRate: false,
     addToTicker: false,
@@ -28,7 +26,6 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         status: 'Inactive',
         profile: '',
         rate: '',
-        category: '',
         testStatus: 'as',
         specialRate: false,
         addToTicker: false,
@@ -42,23 +39,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
 
     const leadData = { ...newLead };
 
-    if (leadData.specialRate) {
-      leadData.category = 'specialrate';
-    } else {
-      leadData.category = newLead.category;
-    }
-
     await onSubmit(leadData);
-
-
-    // If "Add to Ticker" is selected, update the cct API with this rate's ID
-    if (leadData.addToTicker) {
-      try {
-        await axios.post('https://backend.cloudqlobe.com/v3/api/cct', leadData);
-      } catch (error) {
-        console.error("Failed to add rate to ticker:", error);
-      }
-    }
 
     setNewLead({
       countryCode: '',
@@ -67,7 +48,6 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
       status: 'Inactive',
       profile: '',
       rate: '',
-      category: '',
       testStatus: 'as',
       specialRate: false,
       addToTicker: false,
@@ -187,12 +167,14 @@ const RatesPage = () => {
       try {
         const response = await axios.get('https://backend.cloudqlobe.com/v3/api/rates');
         setRateData(response.data);
+        console.log(response.data);
+        
       } catch (error) {
         console.error('Error fetching rates:', error);
       }
     };
     fetchRates();
-  }, [rateData]);
+  }, []);
 
   const handleAddLead = async (leadData) => {
 console.log(leadData);
@@ -200,10 +182,21 @@ console.log(leadData);
     try {
       let response;
       if (isUpdateMode) {
+        console.log(currentRate._id);
+        
         response = await axios.put(`https://backend.cloudqlobe.com/v3/api/rates/${currentRate._id}`, leadData);
       } else {
         response = await axios.post('https://backend.cloudqlobe.com/v3/api/rates', leadData);
       }
+          // If "Add to Ticker" is selected, update the cct API with this rate's ID
+    if (leadData.addToTicker) {
+      try {
+        await axios.post('https://backend.cloudqlobe.com/v3/api/cct', { rateids: response.data._id });
+      } catch (error) {
+        console.error("Failed to add rate to ticker:", error);
+      }
+    }
+
       
       setRateData((prev) =>
         isUpdateMode
@@ -230,7 +223,9 @@ console.log(leadData);
 
   const handleDeleteClick = async (rateId) => {
     try {
-      await axios.delete(`https://backend.cloudqlobe.com/v3/api/rates/${rateId}`);
+    const response =  await axios.delete(`https://backend.cloudqlobe.com/v3/api/rates/${rateId}`);
+    console.log(response);
+    
       setRateData(rateData.filter((rate) => rate._id !== rateId));
       setSuccessMessage('Rate deleted successfully!');
       setErrorMessage('');
