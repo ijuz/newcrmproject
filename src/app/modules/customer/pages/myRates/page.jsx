@@ -62,6 +62,10 @@ const MyRatesPage = () => {
           setCCRatesData(fetchedCCRates);
           setCLIRatesData(fetchedCLIRates);
           setTestsData(tests);
+          console.log("fetchedCCRates",fetchedCCRates);
+          console.log("fetchedCLIRates",fetchedCLIRates);
+          console.log("tests",tests);
+          
         } catch (error) {
           console.error('Error fetching rates or tests:', error);
         } finally {
