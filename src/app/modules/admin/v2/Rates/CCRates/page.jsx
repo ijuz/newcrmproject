@@ -223,7 +223,7 @@ console.log(leadData);
 
   const handleDeleteClick = async (rateId) => {
     try {
-    const response =  await axios.delete(`https://backend.cloudqlobe.com/v3/api/rates/${rateId}`);
+    const response =  await axios.delete(`http://localhost:5000/v3/api/rates/${rateId}`);
     console.log(response);
     
       setRateData(rateData.filter((rate) => rate._id !== rateId));
