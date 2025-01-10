@@ -46,16 +46,18 @@ const MyRatesPage = () => {
           console.log("myratesResponse",ratesResponse);
           console.log("testsResponse",testsResponse)
           const ccRates = ratesResponse.data.filter(rate => rate.rate === 'CC');
-          const cliRates = ratesResponse.data.filter((rate) => rate.rate === 'CLI' && rate.customerId === customerData._id);
+          const cliRates = ratesResponse.data.filter((rate) => rate.rate === 'CLI');
+          const cliRate = cliRates.filter(rate =>  rate.customerId === customerData._id)
           console.log("customerData._id",customerData._id);
           
           const tests = await testsResponse.data.filter(test => test.customerId === customerData._id);
 console.log("ccRates",ccRates);
 console.log("cliRates",cliRates);
+console.log("cliRate",cliRate)
 console.log("tests",tests);
 
           const fetchedCLIRates = await Promise.all(
-            cliRates.map(async (rate) => {
+            cliRate.map(async (rate) => {
               const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/clirates/${rate.rateId}`);
               return response.data; // Assuming each API call returns a rate object
             })
