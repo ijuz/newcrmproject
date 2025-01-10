@@ -26,8 +26,6 @@ const MyRatesPage = () => {
         try {
           const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
           setCustomerData(response.data);
-          console.log("customer",response.data);
-          
         } catch (error) {
           console.error('Error fetching customer data:', error);
         }
@@ -43,21 +41,13 @@ const MyRatesPage = () => {
         try {
           const ratesResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/myrates`);
           const testsResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/tests`);
-          console.log("myratesResponse",ratesResponse);
-          console.log("testsResponse",testsResponse)
-          const ccRates = ratesResponse.data.filter(rate => rate.rate === 'CC');
-          const cliRates = ratesResponse.data.filter((rate) => rate.rate === 'CLI');
-          const cliRate = cliRates.filter(rate =>  rate.customerId == customerData._id)
-          console.log("customerData._id",customerData._id);
-          
-          const tests = await testsResponse.data.filter(test => test.customerId == customerData._id);
-console.log("ccRates",ccRates);
-console.log("cliRates",cliRates);
-console.log("cliRate",cliRate)
-console.log("tests",tests);
+
+          const ccRates = ratesResponse.data.filter(rate => rate.rate === 'CC' && rate.customerId === customerData._id);
+          const cliRates = ratesResponse.data.filter(rate => rate.rate === 'CLI' && rate.customerId === customerData._id);
+          const tests = testsResponse.data.filter(test => test.customerId === customerData._id);
 
           const fetchedCLIRates = await Promise.all(
-            cliRate.map(async (rate) => {
+            cliRates.map(async (rate) => {
               const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/clirates/${rate.rateId}`);
               return response.data; // Assuming each API call returns a rate object
             })
