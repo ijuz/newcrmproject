@@ -45,7 +45,7 @@ const MyRatesPage = () => {
           const testsResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/tests`);
           console.log("myratesResponse",ratesResponse);
           console.log("testsResponse",testsResponse)
-          const ccRates = ratesResponse.data.filter(rate => rate.rate === 'CC' && rate.customerId === customerData._id);
+          const ccRates = ratesResponse.data.filter(rate => rate.rate === 'CC');
           const cliRates = ratesResponse.data.filter(rate => rate.rate === 'CLI' && rate.customerId === customerData._id);
           const tests = testsResponse.data.filter(test => test.customerId === customerData._id);
 console.log("ccRates",ccRates);
