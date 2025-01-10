@@ -46,8 +46,10 @@ const MyRatesPage = () => {
           console.log("myratesResponse",ratesResponse);
           console.log("testsResponse",testsResponse)
           const ccRates = ratesResponse.data.filter(rate => rate.rate === 'CC');
-          const cliRates = ratesResponse.data.filter(rate => rate.rate === 'CLI' && rate.customerId === customerData._id);
-          const tests = testsResponse.data.filter(test => test.customerId === customerData._id);
+          const cliRates = await ratesResponse.data.filter((rate) => rate.rate === 'CLI' && rate.customerId === customerData._id);
+          console.log("customerData._id",customerData._id);
+          
+          const tests = await testsResponse.data.filter(test => test.customerId === customerData._id);
 console.log("ccRates",ccRates);
 console.log("cliRates",cliRates);
 console.log("tests",tests);
