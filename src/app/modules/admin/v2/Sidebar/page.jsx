@@ -34,6 +34,10 @@ const navigate = useNavigate()
         <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
           <a href="/newLeads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">New Leads</a>
           <a href="/notification" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Follow Up</a>
+          <a href="/sales_email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
+          <a href="/sales_Report" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
+          <a href="/sales_message" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
+          <a href="/sales_Assitance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
         </div>
       </div>
 
@@ -147,7 +151,7 @@ const navigate = useNavigate()
     <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
       Email
     </a>
-    <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+    <a href="/admin/account/followup" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
       Followups
     </a>
     <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
@@ -168,6 +172,7 @@ const navigate = useNavigate()
           <a href="/admin/support/testing" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Testing</a>
           <a href="/admin/support/followups" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
           <a href="/admin/support/task" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Tasks</a>
+          <a href="/admin/support/myTickets" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">My Ticket</a>
           <a href="/admin/support/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
           <a href="/admin/support/internalassistence" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
         </div>

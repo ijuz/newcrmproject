@@ -65,6 +65,8 @@ import CLIRatesPage from "./app/modules/customer/pages/rates_page/CLIRates/page.
 import SalesDetailsFollowUp from "../src/app/modules/admin/v2/Sales/Followups/[id]/page.jsx";
 import CarrierDetailsFollowup from "../src/app/modules/admin/v2/Carriers/Followups/[id]/page.jsx";
 import FollowUpDetailsLeads from "./app/modules/admin/v2/Leads/Followups/[id]/page.jsx";
+import MyTickets from "./app/modules/admin/v2/Support/MyTicket/page.jsx";
+import AccountsFollowUp from "./app/modules/admin/v2/Accounts/FollowUps/page.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -124,12 +126,15 @@ function App() {
         // </PrivateRoute>
       } />
 
-
       <Route path="/admin/ccrates" element={<RatesPage />} />
       <Route path="/admin/clirates" element={<AdminCli />} />
       <Route path="/admin/privaterates" element={<AdminPrivateRates />} />
       <Route path="/admin/specialrates" element={<AdminSpecialRates />} />
+      <Route path="/admin/account/followup" element={<AccountsFollowUp />} />
+
+      {/* support */}
       <Route path="/admin/support/troubleTickets" element={<TroubleTickets />} />
+      <Route path="/admin/support/myTickets" element={<MyTickets />} />
       <Route path="/admin/support/followups" element={<AdminFollowUp />} />
       <Route path="/admin/support/testing" element={<TestingPage />} />
       <Route path="/admin/support/task" element={<Admintask />} />

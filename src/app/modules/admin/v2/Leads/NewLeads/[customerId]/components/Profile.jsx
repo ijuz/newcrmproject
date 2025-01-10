@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { FaIdCard, FaMapMarkerAlt, FaClipboardList, FaCheckCircle, FaObjectGroup, FaRegObjectGroup } from 'react-icons/fa';
+
+import { SiWebmoney } from "react-icons/si";
+
+import { FaUsersGear } from "react-icons/fa6";
+import { MdLeaderboard } from "react-icons/md";
+
 import  axios  from "axios";
 import Layout from '../../../../layout/page';
-import { User, Mail, Phone, Globe, MapPin, Calendar, Flag, RefreshCw, AlertTriangle, Briefcase, Users, Link, FileText, ActivityIcon, UploadCloud, } from 'lucide-react';
+import { BsGraphUpArrow } from "react-icons/bs";
+
+import { User, Mail, Phone, Globe, MapPin, Calendar, Flag, RefreshCw, AlertTriangle, Briefcase, Users, Link, FileText, ActivityIcon, UploadCloud, CircleFadingArrowUpIcon, CircleDashedIcon, CircleAlert, CircleCheckIcon, } from 'lucide-react';
 
 const ProfileTab = ({ customerId }) => {
   const [leadData, setLeadData] = useState(null);
@@ -80,16 +89,70 @@ const ProfileTab = ({ customerId }) => {
 
   return (
     <Layout>
-      <div className="py-1 px-4 sm:px-6 lg:px-8 ">
-        <div className="max-w-6xl mx-auto space-y-8">
-          <h1 className="text-4xl font-bold text-center text-gray-800">{leadData?.companyName || "Company Name Not Available"}</h1>
-          
-          {error && (
-            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
-              <p className="font-bold">Error</p>
-              <p>{error}</p>
-            </div>
-          )}
+    <div className="py-1 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-7xl mx-auto space-y-10">
+  {/* Main Header Container with Grey Background */}
+  <div className="bg-white text-gray-500 px-6 py-4 rounded-lg shadow-lg">
+    <div className="flex justify-between items-center">
+      {/* Company Name Section (Left Side) */}
+      <div className="flex flex-col items-center space-y-4 w-1/2">
+        {/* Icon Container */}
+        <div className="bg-indigo-600 text-white square-full p-6 flex items-center justify-center mb-4">
+          <BsGraphUpArrow className="text-5xl" />
+        </div>
+        <h1 className="text-4xl text-gray-500 font-default text-center">
+          {leadData?.companyName || "Company Name Not Available"}
+        </h1>
+      </div>
+
+      {/* Tabs Section (Right Side) */}
+      <div className="ml-8 w-3/4 grid grid-cols-2 gap-8">
+        {/* Customer ID Tab */}
+        <div className="p-6 bg-white rounded-lg shadow-md flex items-center w-full">
+          <FaUsersGear className="text-yellow-500 text-6xl mr-6" />
+          <div className="flex flex-col items-start w-full">
+            <span className="text-sm text-gray-500">Customer ID</span>
+            <p className="text-lg font-default text-black">{leadData?.customerId || "Sree123"}</p>
+          </div>
+        </div>
+
+        {/* Location Tab */}
+        <div className="p-6 bg-white rounded-lg shadow-md flex items-center w-full">
+          <FaMapMarkerAlt className="text-blue-500 text-5xl mr-6" />
+          <div className="flex flex-col items-start w-full">
+            <span className="text-sm text-gray-500">Location</span>
+            <p className="text-lg font-default text-black">{leadData?.location || "India"}</p>
+          </div>
+        </div>
+
+        {/* Lead Type Tab */}
+        <div className="p-6 bg-white rounded-lg shadow-md flex items-center w-full">
+          <MdLeaderboard className="text-orange-500 text-7xl mr-6" />
+          <div className="flex flex-col items-start w-full">
+            <span className="text-sm text-gray-500">Lead Type</span>
+            <p className="text-lg font-default text-black">{leadData?.leadStatus || "Sales"}</p>
+          </div>
+        </div>
+
+        {/* Status Tab */}
+        <div className="p-6 bg-white rounded-lg shadow-md flex items-center w-full">
+          <FaCheckCircle className="text-green-500 text-5xl mr-6" />
+          <div className="flex flex-col items-start w-full">
+            <span className="text-sm text-gray-500">Lead Status</span>
+            <p className="text-lg font-default text-black">{leadData?.status || "Active"}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    
+    {error && (
+      <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4" role="alert">
+        <p className="font-bold">Error</p>
+        <p>{error}</p>
+      </div>
+    )}
           
           {successMessage && (
             <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4" role="alert">
@@ -153,12 +216,7 @@ const ProfileTab = ({ customerId }) => {
   <div className="space-y-4">
     <div>
       <div className="flex justify-end mt-6">
-        <button 
-          onClick={() => setUpdateModalOpen(true)} 
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 mt-6 flex items-center">
-          <UploadCloud className="mr-2" /> {/* Icon inside the button */}
-          Update Details
-        </button>
+      
 {/* Update Lead Modal */}
 {updateModalOpen && (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -364,26 +422,37 @@ const ProfileTab = ({ customerId }) => {
 )}
 
     </div>
-    <h3 className="text-lg font-semibold">Change Lead Status</h3>
-                <div className="flex items-center space-x-4">
-                  <select 
-                    value={newStatus} 
-                    onChange={(e) => setNewStatus(e.target.value)}
-                    className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select Status</option>
-                    <option value="new">New</option>
-                    <option value="hot">Hot</option>
-                    <option value="dead">Dead</option>
-                    <option value="junk">Junk</option>
-                  </select>
-                  <button onClick={handleStatusChange} className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors flex items-center">
-                    <RefreshCw className="mr-2 h-4 w-4" />
-                    Change Status
-                  </button>
-                </div>
-    
-       {/* Lead Conversion */}
+    <h3 className="text-lg font-semibold"></h3>
+    <div className="flex justify-between items-center space-x-4 mt-6">
+  {/* Change Status Button on the Left */}
+  <div className="flex items-center space-x-4">
+    <select 
+      value={newStatus} 
+      onChange={(e) => setNewStatus(e.target.value)}
+      className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">Select Status</option>
+      <option value="new">New</option>
+      <option value="hot">Hot</option>
+      <option value="dead">Dead</option>
+      <option value="junk">Junk</option>
+    </select>
+    <button onClick={handleStatusChange} className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors flex items-center">
+      <RefreshCw className="mr-2 h-4 w-4" />
+      Change Status
+    </button>
+  </div>
+
+  {/* Update Details Button on the Right */}
+  <button 
+    onClick={() => setUpdateModalOpen(true)} 
+    className="px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center">
+    <UploadCloud className="mr-2 h-4 w-4" /> {/* Icon inside the button */}
+    Update Details
+  </button>
+</div>
+
+{/* Lead Conversion Section */}
 <div className="bg-white shadow-md rounded-lg p-6 mt-8">
   <h2 className="text-2xl font-semibold text-gray-800 mb-6">Lead Conversion</h2>
   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -426,6 +495,7 @@ const ProfileTab = ({ customerId }) => {
     </div>
   </div>
 </div>
+
 
     
                

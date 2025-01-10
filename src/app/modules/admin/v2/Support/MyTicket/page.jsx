@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Layout from '../../layout/page';
-import { FaTicketAlt, FaPlus, FaTabletAlt, FaTencentWeibo, FaIdCard, FaReact, FaRecordVinyl, FaStreetView, FaUpload, FaBitcoin, FaServicestack } from 'react-icons/fa';
+import { FaMailBulk, FaPlus } from 'react-icons/fa';
 
-const FollowUp = () => {
+const MyTickets = () => {
   const [followUpData, setFollowUpData] = useState([]);
   const [customerData, setCustomerData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -60,6 +60,7 @@ const FollowUp = () => {
 
   const totalTickets = followUpData.length;
   const liveTickets = followUpData.filter((ticket) => ticket.followupStatus === 'Process').length;
+  const solvedTickets = followUpData.filter((ticket) => ticket.followupStatus === 'Completed').length;
 
   const filteredFollowUps = followUpData.filter(
     (item) =>
@@ -73,20 +74,24 @@ const FollowUp = () => {
         {/* Header Section */}
         <div className="mb-4">
           <div className="flex items-center space-x-4">
-            <FaServicestack className="text-6xl text-orange-500" />
-            <h2 className="text-4xl text-gray-600">Trouble Tickets</h2>
+            <FaMailBulk className="text-6xl text-orange-500" />
+            <h2 className="text-4xl text-gray-600">My Tickets</h2>
           </div>
         </div>
 
         {/* Statistics Section */}
-        <div className="flex justify-between mb-6">
-          <div className="flex-1 mr-4 bg-gradient-to-r from-blue-400 to-blue-600 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+        <div className="flex justify-between mb-6 space-x-6"> {/* Added spacing */}
+          <div className="flex-1 bg-gradient-to-r from-blue-400 to-blue-600 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
             <h3 className="text-lg font-semibold">Total Tickets</h3>
             <p className="text-4xl font-bold mt-2">{totalTickets}</p>
           </div>
-          <div className="flex-1 bg-gradient-to-r from-orange-400 to-orange-600 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+          <div className="flex-1 bg-gradient-to-r from-green-400 to-green-600 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
             <h3 className="text-lg font-semibold">Live Tickets</h3>
             <p className="text-4xl font-bold mt-2">{liveTickets}</p>
+          </div>
+          <div className="flex-1 bg-gradient-to-r from-orange-400 to-orange-600 text-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer">
+            <h3 className="text-lg font-semibold">Solved Tickets</h3>
+            <p className="text-4xl font-bold mt-2">{solvedTickets}</p>
           </div>
         </div>
 
@@ -126,7 +131,7 @@ const FollowUp = () => {
                 <th className="border px-5 py-3 text-left">Customer ID</th>
                 <th className="border px-5 py-3 text-left">Account Manager</th>
                 <th className="border px-5 py-3 text-left">Issues</th>
-                <th className="border px-5py-3 text-left">Support Engineer</th>
+                <th className="border px-5 py-3 text-left">Support Engineer</th>
                 <th className="border px-5 py-3 text-left">Status</th>
                 <th className="border px-5 py-3 text-left">Priority</th>
                 <th className="border px-5 py-3 text-left">Actions</th>
@@ -157,9 +162,6 @@ const FollowUp = () => {
                       <td className="border px-6 py-3">{followUp.followupStatus || 'N/A'}</td>
                       <td className="border px-6 py-3">{followUp.priority || 'N/A'}</td>
                       <td className="border px-6 py-3 space-x-2">
-                        <button className="bg-green-500 text-white px-3 py-1 rounded-lg shadow hover:bg-green-600">
-                          Pickup
-                        </button>
                         <button className="bg-blue-500 text-white px-3 py-1 rounded-lg shadow hover:bg-blue-600">
                           View
                         </button>
@@ -176,4 +178,4 @@ const FollowUp = () => {
   );
 };
 
-export default FollowUp;
+export default MyTickets;
