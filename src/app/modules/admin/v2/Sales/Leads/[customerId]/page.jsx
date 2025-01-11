@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import {
-  FaUser,
-  FaCreditCard,
-  FaQuestionCircle,
-  FaCommentDots,
-  FaDollarSign,
-  FaChevronDown,
-} from "react-icons/fa";
+  MdPerson,
+  MdAttachMoney,
+  MdHelp,
+  MdMessage,
+  MdMonetizationOn,
+  MdArrowDropDown,
+} from "react-icons/md";
 import clsx from "clsx";
 import Layout from "../../../layout/page";
 import ProfileTab from "./components/Profile";
@@ -23,14 +23,14 @@ const tabs = [
   {
     id: "profile",
     label: "Profile",
-    icon: FaUser,
-    color: "rose",
+    icon: MdPerson,
+    color: "bg-red-500",
   },
   {
     id: "rates",
     label: "Rates",
-    icon: FaDollarSign,
-    color: "blue",
+    icon: MdMonetizationOn,
+    color: "bg-blue-500",
     submenu: [
       { id: "rates1", label: "Base Rates", path: "Rates" },
       { id: "rates2", label: "Private Rates", path: "PrivateRates" },
@@ -39,20 +39,20 @@ const tabs = [
   {
     id: "payments",
     label: "Payments",
-    icon: FaCreditCard,
-    color: "amber",
+    icon: MdAttachMoney,
+    color: "bg-green-500",
   },
   {
     id: "support",
     label: "Support",
-    icon: FaQuestionCircle,
-    color: "purple",
+    icon: MdHelp,
+    color: "bg-yellow-500",
   },
   {
     id: "followup",
     label: "Follow-Ups",
-    icon: FaCommentDots,
-    color: "slate",
+    icon: MdMessage,
+    color: "bg-indigo-500",
   },
 ];
 
@@ -69,7 +69,7 @@ const LeadDetails = () => {
       setDropdownOpen(null);
     }
   };
-
+  console.log(customerId, "This is the customer iddddddddddddddddd")
   const handleSubItemClick = (subItem) => {
     setActiveTab(subItem.id);
     setDropdownOpen(null);
@@ -77,47 +77,41 @@ const LeadDetails = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen p-6 bg-gray-50">
+      <div className="p-4 bg-white">
         {/* Tabs Navigation */}
-        <div className="flex justify-center space-x-8 mb-10">
+        <div className="flex justify-around space-x-2 mb-6">
           {tabs.map((tab) => (
-            <div key={tab.id} className="relative">
+            <div key={tab.id} className="relative flex-1">
               <motion.button
                 className={clsx(
-                  "flex items-center p-3 rounded-lg transition-all space-x-2",
-                  activeTab === tab.id
-                    ? `bg-${tab.color}-100 text-${tab.color}-600`
-                    : "hover:bg-gray-200 text-gray-600"
+                  "flex items-center w-full px-4 py-3 rounded transition-all shadow-md",
+                  tab.color,
+                  "text-white"
                 )}
+                style={{ borderRadius: "4px" }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleTabClick(tab)}
               >
-                <tab.icon
-                  size={24}
-                  className={
-                    activeTab === tab.id
-                      ? `text-${tab.color}-600`
-                      : "text-gray-500"
-                  }
-                />
-                <span className="font-medium text-md">{tab.label}</span>
+                <tab.icon size={24} className="text-white" />
+                <span className="ml-2 font-medium text-sm">{tab.label}</span>
                 {tab.submenu && (
-                  <FaChevronDown
+                  <MdArrowDropDown
                     className={clsx(
-                      "ml-2 transition-transform",
-                      dropdownOpen === tab.id ? "rotate-180" : ""
+                      "ml-1 transition-transform",
+                      dropdownOpen === tab.id ? "rotate-180" : "",
+                      "text-white"
                     )}
-                    size={14}
+                    size={20}
                   />
                 )}
               </motion.button>
               {tab.submenu && dropdownOpen === tab.id && (
-                <div className="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-lg z-20">
+                <div className="absolute left-0 mt-2 w-full bg-indigo-400 shadow-lg rounded-lg z-20">
                   {tab.submenu.map((subItem) => (
                     <motion.button
                       key={subItem.id}
-                      className="block w-full text-left px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-100"
+                      className="block w-full text-left px-3 py-2 text-white  hover:bg-white-400"
                       whileHover={{ x: 4 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={() => handleSubItemClick(subItem)}
@@ -132,7 +126,7 @@ const LeadDetails = () => {
         </div>
 
         {/* Active Tab Content */}
-        <div className="p-6 bg-white rounded-lg shadow-md">
+        <div className="bg-gray-300 rounded-lg ">
           {activeTab === "profile" && <ProfileTab customerId={customerId} />}
           {activeTab === "rates1" && <Rates customerId={customerId} />}
           {activeTab === "rates2" && <PrivateRates customerId={customerId} />}

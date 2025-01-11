@@ -56,7 +56,7 @@ const tabs = [
   },
 ];
 
-const LeadDetails = () => {
+const SaleCustomerLeadDetails = () => {
   const { customerId } = useParams();
   const [activeTab, setActiveTab] = useState("profile");
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -144,4 +144,4 @@ const LeadDetails = () => {
   );
 };
 
-export default LeadDetails;
+export default SaleCustomerLeadDetails;

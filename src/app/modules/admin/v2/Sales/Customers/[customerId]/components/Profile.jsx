@@ -460,7 +460,26 @@ const ProfileTab = ({ customerId }) => {
                   <h2 className="text-2xl font-semibold text-gray-800 mb-6">Lead Conversion</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div
-                      onClick={() => handleConversion("Carrier")}
+                      onClick={() => handleConversion("CustomerLead")}
+                      className="cursor-pointer flex flex-col items-center bg-blue-100 border border-blue-300 rounded-lg p-4 hover:shadow-lg transition"
+                    >
+                      <div className="text-blue-500">
+                        <Users size={40} />
+                      </div>
+                      <h3 className="text-lg font-semibold mt-3">Convert to Customer Lead</h3>
+                      <p className="text-gray-600 text-sm mt-1 text-center">
+                        Transition this lead into a customer lead for better tracking and engagement.
+                      </p>
+                      <button
+                        onClick={() => handleConversion("CustomerLead")}
+                        className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                      >
+                        Convert Now
+                      </button>
+                    </div>
+
+                    <div
+                      onClick={() => handleConversion("CarrierLead")}
                       className="cursor-pointer flex flex-col items-center bg-green-100 border border-green-300 rounded-lg p-4 hover:shadow-lg transition"
                     >
                       <div className="text-green-500">
@@ -471,7 +490,7 @@ const ProfileTab = ({ customerId }) => {
                         Assign this lead as a carrier lead for business development opportunities.
                       </p>
                       <button
-                        onClick={() => handleConversion("Carrier")}
+                        onClick={() => handleConversion("CarrierLead")}
                         className="mt-4 px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
                       >
                         Convert Now

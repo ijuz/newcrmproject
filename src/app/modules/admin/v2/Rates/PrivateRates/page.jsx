@@ -1,262 +1,111 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Layout from '../../layout/page';
-import axiosInstance from '../../utils/axiosinstance';
-import axios from 'axios';
 
-const PrivateRatePage = () => {
-    const [customers, setCustomers] = useState([]);
-    const [selectedCustomerId, setSelectedCustomerId] = useState(null);
-    const [rates, setRates] = useState([]);
-    const [privateRates, setPrivateRates] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [rateSearchTerm, setRateSearchTerm] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [selectedRate, setSelectedRate] = useState(null);
-    const [updatedRate, setUpdatedRate] = useState('');
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [selectedCustomer, setSelectedCustomer] = useState(null);
+const TargetedRatePage = () => {
+    const [showCLI, setShowCLI] = useState(true);  // Toggle state between CLI and CC Rates
 
-    // Fetch all customers on page load
-    useEffect(() => {
-        axios.get('https://backend.cloudqlobe.com/v3/api/customers')
-            .then(response => setCustomers(response.data))
-            .catch(error => console.error("Error fetching customers:", error));
-    }, []);
+    // Dummy data for CLI Rates with Country Code
+    const dummyCLIRates = [
+        { countryCode: 'US', country: 'USA', qualityDescription: 'USA Modified Display', rtp: 95, asr: 90, acd: 3, rate: 0.10, lcr: 0.05, hcr: 0.12 },
+        { countryCode: 'CA', country: 'Canada', qualityDescription: 'Canada Correct Display', rtp: 92, asr: 85, acd: 5, rate: 0.12, lcr: 0.06, hcr: 0.14 },
+    ];
 
-    // Fetch all rates (unfiltered) after customer is selected
-    useEffect(() => {
-        if (selectedCustomerId) {
-            axios.get('https://backend.cloudqlobe.com/v3/api/rates')
-                .then(response => setRates(response.data))
-                .catch(error => console.error("Error fetching rates:", error));
-
-            // Fetch private rates associated with the selected customer
-            axiosInstance.get(`/v3/api/private-rates?customerId=${selectedCustomerId}`)
-                .then(response => {
-                    const filteredRates = response.data.filter(rate => rate.customerId === selectedCustomerId);
-                    setPrivateRates(filteredRates);
-                })
-                .catch(error => console.error("Error fetching private rates:", error));
-
-            // Fetch the selected customer's details
-            const customer = customers.find(customer => customer._id === selectedCustomerId);
-            setSelectedCustomer(customer);
-        } else {
-            setPrivateRates([]);
-            setSelectedCustomer(null);
-        }
-    }, [selectedCustomerId, customers]);
-
-    // Add rate to private rates for the selected customer
-    const addPrivateRate = async (rate) => {
-        if (!selectedCustomerId) return;
-        setIsLoading(true);
-        try {
-            const response = await axiosInstance.post('/v3/api/private-rates', { ...rate, customerId: selectedCustomerId });
-            const newPrivateRate = response.data;
-
-            // Update customer's privateRatesId array
-            await axiosInstance.put(`/v3/api/customers/${selectedCustomerId}`, {
-                privateRatesId: newPrivateRate._id
-            });
-
-            setPrivateRates(prevRates => [...prevRates, newPrivateRate]);
-        } catch (error) {
-            console.error("Error adding private rate:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    // Update private rate for the selected customer
-    const updatePrivateRate = async () => {
-        if (!selectedCustomerId || !selectedRate) return;
-        setIsLoading(true);
-        try {
-            const updatedRateData = { ...selectedRate, rate: updatedRate };
-            await axiosInstance.put(`/v3/api/private-rates/${selectedRate._id}`, updatedRateData);
-
-            setPrivateRates(prevRates => prevRates.map(rate =>
-                rate._id === selectedRate._id ? updatedRateData : rate
-            ));
-
-            setIsDialogOpen(false);
-        } catch (error) {
-            console.error("Error updating private rate:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    // Delete private rate for the selected customer
-    const deletePrivateRate = async (privateRateId) => {
-        if (!selectedCustomerId) return;
-        setIsLoading(true);
-        try {
-            await axiosInstance.delete(`/v3/api/private-rates/${privateRateId}`);
-            await axiosInstance.put(`/v3/api/customers/${selectedCustomerId}`, {
-                privateRatesId: privateRateId
-            });
-
-            setPrivateRates(prevRates => prevRates.filter(rate => rate._id !== privateRateId));
-        } catch (error) {
-            console.error("Error deleting private rate:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    // Filter customers based on search term
-    const filteredCustomers = customers.filter(customer =>
-        customer.companyName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-
-    // Filter rates based on search term
-    const filteredRates = rates.filter(rate =>
-        rate.country.toLowerCase().includes(rateSearchTerm.toLowerCase()) ||
-        rate.qualityDescription.toLowerCase().includes(rateSearchTerm.toLowerCase())
-    );
+    // Updated Dummy data for CC Rates with Country Code, LCR, and HCR rates
+    const dummyCCRates = [
+        { countryCode: 'US', country: 'USA', qualityDescription: 'USA Modified Display', rate: 0.10, status: 'Active', profile: 'IVR', lcr: 0.05, hcr: 0.12 },
+        { countryCode: 'CA', country: 'Canada', qualityDescription: 'USA Modified Display', rate: 0.12, status: 'Inactive', profile: 'OUTBOND', lcr: 0.06, hcr: 0.14 },
+    ];
 
     return (
         <Layout>
             <div className="p-6 text-gray-900">
-                <h2 className="text-xl font-bold">Private Rates</h2>
+                <h2 className="text-xl font-bold flex items-center">
+                    TARGETED RATES
+                </h2>
 
-                {/* Customer Search */}
-                <div className="mt-4 flex items-center space-x-2">
-                    <input
-                        type="text"
-                        placeholder="Search customers"
-                        className="p-2 border rounded w-80"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+                {/* Tab Buttons */}
+                <div className="mt-4 flex space-x-4">
+                    <button
+                        onClick={() => setShowCLI(true)}
+                        className={`px-4 py-2 ${showCLI ? 'bg-orange-500 text-white' : 'bg-orange-500'}`}
+                    >
+                        CLI Rates
+                    </button>
+                    <button
+                        onClick={() => setShowCLI(false)}
+                        className={`px-4 py-2 ${!showCLI ? 'bg-green-500 text-white' : 'bg-green-500'}`}
+                    >
+                        CC Rates
+                    </button>
                 </div>
 
-                {/* Customer Table */}
-                <div className="mt-4 overflow-x-auto">
-                    <table className="min-w-full border-collapse">
-                        <thead>
-                            <tr>
-                                <th className="p-2 border">Customer Name</th>
-                                <th className="p-2 border">Customer ID</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredCustomers.map((customer) => (
-                                <tr
-                                    key={customer._id}
-                                    className="cursor-pointer"
-                                    onClick={() => setSelectedCustomerId(customer._id)}
-                                >
-                                    <td className="p-2">{customer.companyName}</td>
-                                    <td className="p-2">{customer._id}</td>
+                {/* Display CLI Rates Table */}
+                {showCLI && (
+                    <div className="mt-6 overflow-x-auto">
+                        <table className="min-w-full border-collapse">
+                            <thead className="bg-[#005F73] text-white">
+                                <tr>
+                                    <th className="p-2 text-center">Country Code</th>
+                                    <th className="p-2 text-center">Country</th>
+                                    <th className="p-2 text-center">Quality Description</th>
+                                    <th className="p-2 text-center">RTP</th>
+                                    <th className="p-2 text-center">ASR</th>
+                                    <th className="p-2 text-center">ACD</th>
+                                    <th className="p-2 text-center">Rate ($)</th>
+                                    <th className="p-2 text-center">Target LCR</th>
+                                    <th className="p-2 text-center">Target HCR</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
-                {/* Display Selected Customer Info */}
-                {selectedCustomer && (
-                    <div className="mt-6">
-                        <h3 className="text-lg font-semibold">Selected Customer</h3>
-                        <div className="mt-2">
-                            <p><strong>Customer ID:</strong> {selectedCustomer.customerId}</p>
-                            <p><strong>Company Name:</strong> {selectedCustomer.companyName}</p>
-                        </div>
+                            </thead>
+                            <tbody>
+                                {dummyCLIRates.map((rate, index) => (
+                                    <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
+                                        <td className="p-2 text-center">{rate.countryCode}</td>
+                                        <td className="p-2 text-center">{rate.country}</td>
+                                        <td className="p-2 text-center">{rate.qualityDescription}</td>
+                                        <td className="p-2 text-center">{rate.rtp}</td>
+                                        <td className="p-2 text-center">{rate.asr}</td>
+                                        <td className="p-2 text-center">{rate.acd}</td>
+                                        <td className="p-2 text-center">${rate.rate}</td>
+                                        <td className="p-2 text-center">{rate.lcr}</td>
+                                        <td className="p-2 text-center">{rate.hcr}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 )}
 
-                {/* Private Rates Section */}
-                {selectedCustomerId && (
-                    <div className="mt-4">
-                        <h3 className="text-lg font-semibold">Private Rates for Selected Customer</h3>
-                        <div className="mt-4 overflow-x-auto">
-                            <table className="min-w-full border-collapse">
-                                <thead>
-                                    <tr>
-                                        <th className="p-2 border">Country</th>
-                                        <th className="p-2 border">Quality Description</th>
-                                        <th className="p-2 border">Rate</th>
-                                        <th className="p-2 border">Actions</th>
+                {/* Display CC Rates Table */}
+                {!showCLI && (
+                    <div className="mt-6 overflow-x-auto">
+                        <table className="min-w-full border-collapse">
+                            <thead className="bg-[#005F73] text-white">
+                                <tr>
+                                    <th className="p-2 text-center">Country Code</th>
+                                    <th className="p-2 text-center">Country</th>
+                                    <th className="p-2 text-center">Quality Description</th>
+                                    <th className="p-2 text-center">Rate</th>
+                                    <th className="p-2 text-center">Status</th>
+                                    <th className="p-2 text-center">Profile</th>
+                                    <th className="p-2 text-center">Target LCR</th>
+                                    <th className="p-2 text-center">Target HCR</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {dummyCCRates.map((rate, index) => (
+                                    <tr key={index} className={index % 2 === 0 ? 'bg-gray-100' : 'bg-white'}>
+                                        <td className="p-2 text-center">{rate.countryCode}</td>
+                                        <td className="p-2 text-center">{rate.country}</td>
+                                        <td className="p-2 text-center">{rate.qualityDescription}</td>
+                                        <td className="p-2 text-center">${rate.rate}</td>
+                                        <td className="p-2 text-center">{rate.status}</td>
+                                        <td className="p-2 text-center">{rate.profile}</td>
+                                        <td className="p-2 text-center">{rate.lcr}</td>
+                                        <td className="p-2 text-center">{rate.hcr}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {privateRates.map((privateRate) => (
-                                        <tr key={privateRate._id} className="border-t">
-                                            <td className="p-2">{privateRate.country}</td>
-                                            <td className="p-2">{privateRate.qualityDescription}</td>
-                                            <td className="p-2">${privateRate.rate}</td>
-                                            <td className="p-2 flex space-x-2">
-                                                <button
-                                                    onClick={() => {
-                                                        setSelectedRate(privateRate);
-                                                        setUpdatedRate(privateRate.rate);
-                                                        setIsDialogOpen(true);
-                                                    }}
-                                                    className="px-4 py-2 bg-yellow-500 text-white rounded"
-                                                >
-                                                    Update
-                                                </button>
-                                                <button
-                                                    onClick={() => deletePrivateRate(privateRate._id)}
-                                                    className="px-4 py-2 bg-red-500 text-white rounded"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                )}
-
-                {/* Display Rates (after selecting a customer) */}
-                {selectedCustomerId && (
-                    <div className="mt-4">
-                        <h3 className="text-lg font-semibold">Available Rates</h3>
-                        {/* Rate Search */}
-                        <div className="mt-2 flex items-center space-x-2">
-                            <input
-                                type="text"
-                                placeholder="Search rates"
-                                className="p-2 border rounded w-80"
-                                value={rateSearchTerm}
-                                onChange={(e) => setRateSearchTerm(e.target.value)}
-                            />
-                        </div>
-                        <div className="mt-4 overflow-x-auto">
-                            <table className="min-w-full border-collapse">
-                                <thead>
-                                    <tr>
-                                        <th className="p-2 border">Country</th>
-                                        <th className="p-2 border">Quality Description</th>
-                                        <th className="p-2 border">Rate</th>
-                                        <th className="p-2 border">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {filteredRates.map((rate) => (
-                                        <tr key={rate._id}>
-                                            <td className="p-2">{rate.country}</td>
-                                            <td className="p-2">{rate.qualityDescription}</td>
-                                            <td className="p-2">${rate.rate}</td>
-                                            <td className="p-2">
-                                                <button
-                                                    onClick={() => addPrivateRate(rate)}
-                                                    className="px-4 py-2 bg-green-500 text-white rounded"
-                                                >
-                                                    Add to Private Rates
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 )}
             </div>
@@ -264,4 +113,4 @@ const PrivateRatePage = () => {
     );
 };
 
-export default PrivateRatePage;
+export default TargetedRatePage;

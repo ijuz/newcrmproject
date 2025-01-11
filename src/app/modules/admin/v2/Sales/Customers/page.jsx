@@ -30,8 +30,9 @@ const CustomersPage = () => {
           "https://backend.cloudqlobe.com/v3/api/customers"
         );
         const filteredCustomers = response.data.filter(
-          (customer) => customer.customerType === "Customer"
+          (customer) => customer.customerType === "SaleCustomerLead"
         );
+        
         setCustomers(filteredCustomers);
       } catch (error) {
         console.error("Error fetching customers:", error);
@@ -44,7 +45,7 @@ const CustomersPage = () => {
 
   const handleSearch = (event) => setSearch(event.target.value);
   const handleFilter = (status) => setLeadStatusFilter(status);
-  const handleRowClick = (customerId) => navigate(`/NewLeads/${customerId}`);
+  const handleRowClick = (customerId) => navigate(`/SaleLead/customer/${customerId}`);
   // Filter customers based on search and lead status
   const filteredCustomers = useMemo(() => {
     return customers.filter((customer) => {

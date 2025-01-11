@@ -14,7 +14,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     rtp: '',
     asr: '',
     acd: '',
-    addToTicker: false,
+    ticker: false, 
     testStatus: 'na',
   });
 
@@ -33,7 +33,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         asr: '',
         acd: '',
         testStatus: 'na',
-        addToTicker: false,
+        ticker: false,
       });
     }
   }, [initialData]);
@@ -52,7 +52,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
       asr: '',
       acd: '',
       testStatus: 'na',
-      addToTicker: false,
+      ticker: false,
     });
   };
 
@@ -82,10 +82,9 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
               <option value="Inactive">Inactive</option>
             </select>
           </label>
-          {/* New Ticker Toggle */}
           <div className="mb-4">
             <label className="inline-flex items-center">
-              <input type="checkbox" checked={newLead.addToTicker} onChange={(e) => setNewLead({ ...newLead, addToTicker: e.target.checked })} className="form-checkbox h-5 w-5 text-blue-600" />
+              <input type="checkbox" checked={newLead.ticker} onChange={(e) => setNewLead({ ...newLead, ticker: e.target.checked })} className="form-checkbox h-5 w-5 text-blue-600" />
               <span className="ml-2">Add to Ticker</span>
             </label>
           </div>
@@ -135,20 +134,17 @@ const RatesPage = () => {
   });
 
   const handleAddLead = async (leadData) => {
-    console.log(leadData);
-    
     try {
       let response;
       if (isUpdateMode) {
         response = await axiosInstance.put(`v3/api/clirates/${currentRate._id}`, leadData);
       } else {
         response = await axiosInstance.post('v3/api/clirates', leadData);
-      }
-        // If the ticker option is enabled, send it to the ticker API
-        if (leadData.addToTicker) {
-          await axiosInstance.post('/v3/api/clt', { rateids: response.data._id });
+        
+        if (leadData.ticker) {
+          await axiosInstance.post('/v3/api/clt', { rateids: [response.data._id] });
         }
-    
+      }
       setRateData((prev) => 
         isUpdateMode 
           ? prev.map(rate => (rate._id === currentRate._id ? response.data : rate)) 
@@ -202,26 +198,26 @@ const RatesPage = () => {
           <option value="rate">Sort by Rate</option>
         </select>
 
-        <table className="min-w-full border border-gray-300">
+        <table className="min-w-full bg-white shadow-lg mt-4">
           <thead>
-            <tr>
-              <th className="border border-gray-300 px-4 py-2">Country Code</th>
-              <th className="border border-gray-300 px-4 py-2">Country Name</th>
-              <th className="border border-gray-300 px-4 py-2">Quality Description</th>
-              <th className="border border-gray-300 px-4 py-2">Rate</th>
-              <th className="border border-gray-300 px-4 py-2">Status</th>
-              <th className="border border-gray-300 px-4 py-2">Actions</th>
+            <tr className="bg-[#005F73] text-white">
+              <th className="px-4 py-2">Country Code</th>
+              <th className="px-4 py-2">Country Name</th>
+              <th className="px-4 py-2">Quality Description</th>
+              <th className="px-4 py-2">Rate</th>
+              <th className="px-4 py-2">Status</th>
+              <th className="px-4 py-2">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {sortedData.map((rate) => (
-              <tr key={rate._id}>
-                <td className="border border-gray-300 px-4 py-2">{rate.countryCode}</td>
-                <td className="border border-gray-300 px-4 py-2">{rate.country}</td>
-                <td className="border border-gray-300 px-4 py-2">{rate.qualityDescription}</td>
-                <td className="border border-gray-300 px-4 py-2">{rate.rate}</td>
-                <td className={`border border-gray-300 px-4 py-2 ${rate.status === 'Active' ? 'text-green-600' : 'text-red-600'}`}>{rate.status}</td>
-                <td className="border border-gray-300 px-4 py-2">
+            {sortedData.map((rate, index) => (
+              <tr key={rate._id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
+                <td className="px-4 py-2">{rate.countryCode}</td>
+                <td className="px-4 py-2">{rate.country}</td>
+                <td className="px-4 py-2">{rate.qualityDescription}</td>
+                <td className="px-4 py-2">{rate.rate}</td>
+                <td className={`px-4 py-2 ${rate.status === 'Active' ? 'text-green-600' : 'text-red-600'}`}>{rate.status}</td>
+                <td className="px-4 py-2">
                   <button onClick={() => handleUpdateClick(rate)} className="text-blue-500 hover:underline">Edit</button>
                   <button onClick={() => handleDeleteClick(rate._id)} className="text-red-500 hover:underline ml-2">Delete</button>
                 </td>

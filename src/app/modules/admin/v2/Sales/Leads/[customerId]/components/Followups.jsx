@@ -1,115 +1,204 @@
-import { DatabaseZapIcon,FileStack } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { FaPlusCircle, FaHistory } from "react-icons/fa"; // Import icons
+import React, { useState, useEffect, useRef } from "react";
+import { SlCalender } from "react-icons/sl";
+import { LuCircleDollarSign } from "react-icons/lu";
+import { IoMdSend } from "react-icons/io";
+import { AiFillInteraction } from "react-icons/ai";
+import { FaClipboardList, FaEnvelope, FaPhone, FaTags, FaRegCalendarAlt, FaClock, FaFileAlt, FaCircleNotch, FaICursor, FaCriticalRole, FaStopCircle } from "react-icons/fa";
 
-const FollowUpTab = ({ setActiveTab }) => {
-  const [followups, setFollowups] = useState([]);
+const FollowUpTab = () => {
+  const [followups, setFollowups] = useState([
+    { _id: "1", followupDescription: ["Discuss project timeline"], followupTime: "2025-01-09T10:00:00Z" },
+    { _id: "2", followupDescription: ["Review contract terms"], followupTime: "2025-01-08T14:00:00Z" },
+    { _id: "3", followupDescription: ["Send invoice for December"], followupTime: "2025-01-07T09:00:00Z" },
+  ]);
   const [newFollowUp, setNewFollowUp] = useState("");
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const followUpRef = useRef(null);
 
   useEffect(() => {
-    const fetchFollowups = async () => {
-      try {
-        const response = await fetch("https://backend.cloudqlobe.com/v3/api/followups");
-        const data = await response.json();
-        setFollowups(data);
-      } catch (error) {
-        console.error("Error fetching followups:", error);
-      }
-    };
+    followUpRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [followups]);
 
-    fetchFollowups();
-  }, []);
-
-  const handleAddFollowUp = async () => {
+  const handleAddFollowUp = () => {
     if (!newFollowUp.trim()) return;
-
     const newFollowUpObj = {
+      _id: String(Date.now()),
       followupDescription: [newFollowUp],
-      followupTime: new Date(),
+      followupTime: new Date().toISOString(),
     };
+    setFollowups((prevFollowups) => [...prevFollowups, newFollowUpObj]);
+    setNewFollowUp("");
+    setIsFormVisible(false);
+  };
 
-    const response = await fetch("https://backend.cloudqlobe.com/v3/api/followups", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newFollowUpObj),
-    });
+  const handleClockButtonClick = () => {
+    setIsFormVisible(true);
+  };
 
-    if (response.ok) {
-      setFollowups((prevFollowups) => [...prevFollowups, newFollowUpObj]);
-      setNewFollowUp(""); // Clear the input field after adding
-    }
+  const handleCancel = () => {
+    setIsFormVisible(false);
   };
 
   return (
-    <div className="flex flex-col items-center bg-gray-100 min-h-screen p-6 relative">
-      {/* Header Section with Icon and Button */}
-      <div className="w-full max-w-4xl bg-white rounded-lg overflow-hidden mb-4 p-6">
-        <div className="flex justify-between items-center border-b-2 border-gray-200 mb-4">
-          {/* History Icon in a Circle */}
-          <div className="flex items-center space-x-2">
-            <div className="p-2 bg-blue-500 rounded-full">
-              <FileStack  className="text-white text-2xl" />
-            </div>
-            <h2 className="text-2xl font-semibold text-gray-800">FOLLOW-UP HISTORY</h2>
-          </div>
-
-          {/* Button to Navigate to Follow-Up Form */}
-          <button
-            onClick={() => setActiveTab("formfollow")}
-            className="flex items-center space-x-2 bg-gradient-to-r from-orange-500 to-orange-500 text-white px-6 py-3 rounded-full shadow-xl hover:bg-blue-600 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-200 ease-in-out transform hover:scale-110"
-          >
-            <DatabaseZapIcon className="text-xl" />
-            <span>Add Follow-Up</span>
-          </button>
-        </div>
+    <div className="flex items-center justify-center min-h-screen bg-white">
+      {/* Image Section */}
+      <div className="w-1/2 p-6 flex items-center justify-center">
+        <img
+          src="/images/adminlLeadFollowUp.jpg"
+          alt="Follow-up Illustration"
+          className="w-full h-auto"
+        />
       </div>
 
-      {/* Main Follow-Up Box */}
-      <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg overflow-hidden mb-14">
-        {/* Chat-like Follow-Up Notes */}
-        <div className="p-6 max-h-[500px] overflow-y-auto space-y-4 bg-gray-50 border-b-2 border-gray-200">
-          {followups.length > 0 ? (
-            followups.map((followup, index) => (
-              <div
-                key={followup._id}
-                className={`flex ${
-                  index % 2 === 0 ? "justify-start" : "justify-end"
-                }`}
-              >
-                <div
-                  className={`p-4 ${
-                    index % 2 === 0
-                      ? "bg-blue-100 text-blue-800"
-                      : "bg-gray-400 text-orange-800"
-                  } rounded-lg shadow-md max-w-xs`}
-                >
-                  <p className="font-medium">
-                    {followup.followupDescription?.join(", ")}
-                  </p>
-                  <p className="text-sm text-gray-500 mt-2">
-                    {new Date(followup.followupTime).toLocaleString()}
-                  </p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-center text-gray-500">No follow-ups available</div>
-          )}
+      {/* Follow-Up Section */}
+      <div className="w-1/2 bg-white rounded-lg p-8 shadow-lg">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-3xl font-bold text-gray-500 flex items-center">
+            <LuCircleDollarSign className="text-orange-300 mr-2 text-5xl" />
+            Telivoiz LLC
+          </h2>
+          <button
+            onClick={handleClockButtonClick}
+            className="text-blue-500 p-3 rounded-lg flex items-center justify-center"
+          >
+            <SlCalender className="mr-2 text-4xl" />
+          </button>
         </div>
 
-        {/* Chat Bar to Add Follow-Up */}
-        <div className="w-full bg-white flex items-center p-4 shadow-md rounded-lg space-x-4">
+        <div className="bg-white rounded-lg overflow-hidden flex-grow flex flex-col-reverse mb-8 shadow-sm">
+          <div className="p-6 space-y-6 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-100">
+            {followups.length > 0 ? (
+              followups.map((followup) => (
+                <div key={followup._id} className="flex items-center justify-between">
+                  <div className="flex-grow bg-indigo-100 p-5 rounded-lg">
+                    <p className="font-medium text-gray-800">{followup.followupDescription.join(", ")}</p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      {new Date(followup.followupTime).toLocaleString()}
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center text-gray-500">No notes available</div>
+            )}
+            <div ref={followUpRef}></div>
+          </div>
+        </div>
+
+        {isFormVisible && (
+          <div className="absolute inset-0 bg-black bg-opacity-25 flex items-center justify-center">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-1/2">
+              <h3 className="text-2xl font-bold mb-6 flex items-center">
+                <AiFillInteraction  className="text-blue-500 mr-3 text-5xl" />
+                Follow-Up Information
+              </h3>
+              <form className="space-y-4">
+                <div className="flex items-center space-x-4">
+                  <div className="w-1/2">
+                    <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
+                      <FaClipboardList className="mr-2 text-lg" />
+                      Follow-Up Description
+                    </label>
+                    <input
+                      type="text"
+                      className="p-3 border rounded-lg w-full"
+                      placeholder="Enter description"
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
+                      <FaEnvelope className="mr-2 text-lg" />
+                      Follow-Up Method
+                    </label>
+                    <select className="p-3 border rounded-lg w-full">
+                      <option>Email</option>
+                      <option>Phone</option>
+                      <option>In-person</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  <div className="w-1/2">
+                    <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
+                      <FaTags className="mr-2 text-lg" />
+                      Follow-Up Category
+                    </label>
+                    <select className="p-3 border rounded-lg w-full">
+                      <option>Sales</option>
+                      <option>Support</option>
+                      <option>General</option>
+                    </select>
+                  </div>
+                  <div className="w-1/2">
+                    <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
+                      <FaRegCalendarAlt className="mr-2 text-lg" />
+                      Date
+                    </label>
+                    <input
+                      type="date"
+                      className="p-3 border rounded-lg w-full"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  <div className="w-1/2">
+                    <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
+                      <FaClock className="mr-2 text-lg" />
+                      Time
+                    </label>
+                    <input
+                      type="time"
+                      className="p-3 border rounded-lg w-full"
+                    />
+                  </div>
+                  <div className="w-1/2">
+                    <label className="flex items-center text-sm font-medium text-gray-700 mb-1">
+                      <FaFileAlt className="mr-2 text-lg" />
+                      Additional Notes
+                    </label>
+                    <input
+                      type="text"
+                      className="p-3 border rounded-lg w-full"
+                      placeholder="Add any notes"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-between mt-6">
+                  <button
+                    type="button"
+                    onClick={handleAddFollowUp}
+                    className="bg-orange-500 text-white py-2 px-5 rounded-lg"
+                  >
+                    Add Follow-Up
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="bg-gray-500 text-white py-2 px-5 rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        <div className="flex items-center space-x-4 mt-6">
           <textarea
             value={newFollowUp}
             onChange={(e) => setNewFollowUp(e.target.value)}
-            placeholder="Type your follow-up..."
-            className="w-full p-3 bg-gray-100 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            placeholder="Type your note..."
+            className="flex-grow h-12 p-4 bg-white rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
           />
           <button
             onClick={handleAddFollowUp}
-            className="bg-gradient-to-r from-green-400 to-green-400 text-white px-4 py-2 rounded-lg shadow-md hover:from-blue-500 hover:to-orange-500 focus:outline-none focus:ring-2 focus:ring-blue-300 transition"
+            className="w-12 h-12 bg-gradient-to-r from-green-400 to-green-500 text-white rounded-full shadow-md hover:from-green-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-300 transition-transform transform hover:scale-110 flex items-center justify-center"
           >
-            <FaPlusCircle />
+            <IoMdSend className="text-xl" />
           </button>
         </div>
       </div>
@@ -117,4 +206,4 @@ const FollowUpTab = ({ setActiveTab }) => {
   );
 };
 
-export default FollowUpTab;
+export default FollowUpTab;

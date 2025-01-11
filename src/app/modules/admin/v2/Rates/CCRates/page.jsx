@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../utils/axiosinstance';
 import Layout from '../../layout/page';
 import axios from 'axios';
 
@@ -10,6 +11,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
     status: 'Inactive',
     profile: '',
     rate: '',
+    category: '',
     testStatus: 'as',
     specialRate: false,
     addToTicker: false,
@@ -26,6 +28,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
         status: 'Inactive',
         profile: '',
         rate: '',
+        category: '',
         testStatus: 'as',
         specialRate: false,
         addToTicker: false,
@@ -39,7 +42,23 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
 
     const leadData = { ...newLead };
 
+    if (leadData.specialRate) {
+      leadData.category = 'specialrate';
+    } else {
+      leadData.category = newLead.category;
+    }
+
     await onSubmit(leadData);
+
+
+    // If "Add to Ticker" is selected, update the cct API with this rate's ID
+    if (leadData.addToTicker) {
+      try {
+        await axios.post('https://backend.cloudqlobe.com/v3/api/cct', leadData);
+      } catch (error) {
+        console.error("Failed to add rate to ticker:", error);
+      }
+    }
 
     setNewLead({
       countryCode: '',
@@ -48,6 +67,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
       status: 'Inactive',
       profile: '',
       rate: '',
+      category: '',
       testStatus: 'as',
       specialRate: false,
       addToTicker: false,
@@ -167,37 +187,24 @@ const RatesPage = () => {
       try {
         const response = await axios.get('https://backend.cloudqlobe.com/v3/api/rates');
         setRateData(response.data);
-        console.log(response.data);
-        
       } catch (error) {
         console.error('Error fetching rates:', error);
       }
     };
     fetchRates();
-  }, []);
+  }, [rateData]);
 
   const handleAddLead = async (leadData) => {
-console.log(leadData);
+    console.log(leadData);
 
     try {
       let response;
       if (isUpdateMode) {
-        console.log(currentRate._id);
-        
         response = await axios.put(`https://backend.cloudqlobe.com/v3/api/rates/${currentRate._id}`, leadData);
       } else {
         response = await axios.post('https://backend.cloudqlobe.com/v3/api/rates', leadData);
       }
-          // If "Add to Ticker" is selected, update the cct API with this rate's ID
-    if (leadData.addToTicker) {
-      try {
-        await axios.post('https://backend.cloudqlobe.com/v3/api/cct', { rateids: response.data._id });
-      } catch (error) {
-        console.error("Failed to add rate to ticker:", error);
-      }
-    }
 
-      
       setRateData((prev) =>
         isUpdateMode
           ? prev.map(rate => (rate._id === currentRate._id ? response.data : rate))
@@ -223,9 +230,7 @@ console.log(leadData);
 
   const handleDeleteClick = async (rateId) => {
     try {
-    const response =  await axios.delete(`https://backend.cloudqlobe.com/v3/api/rates/${rateId}`);
-    console.log(response);
-    
+      await axios.delete(`https://backend.cloudqlobe.com/v3/api/rates/${rateId}`);
       setRateData(rateData.filter((rate) => rate._id !== rateId));
       setSuccessMessage('Rate deleted successfully!');
       setErrorMessage('');
@@ -273,16 +278,16 @@ console.log(leadData);
           Add Rate
         </button>
 
-        <table className="min-w-full bg-white shadow-lg border mt-4">
+        <table className="min-w-full bg-white shadow-lg mt-4">
           <thead>
             <tr className="bg-[#005F73] text-white">
-              <th className="py-2 px-4 border">Country Code</th>
-              <th className="py-2 px-4 border">Country</th>
-              <th className="py-2 px-4 border">Quality Description</th>
-              <th className="py-2 px-4 border">Rate</th>
-              <th className="py-2 px-4 border">Status</th>
-              <th className="py-2 px-4 border">Profile</th>
-              <th className="py-2 px-4 border">Actions</th>
+              <th className="py-2 px-4">Country Code</th>
+              <th className="py-2 px-4">Country</th>
+              <th className="py-2 px-4">Quality Description</th>
+              <th className="py-2 px-4">Rate</th>
+              <th className="py-2 px-4">Status</th>
+              <th className="py-2 px-4">Profile</th>
+              <th className="py-2 px-4">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -299,15 +304,15 @@ console.log(leadData);
                 if (sort === 'status') return a.status.localeCompare(b.status);
                 return 0;
               })
-              .map((rate) => (
-                <tr key={rate._id}>
-                  <td className="py-2 px-4 border">{rate.countryCode}</td>
-                  <td className="py-2 px-4 border">{rate.country}</td>
-                  <td className="py-2 px-4 border">{rate.qualityDescription}</td>
-                  <td className="py-2 px-4 border">{rate.rate}</td>
-                  <td className="py-2 px-4 border">{rate.status}</td>
-                  <td className="py-2 px-4 border">{rate.profile}</td>
-                  <td className="py-2 px-4 border">
+              .map((rate, index) => (
+                <tr key={rate._id} className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}>
+                  <td className="py-2 px-4">{rate.countryCode}</td>
+                  <td className="py-2 px-4">{rate.country}</td>
+                  <td className="py-2 px-4">{rate.qualityDescription}</td>
+                  <td className="py-2 px-4">{rate.rate}</td>
+                  <td className="py-2 px-4">{rate.status}</td>
+                  <td className="py-2 px-4">{rate.profile}</td>
+                  <td className="py-2 px-4">
                     <button
                       onClick={() => handleUpdateClick(rate)}
                       className="text-blue-500 hover:text-blue-700"
@@ -324,8 +329,8 @@ console.log(leadData);
                 </tr>
               ))}
           </tbody>
-
         </table>
+
       </div>
 
       <Modal

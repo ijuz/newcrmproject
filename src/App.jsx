@@ -67,6 +67,13 @@ import CarrierDetailsFollowup from "../src/app/modules/admin/v2/Carriers/Followu
 import FollowUpDetailsLeads from "./app/modules/admin/v2/Leads/Followups/[id]/page.jsx";
 import MyTickets from "./app/modules/admin/v2/Support/MyTicket/page.jsx";
 import AccountsFollowUp from "./app/modules/admin/v2/Accounts/FollowUps/page.jsx";
+import OverdraftRequestPage from "./app/modules/admin/v2/Requests/OverdraftRequests/page.jsx";
+import RechargerequestPage from "./app/modules/admin/v2/Requests/RechargeRequests/page.jsx";
+import VendorRequestPage from "./app/modules/admin/v2/Requests/Vendorpayment/page.jsx";
+import RechargePage from "./app/modules/admin/v2/Accounts/Recharge/page.jsx";
+import TargetedRatePage from "./app/modules/admin/v2/Rates/PrivateRates/page.jsx";
+import SpecialRatePage from "./app/modules/admin/v2/Rates/SpecialRates/page.jsx";
+import SaleCustomerLeadDetails from "./app/modules/admin/v2/Sales/Customers/[customerId]/page.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -119,6 +126,7 @@ function App() {
           <Route path="/Addlead" element={<AddLead />} />
           <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
           <Route path="/SaleLead/:customerId" element={<SaleLead />} />
+          <Route path="/SaleLead/customer/:customerId" element={<SaleCustomerLeadDetails />} />
           <Route path="/customermanagement" element={<CustomersPage />} />
           <Route path="/settings_page" element={<CSettingsPage />} />
           <Route path="/add-ticket" element={<AddTicket />} />
@@ -126,10 +134,16 @@ function App() {
         // </PrivateRoute>
       } />
 
+      {/* Accounts */}
+      <Route path="/admin/recharge" element={<RechargePage />} />
       <Route path="/admin/ccrates" element={<RatesPage />} />
       <Route path="/admin/clirates" element={<AdminCli />} />
-      <Route path="/admin/privaterates" element={<AdminPrivateRates />} />
-      <Route path="/admin/specialrates" element={<AdminSpecialRates />} />
+      <Route path="/admin/targetedrates" element={<TargetedRatePage />} />
+      <Route path="/admin/specialrates" element={<SpecialRatePage />} />
+      <Route path="/admin/recharge_requests" element={<RechargerequestPage />} />
+      <Route path="/admin/vendorpayment" element={<VendorRequestPage />} />
+      <Route path="/admin/overdraft_requests" element={<OverdraftRequestPage />} />
+      {/* <Route path="/admin/privaterate_requests" element={<privaterateRequests />} /> */}
       <Route path="/admin/account/followup" element={<AccountsFollowUp />} />
 
       {/* support */}
