@@ -1,168 +1,128 @@
-import React, { useState, useEffect } from 'react';
-import { Search, UserCircle2 } from 'lucide-react';
-import axiosInstance from '../../utils/axiosinstance';
+import React, { useState } from 'react';
 import Layout from '../../layout/page';
+import { FaSearch, FaCog, FaComments, FaSnapchat, FaEllipsisV } from 'react-icons/fa';
+import { IoMdChatbubbles } from "react-icons/io"; // Importing the icons
 
-const ChatAdminList = () => {
-  const [selectedCustomerId, setSelectedCustomerId] = useState(null);
-  const [customers, setCustomers] = useState([]);
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState(""); // State for the new message
+// Placeholder data for the chat panel
+const chatData = [
+  { id: 1, name: 'John Doe', message: 'Hey, how are you?', time: '10:30 AM', avatar: 'https://i.pinimg.com/736x/03/eb/d6/03ebd625cc0b9d636256ecc44c0ea324.jpg', status: 'online' },
+  { id: 2, name: 'Jane Smith', message: 'Let\'s catch up later.', time: '09:15 AM', avatar: 'https://i.pinimg.com/736x/0f/fe/06/0ffe063ec2dcaf4145f886804e45d0d8.jpg', status: 'offline' },
+  { id: 3, name: 'Sam Wilson', message: 'Good morning!', time: '08:45 AM', avatar: 'https://i.pinimg.com/736x/57/ad/17/57ad1731e21449527950cfe98c68b012.jpg', status: 'online' },
+];
 
-  // Fetch customer data
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        const response = await axiosInstance.get('/v3/api/customers');
-        const customerData = response.data.map((customer) => ({
-          id: customer._id,
-          companyName: customer.companyName,
-          customerId: customer.customerId,
-          contactPerson: customer.contactPerson,
-          companyEmail: customer.companyEmail,
-        }));
-        setCustomers(customerData);
-        console.log(customerData)
-      } catch (error) {
-        console.error("Error fetching customers", error);
-      }
-    };
+const ChatPanel = () => {
+  const [selectedChat, setSelectedChat] = useState(chatData[0]); // Default selected chat
+  const [darkMode, setDarkMode] = useState(false); // State to manage dark mode
+  const [searchTerm, setSearchTerm] = useState(""); // State to manage chat search
 
-    fetchCustomers();
-  }, []);
-
-  // Fetch messages when a customer is selected
-  useEffect(() => {
-    const fetchMessages = async () => {
-      if (selectedCustomerId) {
-        try {
-          const response = await axiosInstance.get('/v3/api/chat');
-          const chatMessages = response.data || [];
-
-          // Filter messages by selected customerId
-          const filteredMessages = chatMessages.filter(
-            (msg) => msg.customerId === selectedCustomerId
-          );
-          setMessages(filteredMessages);
-        } catch (error) {
-          console.error("Error fetching messages", error);
-        }
-      }
-    };
-
-    fetchMessages();
-  }, [selectedCustomerId]);
-
-  // Handle sending a new message
-  const sendMessage = async (e) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return; // Don't send empty messages
-
-    try {
-      // API request to send a new message
-      const response = await axiosInstance.post('/v3/api/chat/create', {
-        customerId: selectedCustomerId,
-        senderID: 'admin',
-        msg: newMessage,
-        customerName: "name",
-        cid: selectedCustomerId,
-        messageStatus: "adminsend"
-      });
-
-      const createdMessage = response.data.data;
-
-      // Update the chat with the newly sent message
-      setMessages((prevMessages) => [...prevMessages, createdMessage]);
-      setNewMessage(""); // Clear the message input
-    } catch (error) {
-      console.error("Error sending message", error);
-    }
-  };
+  // Toggle dark mode
+  const toggleDarkMode = () => setDarkMode(!darkMode);
 
   return (
     <Layout>
-      <div style={{ marginBottom: '3em' }} className="flex h-screen bg-gray-50">
-        {/* Customer List */}
-        <div className="w-96 bg-white border-r border-gray-200">
-          <div className="p-4 border-b border-gray-200">
-            <h1 className="text-xl font-semibold text-gray-800">Chats</h1>
-            <div className="mt-4 flex gap-2">
-              <div className="flex-1 relative">
-                <Search className="h-4 w-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+      <div className={`flex h-screen ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        {/* Left Side: Chat List */}
+        <div className={`w-1/3 bg-off-white text-black shadow-xl`}>
+          <div className="p-6">
+            {/* Settings Bar (Dark Mode and Settings Icon) */}
+            <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-semibold flex items-center">
+  <IoMdChatbubbles className="mr-2 text-4xl text-blue-500 " />
+  Chat
+</h2>
+
+              <div className="flex space-x-4 items-center">
+                <FaCog className="cursor-pointer text-orange-600 text-2xl" onClick={toggleDarkMode} />
+                <FaEllipsisV className="cursor-pointer text-2xl text-gray-600 hover:text-gray-900 transition duration-300" />
+              </div>
+            </div>
+            {/* Search Bar */}
+            <div className="mb-4">
+            <div className="flex items-center bg-white p-2 rounded-md shadow-lg">
+
+                <FaSearch className="text-gray-500" />
                 <input
                   type="text"
-                  placeholder="Search customers..."
-                  className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:border-orange-500"
+                  placeholder="Search chats..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="ml-2 bg-transparent text-gray-500 outline-none"
                 />
               </div>
             </div>
-          </div>
-
-          {/* Customer List */}
-          <div className="overflow-y-auto h-[calc(100vh-88px)]">
-            {customers.map((customer) => (
-              <div
-                key={customer.id}
-                onClick={() => setSelectedCustomerId(customer.customerId)}
-                className={`p-4 border-b border-gray-100 cursor-pointer transition-colors hover:bg-gray-50`}
-              >
-                <div className="flex items-center gap-3">
-                  <UserCircle2 className="h-10 w-10 text-gray-400" />
-                  <div>
-                    <h3 className="font-medium text-gray-900">{customer.companyName}</h3>
-                    <p className="text-sm text-gray-600">{customer.customerId}</p>
-                    <p className="text-sm text-gray-500">{customer.contactPerson}</p>
-                    <p className="text-sm text-gray-500">{customer.companyEmail}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+            {/* Chat List */}
+            <ul>
+              {chatData
+                .filter(chat => chat.name.toLowerCase().includes(searchTerm.toLowerCase()))
+                .map((chat) => (
+                  <li
+                    key={chat.id}
+                    className="flex items-center py-4 px-3 hover:bg-gray-200 cursor-pointer transition duration-300 ease-in-out transform hover:scale-105"
+                    onClick={() => setSelectedChat(chat)}
+                  >
+                    <img src={chat.avatar} alt={chat.name} className="w-12 h-12 rounded-full mr-2" />
+                    <div className={`w-3 h-3 rounded-full ${chat.status === 'online' ? 'bg-green-500' : 'bg-gray-500'} mr-4`} />
+                    <div>
+                      <h3 className="font-medium">{chat.name}</h3>
+                      <p className="text-sm text-gray-600">{chat.message}</p>
+                    </div>
+                  </li>
+                ))}
+            </ul>
           </div>
         </div>
 
-        {/* Chat View */}
-        <div className="flex-1 bg-white flex flex-col">
-          {selectedCustomerId ? (
-            <>
-              {/* Chat Messages */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
-                {messages.map((message, index) => (
-                  <div key={index} className={`flex ${message.senderID !== 'admin' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[70%] rounded-lg p-3 ${message.senderID !== 'admin' ? 'bg-orange-500 text-white' : 'bg-white border border-gray-200'}`}>
-                      {message.msg} <span className="text-xs text-gray-500">{new Date(message.time).toLocaleTimeString()}</span>
-                    </div>
-                  </div>
-                ))}
+        {/* Right Side: Chat and Profile */}
+        <div className={`w-2/3 ${darkMode ? 'bg-gray-900' : 'bg-white'} border-l shadow-xl`}>
+          <div className="p-6">
+            {/* Guest Profile */}
+            <div className="flex items-center mb-6 border-b pb-4">
+              <img src={selectedChat.avatar} alt={selectedChat.name} className="w-16 h-16 rounded-full mr-4" />
+              <div>
+                <h3 className="text-xl font-semibold text-gray-800">{selectedChat.name}</h3>
+                <div className="flex items-center">
+                  <div className={`w-3 h-3 rounded-full ${selectedChat.status === 'online' ? 'bg-green-500' : 'bg-gray-500'} mr-2`} />
+                  <p className="text-sm text-gray-500">{selectedChat.status === 'online' ? 'Online' : 'Offline'}</p>
+                </div>
+                <p className="text-sm text-gray-500">Last active: {selectedChat.time}</p>
               </div>
-
-              {/* Send Message Section */}
-              <div className="p-4 border-t border-gray-200">
-                <form onSubmit={sendMessage} className="flex">
-                  <input
-                    type="text"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    placeholder="Type your message..."
-                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-orange-500"
-                  />
-                  <button
-                    type="submit"
-                    className="ml-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 focus:outline-none"
-                  >
-                    Send
-                  </button>
-                </form>
-              </div>
-            </>
-          ) : (
-            <div className="flex-1 flex items-center justify-center text-gray-500">
-              Select a customer to view the conversation
             </div>
-          )}
+
+            {/* Chat Window */}
+            <div className="h-96 overflow-y-auto mb-4">
+              <div className="flex flex-col space-y-4">
+                {/* Example Chat Messages */}
+                <div className="flex items-start">
+                  <div className="w-12 h-12 rounded-full bg-gray-300 mr-4"></div>
+                  <div className="bg-gray-100 p-3 rounded-lg max-w-xs shadow-lg">
+                    <p className="text-sm text-gray-800">Hi! How's everything going?</p>
+                  </div>
+                </div>
+                <div className="flex items-end justify-end">
+                  <div className="bg-teal-500 text-white p-3 rounded-lg max-w-xs shadow-lg">
+                    <p className="text-sm text-gray-100">I'm doing great, thanks! How about you?</p>
+                  </div>
+                  <div className="w-12 h-12 rounded-full bg-teal-300 ml-4"></div>
+                </div>
+              </div>
+            </div>
+
+            {/* Chat Input */}
+            <div className="flex items-center bg-gray-100 p-3 rounded-lg border border-gray-300 shadow-lg">
+              <input
+                type="text"
+                placeholder="Type a message..."
+                className="flex-1 p-2 bg-white rounded-lg text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              />
+              <button className="ml-4 bg-teal-500 text-white p-2 rounded-full hover:bg-teal-600 transition duration-300">
+                Send
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>
   );
 };
 
-export default ChatAdminList;
+export default ChatPanel;

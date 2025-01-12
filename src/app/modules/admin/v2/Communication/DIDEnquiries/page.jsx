@@ -1,137 +1,162 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Layout from '../../layout/page';
-import axiosInstance from '../../../utils/axiosinstance';
+import { MdOutlineSearch } from 'react-icons/md';
+import { TbSquareRoundedFilled } from "react-icons/tb"; // Importing the icon
 
-export default function DidInquiriesPage() {
-  const [inquiries, setInquiries] = useState([]);
-  const [filteredInquiries, setFilteredInquiries] = useState([]);
-  const [statusFilter, setStatusFilter] = useState('');
-  const [loading, setLoading] = useState(false);
+// Placeholder data for the DID enquiries table
+const didEnquiryData = [
+  {
+    id: 1,
+    name: 'John Doe',
+    companyName: 'ABC Corp',
+    email: 'johndoe@abccorp.com',
+    contactNumber: '+1234567890',
+    timeZone: 'IST',
+    noOfDID: 5,
+    noOfUsers: 10,
+    selectedCountry: 'India',
+    enquiryDate: '12/15/2024',
+  },
+  {
+    id: 2,
+    name: 'Jane Smith',
+    companyName: 'XYZ Ltd',
+    email: 'janesmith@xyzltd.com',
+    contactNumber: '+0987654321',
+    timeZone: 'PST',
+    noOfDID: 3,
+    noOfUsers: 8,
+    selectedCountry: 'USA',
+    enquiryDate: '01/10/2025',
+  },
+];
 
-  const fetchInquiries = async () => {
-    try {
-      const { data } = await axiosInstance.get('/v3/api/inquiries');
-      const didInquiries = data.filter(inquiry => inquiry.type === 'did');
-      setInquiries(didInquiries);
-      setFilteredInquiries(didInquiries);
-    } catch (error) {
-      console.error('Error fetching DID inquiries:', error);
-    }
+const Didnumberenquiery = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedEnquiry, setSelectedEnquiry] = useState(null);
+
+  const openModal = (enquiry) => {
+    setSelectedEnquiry(enquiry);
+    setIsModalOpen(true);
   };
 
-  useEffect(() => {
-    fetchInquiries();
-  }, []);
-
-  const handleFilterChange = () => {
-    const filtered = inquiries.filter(inquiry => (statusFilter ? inquiry.status === statusFilter : true));
-    setFilteredInquiries(filtered);
-  };
-
-  useEffect(() => {
-    handleFilterChange();
-  }, [statusFilter, inquiries]);
-
-  const handleStatusUpdate = async (id, newStatus) => {
-    setLoading(true);
-    try {
-      await axiosInstance.put(`/v3/api/inquiries/${id}`, { status: newStatus });
-      fetchInquiries();
-    } catch (error) {
-      console.error('Error updating status:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'Pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'Ongoing':
-        return 'bg-blue-100 text-blue-800';
-      case 'Contacted':
-        return 'bg-green-100 text-green-800';
-      default:
-        return 'bg-gray-200 text-gray-800';
-    }
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedEnquiry(null);
   };
 
   return (
     <Layout>
-      <div className="p-4">
-        <h1 className="text-2xl font-semibold mb-6 text-gray-800">DID Inquiries</h1>
-
-        <div className="mb-4">
-          <label className="text-gray-700 mr-2">Filter by Status:</label>
-          <select
-            onChange={e => setStatusFilter(e.target.value)}
-            className="border border-gray-300 p-2 rounded-md shadow-sm"
-          >
-            <option value="">All Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Ongoing">Ongoing</option>
-            <option value="Contacted">Contacted</option>
-          </select>
+      <div className="p-6 bg-gray-50 text-gray-800">
+        {/* Table Heading with Icon */}
+        <div className="flex items-center mb-6">
+          <MdOutlineSearch className="h-8 w-8 text-teal-500 mr-3" />
+          <h2 className="text-3xl font-semibold text-gray-800">DID Enquiries</h2>
         </div>
 
-        <div className="bg-white shadow-md rounded-lg p-4" style={{ maxHeight: '500px', overflowY: 'auto' }}>
-          <table className="min-w-full">
-            <thead>
-              <tr className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white">
-                <th className="px-8 py-2 border-b border-gray-200">Type</th>
-                <th className="px-10 py-2 border-b border-gray-200">Name</th>
-                <th className="px-8 py-2 border-b border-gray-200">Email</th>
-                <th className="px-8 py-2 border-b border-gray-200">Company</th>
-                <th className="px-8 py-2 border-b border-gray-200">Contact Number</th>
-                <th className="px-8 py-2 border-b border-gray-200">Notes</th>
-                <th className="px-8 py-2 border-b border-gray-200">Status</th>
-                <th className="px-8 py-2 border-b border-gray-200">Meeting Time</th>
-                <th className="px-8 py-2 border-b border-gray-200">No. of Users</th>
-                <th className="px-8 py-2 border-b border-gray-200">Meeting Date</th>
-                <th className="px-8 py-2 border-b border-gray-200">Country</th>
-                <th className="px-8 py-2 border-b border-gray-200">Time Zone</th>
-                <th className="px-8 py-2 border-b border-gray-200">No. of DID</th>
+        {/* Table for DID Enquiries */}
+        <div className="overflow-x-auto bg-white shadow-md rounded-lg">
+          <table className="min-w-full table-auto">
+            <thead className="bg-indigo-500 text-white">
+              <tr>
+                <th className="py-3 px-4 text-sm font-medium">Name</th>
+                <th className="py-3 px-4 text-sm font-medium">Company</th>
+                <th className="py-3 px-4 text-sm font-medium">Email</th>
+                <th className="py-3 px-4 text-sm font-medium">Country</th>
+                <th className="py-3 px-4 text-sm font-medium">Enquiry Date</th>
+                <th className="py-3 px-4 text-sm font-medium">Action</th>
               </tr>
             </thead>
-            <tbody className="text-gray-700">
-              {filteredInquiries.map(inquiry => (
-                <tr key={inquiry._id} className="hover:bg-gray-100">
-                  <td className="px-10 py-2">{(inquiry.type || 'N/A').toUpperCase()}</td>
-                  <td className="px-18 py-2">{inquiry.name || 'N/A'}</td>
-                  <td className="px-10 py-2">{inquiry.email || 'N/A'}</td>
-                  <td className="px-10 py-2">{inquiry.companyName || 'N/A'}</td>
-                  <td className="px-10 py-2">{inquiry.contactNumber || 'N/A'}</td>
-                  <td className="px-10 py-2">{inquiry.notes || 'N/A'}</td>
-                  <td className="px-10 py-2">
-                    {loading ? (
-                      <div className="spinner-border animate-spin w-4 h-4 border-2 rounded-full text-blue-500" role="status">
-                        <span className="sr-only">Loading...</span>
-                      </div>
-                    ) : (
-                      <select 
-                        value={inquiry.status} 
-                        onChange={(e) => handleStatusUpdate(inquiry._id, e.target.value)} 
-                        className={`p-2 rounded ${getStatusColor(inquiry.status)}`}
-                      >
-                        <option value="Pending">Pending</option>
-                        <option value="Ongoing">Ongoing</option>
-                        <option value="Contacted">Contacted</option>
-                      </select>
-                    )}
+            <tbody>
+              {didEnquiryData.map((enquiry) => (
+                <tr key={enquiry.id} className="hover:bg-gray-100 transition duration-200">
+                  <td className="py-3 px-4">{enquiry.name}</td>
+                  <td className="py-3 px-4">{enquiry.companyName}</td>
+                  <td className="py-3 px-4">{enquiry.email}</td>
+                  <td className="py-3 px-4">{enquiry.selectedCountry}</td>
+                  <td className="py-3 px-4">{enquiry.enquiryDate}</td>
+                  <td className="py-3 px-4 flex justify-end space-x-2">
+                    <button
+                      className="bg-orange-600 text-white px-5 py-2 rounded-md hover:bg-blue-700"
+                      onClick={() => openModal(enquiry)}
+                    >
+                      View
+                    </button>
+                    <button
+                      className="bg-green-600 text-white px-5 py-2 rounded-md hover:bg-green-700"
+                      onClick={() => alert(`Pickup initiated for ${enquiry.name}`)}
+                    >
+                      Pickup
+                    </button>
                   </td>
-                  <td className="px-10 py-2">{inquiry.meetingTime || 'N/A'}</td>
-                  <td className="px-10 py-2">{inquiry.noOfUsers || 'N/A'}</td>
-                  <td className="px-10 py-2">{inquiry.meetingDate ? new Date(inquiry.meetingDate).toLocaleDateString() : 'N/A'}</td>
-                  <td className="px-10 py-2">{inquiry.country || 'N/A'}</td>
-                  <td className="px-10 py-2">{inquiry.timeZone || 'N/A'}</td>
-                  <td className="px-10 py-2">{inquiry.noOfDID || 'N/A'}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+
+        {/* Modal for Viewing Enquiry Details */}
+        {isModalOpen && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-2/3 max-w-lg">
+              {/* Modal Header with Icon and Close Button */}
+              <div className="flex justify-between items-center mb-8">
+                <div className="flex items-center">
+                  <TbSquareRoundedFilled className="h-8 w-8 text-teal-500 mr-3" />
+                  <h3 className="text-2xl font-semibold text-teal-600">DID Enquiry Details</h3>
+                </div>
+                <button onClick={closeModal} className="text-gray-500 text-3xl">&times;</button>
+              </div>
+
+              {/* Simplified Enquiry Details */}
+              <div className="space-y-4">
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium text-gray-700">Contact Number:</span>
+                  <span className="text-sm text-gray-600">{selectedEnquiry.contactNumber}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium text-gray-700">Number of Users:</span>
+                  <span className="text-sm text-gray-600">{selectedEnquiry.noOfUsers}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium text-gray-700">Number of DIDs:</span>
+                  <span className="text-sm text-gray-600">{selectedEnquiry.noOfDID}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium text-gray-700">Time Zone:</span>
+                  <span className="text-sm text-gray-600">{selectedEnquiry.timeZone}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium text-gray-700">Country:</span>
+                  <span className="text-sm text-gray-600">{selectedEnquiry.selectedCountry}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium text-gray-700">Enquiry Date:</span>
+                  <span className="text-sm text-gray-600">{selectedEnquiry.enquiryDate}</span>
+                </div>
+              </div>
+
+              {/* Modal Action Buttons */}
+              <div className="flex justify-end space-x-4 mt-6">
+                <button
+                  className="bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600"
+                  onClick={closeModal}
+                >
+                  Close
+                </button>
+                <button
+                  className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600"
+                  onClick={() => alert('Further actions can be done here')}
+                >
+                  Take Action
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Layout>
   );
-}
+};
+
+export default Didnumberenquiery;

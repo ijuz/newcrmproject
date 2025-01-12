@@ -74,6 +74,10 @@ import RechargePage from "./app/modules/admin/v2/Accounts/Recharge/page.jsx";
 import TargetedRatePage from "./app/modules/admin/v2/Rates/PrivateRates/page.jsx";
 import SpecialRatePage from "./app/modules/admin/v2/Rates/SpecialRates/page.jsx";
 import SaleCustomerLeadDetails from "./app/modules/admin/v2/Sales/Customers/[customerId]/page.jsx";
+import PrivateRateRequestPage from "./app/modules/admin/v2/Requests/PrivaterateRequest/page.jsx";
+import EnquiryPage from "./app/modules/admin/v2/Communication/Enquiries/page.jsx";
+import Didnumberenquiery from "./app/modules/admin/v2/Communication/DIDEnquiries/page.jsx";
+import ChatPanel from "./app/modules/admin/v2/Communication/ChatBot/page.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -143,7 +147,7 @@ function App() {
       <Route path="/admin/recharge_requests" element={<RechargerequestPage />} />
       <Route path="/admin/vendorpayment" element={<VendorRequestPage />} />
       <Route path="/admin/overdraft_requests" element={<OverdraftRequestPage />} />
-      {/* <Route path="/admin/privaterate_requests" element={<privaterateRequests />} /> */}
+      <Route path="/admin/privaterate_requests" element={<PrivateRateRequestPage />} />
       <Route path="/admin/account/followup" element={<AccountsFollowUp />} />
 
       {/* support */}
@@ -155,6 +159,13 @@ function App() {
       <Route path="/admin/support/messages" element={<PageUnderDevelopment />} />
       <Route path="/admin/support/internalassistence" element={<InternalAssistence />} />
       <Route path="/cliratestable" element={<RateTableCli />} />
+
+      {/* Communications */}
+      <Route path="/admin/communication/enquiry" element={<EnquiryPage />} />
+      <Route path="/admin/communication/didEnquiry" element={<Didnumberenquiery />} />
+      <Route path="/admin/communication/chatpanel" element={<ChatPanel />} />
+
+
       {/* CLIRatesPage */}
       <Route path="/specialrates" element={<RateTableSpecial />} />
       <Route path="/clirates" element={<CLIRatesPage />} />

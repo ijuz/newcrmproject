@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import axiosInstance from "../../../utils/axiosinstance"; // Adjust the import to match your project structure
 import DashboardLayout from "../../layout/page"; // Adjust the import to match your project structure
 import axios from "axios";
+import { SiVitest } from "react-icons/si";
+import { SiBitcomet } from "react-icons/si";
 
 const TestingPage = () => {
   const [testsData, setTestsData] = useState([]);
   const [customersData, setCustomersData] = useState([]);
   const [ratesData, setRatesData] = useState([]);
-  const [openCustomerId, setOpenCustomerId] = useState(null);
-  const [newStatus, setNewStatus] = useState("");
-  const [reason, setReason] = useState("");
-  const [selectedTest, setSelectedTest] = useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
@@ -52,10 +51,6 @@ const TestingPage = () => {
     fetchRatesData();
   }, []);
 
-  const findCustomerById = (customerId) => {
-    return customersData.find((customer) => customer._id === customerId) || {};
-  };
-
   const findTestsByCustomerId = (customerId) => {
     return testsData.filter((test) => test.customerId === customerId);
   };
@@ -64,163 +59,121 @@ const TestingPage = () => {
     return ratesData.find((rate) => rate._id === rateId) || {};
   };
 
-  const toggleCustomerView = (customerId) => {
-    setOpenCustomerId(openCustomerId === customerId ? null : customerId);
-  };
-
-  const handleStatusUpdate = async (testId) => {
-    try {
-      await axiosInstance.put(`v3/api/tests/${testId}`, { testStatus: newStatus, testReason: reason });
-      alert("Status and reason updated successfully!");
-      setIsModalOpen(false);
-      window.location.reload();
-    } catch (error) {
-      console.error("Error updating status:", error);
-    }
-  };
-
-  const openModal = (testId) => {
-    setSelectedTest(testId);
+  const openModal = (customer) => {
+    setSelectedCustomer(customer);
     setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedCustomer(null);
   };
 
   return (
     <DashboardLayout>
       <div className="p-6 bg-gray-50 text-gray-800">
-        <h2 className="text-2xl font-bold">Testing Page</h2>
+        <div className="flex items-center mb-6">
+          <SiVitest className="h-10 w-10 text-orange-500 mr-4" />
+          <h2 className="text-3xl text-gray-500 bg-grey font-default">Testing Page</h2>
+        </div>
 
         <div className="mt-6 overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
-            <thead className="bg-orange-500 text-white">
+          <table className="min-w-full bg-white shadow-md rounded-lg">
+            <thead className="bg-[#005F73] text-white">
               <tr>
-                <th className="py-2 px-4 border-b border-gray-300">Customer ID</th>
-                <th className="py-2 px-4 border-b border-gray-300">Company Name</th>
-                <th className="py-2 px-4 border-b border-gray-300">Service Engineer</th>
-                <th className="py-2 px-4 border-b border-gray-300">Status</th>
-                <th className="py-2 px-4 border-b border-gray-300">Action</th>
+                <th className="py-2 px-4">Customer ID</th>
+                <th className="py-2 px-4">Company Name</th>
+                <th className="py-2 px-4">Service Engineer</th>
+                <th className="py-2 px-4 text-center">Status</th> {/* Added text-center for Status */}
+                <th className="py-2 px-4">Action</th>
               </tr>
             </thead>
+
             <tbody>
-              {customersData.map((customer) => {
-                const tests = findTestsByCustomerId(customer._id);
-                const testStatus = tests.length > 0 ? tests[0].testStatus : "Test Initiated";
-                return (
-                  <React.Fragment key={customer._id}>
-                    <tr className="hover:bg-green-200 transition duration-200">
-                      <td className="py-2 px-4 border-b border-gray-300">{customer.customerId}</td>
-                      <td className="py-2 px-4 border-b border-gray-300">{customer.companyName || "N/A"}</td>
-                      <td className="py-2 px-4 border-b border-gray-300">Not assigned</td>
-                      <td className="py-2 px-4 border-b border-gray-300">{testStatus}</td>
-                      <td className="py-2 px-4 border-b border-gray-300">
-                        <button
-                          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-                          onClick={() => toggleCustomerView(customer._id)}
-                        >
-                          {openCustomerId === customer._id ? "Hide" : "View"}
-                        </button>
-                      </td>
-                    </tr>
-
-                    {openCustomerId === customer._id && (
-                      <tr>
-                        <td colSpan="5" className="py-4 px-4 border-b border-gray-300">
-                          <div className="bg-gray-100 p-4 rounded-lg">
-                            <h3 className="text-lg font-semibold">Rates for {customer.companyName}</h3>
-                            <div className="mt-4">
-                              <table className="min-w-full bg-white border border-gray-300 shadow-md rounded-lg">
-                                <thead className="bg-green-500 text-white">
-                                  <tr>
-                                    <th className="py-2 px-4 border-b border-gray-300">Country Code</th>
-                                    <th className="py-2 px-4 border-b border-gray-300">Country</th>
-                                    <th className="py-2 px-4 border-b border-gray-300">Price</th>
-                                    <th className="py-2 px-4 border-b border-gray-300">Description</th>
-                                    <th className="py-2 px-4 border-b border-gray-300">Profile</th>
-                                    <th className="py-2 px-4 border-b border-gray-300">Status</th>
-                                    <th className="py-2 px-4 border-b border-gray-300">Test Status</th>
-                                    <th className="py-2 px-4 border-b border-gray-300">Change Status</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {tests.map((test) => {
-                                    const rate = findRateById(test.rateId);
-                                    const testStatus = test.testStatus || "N/A";
-                                    return (
-                                      <tr key={test._id}>
-                                        <td className="py-2 px-4 border-b border-gray-300">{rate.countryCode || "N/A"}</td>
-                                        <td className="py-2 px-4 border-b border-gray-300">{rate.country || "N/A"}</td>
-                                        <td className="py-2 px-4 border-b border-gray-300">{rate.rate || "N/A"}</td>
-                                        <td className="py-2 px-4 border-b border-gray-300">{rate.qualityDescription || "N/A"}</td>
-                                        <td className="py-2 px-4 border-b border-gray-300">{rate.profile || "N/A"}</td>
-                                        <td className="py-2 px-4 border-b border-gray-300">{rate.status || "N/A"}</td>
-                                        <td className="py-2 px-4 border-b border-gray-300">{testStatus}</td>
-                                        <td className="py-2 px-4 border-b border-gray-300">
-                                          <button
-                                            className="mt-2 bg-green-500 text-white px-4 py-2 rounded"
-                                            onClick={() => openModal(test._id)}
-                                          >
-                                            Update
-                                          </button>
-                                        </td>
-                                      </tr>
-                                    );
-                                  })}
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </React.Fragment>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+              {customersData.map((customer, index) => (
+                <tr
+                  key={customer._id}
+                  className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}
+                >
+                  <td className="py-2 px-4">{customer.customerId}</td>
+                  <td className="py-2 px-4">{customer.companyName || "N/A"}</td>
+                  <td className="py-2 px-4">Not assigned</td>
+                  <td className="py-2 px-4">Test Initiated</td>
+                  <td className="py-2 px-4 text-right">
+                    <button
+                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition mr-2"
+                      onClick={() => openModal(customer)}
+                    >
+                      View
+                    </button>
+                    <button
+                      className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-500 transition"
+                      onClick={() => alert(`Pickup action for ${customer.companyName}`)}
+                    >
+                    Pickup
+                  </button>
+                </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
       </div>
+    </div>
 
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-            <h3 className="text-xl font-semibold mb-4">Update Test Status</h3>
-            <label className="block mb-2">Status</label>
-            <select
-              className="border border-gray-300 rounded-lg p-2 w-full mb-4"
-              value={newStatus}
-              onChange={(e) => setNewStatus(e.target.value)}
-            >
-              <option value="Test Accepted">Test Accepted</option>
-              <option value="Test Started">Test Started</option>
-              <option value="Processing">Test Processing</option>
-              <option value="Completed">Test Completed</option>
-              <option value="Failed">Test Failed</option>
-            </select>
+      {
+    isModalOpen && selectedCustomer && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-2/3">
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center">
+              <SiBitcomet className="h-6 w-6 text-orange-500 mr-2" />
+              <h3 className="text-xl font-default">Details for {selectedCustomer.companyName}</h3>
+            </div>
+            <button onClick={closeModal} className="text-gray-500 text-2xl">&times;</button>
+          </div>
 
-            <label className="block mb-2">Reason</label>
-            <textarea
-              className="border border-gray-300 rounded-lg p-2 w-full mb-4"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-            ></textarea>
-
-            <div className="flex justify-end">
-              <button
-                className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
-                onClick={() => setIsModalOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-green-500 text-white px-4 py-2 rounded"
-                onClick={() => handleStatusUpdate(selectedTest)}
-              >
-                Update
-              </button>
+          <div className="max-w-screen-xl mx-auto p-5">
+            <div className="min-w-full bg-white shadow-md rounded-lg">
+              <table className="min-w-full bg-white shadow-md rounded-lg">
+                <thead className="bg-indigo-500 text-white">
+                  <tr>
+                    <th className="py-2 px-6 text-sm">Country Code</th>
+                    <th className="py-2 px-6 text-sm">Country</th>
+                    <th className="py-2 px-6 text-sm">Price</th>
+                    <th className="py-2 px-6 text-sm">Description</th>
+                    <th className="py-2 px-6 text-sm">Profile</th>
+                    <th className="py-2 px-6 text-sm">Status</th>
+                    <th className="py-2 px-6 text-sm">Test Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {findTestsByCustomerId(selectedCustomer._id).map((test, index) => {
+                    const rate = findRateById(test.rateId);
+                    return (
+                      <tr
+                        key={test._id}
+                        className={index % 2 === 0 ? "bg-white" : "bg-gray-100"}
+                      >
+                        <td className="py-2 px-6 text-sm">{rate.countryCode || "N/A"}</td>
+                        <td className="py-2 px-6 text-sm">{rate.country || "N/A"}</td>
+                        <td className="py-2 px-6 text-sm">{rate.rate || "N/A"}</td>
+                        <td className="py-2 px-6 text-sm">{rate.qualityDescription || "N/A"}</td>
+                        <td className="py-2 px-6 text-sm">{rate.profile || "N/A"}</td>
+                        <td className="py-2 px-6 text-sm">{rate.status || "N/A"}</td>
+                        <td className="py-2 px-6 text-sm">{test.testStatus || "N/A"}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
-      )}
-    </DashboardLayout>
+
+      </div>
+    )
+  }
+    </DashboardLayout >
   );
 };
 
