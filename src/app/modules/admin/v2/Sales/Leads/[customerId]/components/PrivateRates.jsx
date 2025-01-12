@@ -1,215 +1,262 @@
-import React, { useState, useEffect } from "react";
-import { PlusIcon, FunnelIcon } from "@heroicons/react/24/outline";
-import { motion } from "framer-motion";
-import axios from "axios";
-// import jwtDecode from "jwt-decode";
-import { jwtDecode } from "jwt-decode";
+import React, { useEffect, useState } from 'react';
+import { jwtDecode } from 'jwt-decode'; // Import jwt-decode
+import axios from 'axios';
 
-const PrivateRates = ({customerId}) => {
-  // console.log(customerId,"customerId");
-  
-  const [normalRatesData, setNormalRatesData] = useState([]);
-  const [selectedRates, setSelectedRates] = useState([]);
+const MyRatesPage = () => {
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [myRatesData, setMyRatesData] = useState([]);
   const [customerData, setCustomerData] = useState(null);
+  const [testsData, setTestsData] = useState([]);
+  const [showCheckboxes, setShowCheckboxes] = useState(false); // Controls whether checkboxes are visible
+  const [selectedRates, setSelectedRates] = useState([]);
+  const [currentRateType, setCurrentRateType] = useState('CCRate');
+  const [ccRatesData, setCCRatesData] = useState([]);
+  const [cliRatesData, setCLIRatesData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCountry, setSelectedCountry] = useState("");
-  const [sort, setSort] = useState("countryCode");
-  const [showSelectColumn, setShowSelectColumn] = useState(false);
-  const [showOnlySelected, setShowOnlySelected] = useState(false);
-
+  const [dataNotFound, setDataNotFound] = useState(false);
 
   useEffect(() => {
-    const fetchCustomerAndRates = async () => {
-      setLoading(true);
-      try {
-        if (customerId) {
-          const customerResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
-          setCustomerData(customerResponse.data);
+    const fetchCustomerData = async () => {
+      const token = localStorage.getItem('token');
+      const customerId = token ? jwtDecode(token).id : null; // Decode token to get customer ID
 
-          const ratesResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/rates`);
-          setNormalRatesData(ratesResponse.data);
+      if (customerId) {
+        try {
+          const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/customers/${customerId}`);
+          setCustomerData(response.data);
+        } catch (error) {
+          console.error('Error fetching customer data:', error);
         }
-      } catch (error) {
-        console.error("Error fetching customer or rates:", error);
-      } finally {
-        setLoading(false);
       }
     };
-
-    fetchCustomerAndRates();
+    fetchCustomerData();
   }, []);
 
 
-    // Extract customer ID from the token
-    const getCustomerIdFromToken = () => {
-      const token = localStorage.getItem("token");
-      if (!token) return null;
-      const decoded = jwtDecode(token);
-      return decoded.id;
-    };
-  
-  // Handle adding selected rates to My Rates
-  const handleAddSelectedToMyRates = async () => {
-    const customerId = getCustomerIdFromToken();
-    if (!customerId) {
-      console.error("Customer ID not found in token");
-      return;
-    }
+  useEffect(() => {
+    const fetchRatesAndTests = async () => {
+      if (customerData) {
+        try {
+          const ratesResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/myrates`);
+          const testsResponse = await axios.get(`https://backend.cloudqlobe.com/v3/api/tests`);
 
-    const selectedRateIds = selectedRates.map((rate) => rate._id);
+          const ccRates = ratesResponse.data.filter(rate => rate.rate === 'CC' && rate.customerId === customerData._id);
+          const cliRates = ratesResponse.data.filter(rate => rate.rate === 'CLI' && rate.customerId === customerData._id);
+          const tests = testsResponse.data.filter(test => test.customerId === customerData._id);
+
+          const fetchedCLIRates = await Promise.all(
+            cliRates.map(async (rate) => {
+              const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/clirates/${rate.rateId}`);
+              return response.data; // Assuming each API call returns a rate object
+            })
+          );
+          const fetchedCCRates = await Promise.all(
+            ccRates.map(async (rate) => {
+              const response = await axios.get(`https://backend.cloudqlobe.com/v3/api/rates/${rate.rateId}`);
+              return response.data.rate; // Assuming each API call returns a rate object
+            })
+          );
+
+          setCCRatesData(fetchedCCRates);
+          setCLIRatesData(fetchedCLIRates);
+          setTestsData(tests);
+          console.log("fetchedCCRates",fetchedCCRates);
+          console.log("fetchedCLIRates",fetchedCLIRates);
+          console.log("tests",tests);
+          
+        } catch (error) {
+          console.error('Error fetching rates or tests:', error);
+        } finally {
+          setLoading(false);
+        }
+      }
+    };
+    fetchRatesAndTests();
+  }, [customerData]);
+
+  useEffect(() => {
+    setDataNotFound(!ccRatesData.length && !cliRatesData.length);
+  }, [ccRatesData, cliRatesData]);
+
+  const handleCheckboxChange = (rate) => {
+    setSelectedRates(prevSelectedRates => {
+      if (prevSelectedRates.some(item => item._id === rate._id)) {
+        return prevSelectedRates.filter(item => item._id !== rate._id);
+      } else {
+        return [...prevSelectedRates, rate];
+      }
+    });
+  };
+
+  const handleRequestTest = async () => {
     try {
-      const response = await axios.put(`https://backend.cloudqlobe.com/v3/api/customers/updatemyrate/${customerId}`, {
-        myRatesId: selectedRateIds,
+      const requestPromises = selectedRates.map(rate => {
+        return axios.post(`https://backend.cloudqlobe.com/v3/api/tests`, {
+          rateId: rate._id,
+          customerId: customerData._id,
+          rateCustomerId: `${customerData._id}hi${rate._id}`,
+          testStatus: 'Test requested',
+          testReason: 'Requested',
+        });
       });
-      console.log("Selected rates successfully added to My Rates:", response.data);
-      window.alert("Rate(s) added successfully");
+      await Promise.all(requestPromises);
+      alert('Tests Requested Successfully');
       window.location.reload();
     } catch (error) {
-      console.error("Error adding selected rates to My Rates:", error);
+      console.error('Error requesting tests:', error);
     }
   };
 
-  // Check if a rate is disabled
-  const isRateDisabled = (rateId) => {
-    if (!customerData) return false;
-    const { myRatesId, rateAddedtotest, rateTested, rateTesting } = customerData;
-    return (
-      myRatesId.includes(rateId) ||
-      rateAddedtotest.includes(rateId) ||
-      rateTested.includes(rateId) ||
-      rateTesting.includes(rateId)
+  const filteredData = (currentRateType === 'CCRate' ? ccRatesData : cliRatesData).filter(item => {
+    // If statusFilter is "all", skip the test matching and show all items for the currentRateType
+    if (statusFilter === 'all') {
+      return item.country?.toLowerCase().includes(search.toLowerCase());
+    }
+  
+    // Otherwise, check if any test matches the criteria
+    const hasMatchingTest = testsData.some(test => 
+      test.rateId === item._id && test.testStatus === statusFilter
     );
-  };
-
-  // Get unique country options for the dropdown
-  const countryOptions = Array.from(new Set(normalRatesData.map((rate) => rate.country))).sort();
-
-  // Filter and sort rates
-  const filteredData = selectedCountry
-    ? normalRatesData.filter((rate) => rate.country === selectedCountry)
-    : normalRatesData;
-
-  const sortedData = filteredData.sort((a, b) =>
-    sort === "countryName"
-      ? a.country.localeCompare(b.country)
-      : a.countryCode.localeCompare(b.countryCode)
-  );
-
-  const displayedData = showOnlySelected ? selectedRates : sortedData;
-
-  if (loading) {
+  
+    console.log(hasMatchingTest);
+  
+    // Filter based on country and matching tests
     return (
-      <div className="min-h-screen bg-orange-50 flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-          className="w-16 h-16 border-t-4 border-orange-300 border-solid rounded-full"
-        />
-      </div>
+      item.country?.toLowerCase().includes(search.toLowerCase()) &&
+      hasMatchingTest
     );
-  }
+  });
+  
+
+  console.log(filteredData);
 
   return (
-    <div className="p-4 bg-gray-100 text-gray-800">
-      {/* Page Header */}
-      <div className="flex items-center mb-6">
-        <div className="bg-orange-500 text-2xl rounded-lg text-white px-4 py-2 mr-2">$</div>
-        <h1 className="text-lg font-medium bg-blue-500 text-white px-4 py-2 rounded-lg">
-          My Rates
-        </h1>
-      </div>
+      <div className="p-6 text-gray-800 bg-white">
+        <div className="flex justify-between items-start w-full">
+          <h2 className="text-2xl font-bold">My Rates</h2>
+          {customerData && (
+            <div className="flex flex-col items-end">
+              <p className="text-gray-800">Company Name: <span className="font-bold">{customerData.companyName}</span></p>
+              <p className="text-gray-800 mt-1">Customer ID: <span className="font-bold">{customerData.customerId}</span></p>
+            </div>
+          )}
+        </div>
 
-      {/* Country Dropdown and Sort Section */}
-      <div className="flex items-center justify-between space-x-4 mb-6">
-        <select
-          value={selectedCountry}
-          onChange={(e) => setSelectedCountry(e.target.value)}
-          className="flex-grow bg-white text-gray-800 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">Select a country</option>
-          {countryOptions.map((country) => (
-            <option key={country} value={country}>
-              {country}
-            </option>
-          ))}
-        </select>
+        <div className="mt-8 flex items-center justify-between space-x-4">
+          <input
+            type="text"
+            placeholder="Search by country name..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-1/2 bg-white px-4 py-2 rounded-lg border border-gray-300"
+          />
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="bg-white px-4 py-2 rounded-lg border border-gray-300"
+          >
+            <option value="all">All Statuses</option>
+            <option value="Test requested">Test Requested</option>
+            <option value="Test Accepted">Test Accepted</option>
+            <option value="Test Started"> Test Started</option>
+            <option value="Processing"> Test Processing</option>
+            <option value="Completed"> Test Completed</option>
+            <option value="Failed"> Test Failed</option>
+            <option value="No Test Requested">No Test Requested</option>
+          </select>
 
-        <button
-          onClick={() => setShowSelectColumn(!showSelectColumn)}
-          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
-        >
-          {showSelectColumn ? "Hide Select Rates" : "Select Rates"}
-        </button>
+          {!showCheckboxes && (
+            <button
+              className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onClick={() => setShowCheckboxes(true)}
+            >
+              Select Rates
+            </button>
+          )}
+        </div>
 
-        <button
-          onClick={() => setShowOnlySelected(!showOnlySelected)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center"
-        >
-          <FunnelIcon className="w-5 h-5 mr-2" />
-          Filter
-        </button>
-      </div>
+        <div className="mt-4">
+          <button
+            className={`px-4 py-2 rounded-lg mr-4 ${currentRateType === 'CCRate' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => setCurrentRateType('CCRate')}
+          >
+            CCRate
+          </button>
+          <button
+            className={`px-4 py-2 rounded-lg ${currentRateType === 'CLIRate' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            onClick={() => setCurrentRateType('CLIRate')}
+          >
+            CLIRate
+          </button>
+        </div>
 
-      {/* Add Selected to My Rates Button */}
-      {showOnlySelected && selectedRates.length > 0 && (
-        <button
-          onClick={handleAddSelectedToMyRates}
-          className="mb-6 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center"
-        >
-          <PlusIcon className="w-5 h-5 mr-2" />
-          Add Selected to My Rates
-        </button>
-      )}
-
-      {/* Rates Table */}
-      <div className="overflow-x-auto rounded-lg bg-white shadow-md">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-blue-700 text-white">
-              {showSelectColumn && <th className="p-2">Select</th>}
-              <th className="p-2">Country Code</th>
-              <th className="p-2">Country Name</th>
-              <th className="p-2">Quality Description</th>
-              <th className="p-2">Rate</th>
-              <th className="p-2">Profile</th>
-              <th className="p-2">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayedData.map((rate, index) => (
-              <tr
-                key={rate._id}
-                className={index % 2 === 0 ? "bg-gray-100" : "bg-white"}
-              >
-                {showSelectColumn && (
-                  <td className="p-2 text-center">
-                    <input
-                      type="checkbox"
-                      disabled={isRateDisabled(rate._id)}
-                      checked={selectedRates.some((selected) => selected._id === rate._id)}
-                      onChange={() => {
-                        setSelectedRates((prev) =>
-                          prev.some((selected) => selected._id === rate._id)
-                            ? prev.filter((selected) => selected._id !== rate._id)
-                            : [...prev, rate]
-                        );
-                      }}
-                    />
-                  </td>
-                )}
-                <td className="p-2 text-center">{rate.countryCode}</td>
-                <td className="p-2 text-center">{rate.country}</td>
-                <td className="p-2 text-center">{rate.qualityDescription}</td>
-                <td className="p-2 text-center">{rate.rate}</td>
-                <td className="p-2 text-center">{rate.profile}</td>
-                <td className="p-2 text-center">{rate.status}</td>
+        {loading ? (
+          <p>Loading rates...</p>
+        ) : dataNotFound ? (
+          <p>No data found.</p>
+        ) : (
+          <table className="min-w-full mt-6 border bg-white">
+            <thead>
+              <tr className="bg-[#005F73] text-white">
+                {showCheckboxes && <th className="px-4 py-2">Select</th>}
+                <th className="px-4 py-2">Country Code</th>
+                <th className="px-4 py-2">Country Name</th>
+               {currentRateType === "CCRate" && <th className="px-4 py-2">Profile</th>} 
+                <th className="px-4 py-2">Rate</th>
+                <th className="px-4 py-2">Quality Description</th>
+                {currentRateType === "CLIRate" && <th className="px-4 py-2">asr</th>} 
+                {currentRateType === "CLIRate" && <th className="px-4 py-2">billingCycle</th>} 
+                {currentRateType === "CLIRate" && <th className="px-4 py-2">rtp</th>} 
+                {currentRateType === "CLIRate" && <th className="px-4 py-2">acd</th>} 
+                <th className="px-4 py-2">Status</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody style={{textAlign:"center"}}>
+              {filteredData.map((rate, index) => (
+                <tr key={index} className="border-t">
+                  {showCheckboxes && (
+                    <td className="border border-gray-300 px-4 py-2">
+                      <input
+                        type="checkbox"
+                        onChange={() => handleCheckboxChange(rate)}
+                      />
+                    </td>
+                  )}
+                  <td className="px-4 py-2">{rate.countryCode || 'N/A'}</td>
+                  <td className="px-4 py-2">{rate.country || 'N/A'}</td>
+                  {rate.profile && <td className="px-4 py-2">{rate.profile || 'N/A'}</td>}
+                  <td className="px-4 py-2">{rate.rate || 'N/A'}</td>
+                  <td className="px-4 py-2">{rate.qualityDescription || 'N/A'}</td>
+                  {rate.asr && <td className="px-4 py-2">{rate.asr || 'N/A'}</td>}
+                  {rate.billingCycle && <td className="px-4 py-2">{rate.billingCycle || 'N/A'}</td>}
+                  {rate.rtp && <td className="px-4 py-2">{rate.rtp || 'N/A'}</td>}
+                  {rate.acd && <td className="px-4 py-2">{rate.acd || 'N/A'}</td>}
+                  <td className="px-4 py-2">{rate.status || 'N/A'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {showCheckboxes && (
+          <div className="mt-6 flex justify-end space-x-4">
+            <button
+              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300"
+              onClick={() => setShowCheckboxes(false)}
+            >
+              Cancel
+            </button>
+            <button
+              className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onClick={handleRequestTest}
+            >
+              Request Test
+            </button>
+          </div>
+        )}
       </div>
-    </div>
   );
 };
 
-export default PrivateRates;
+export default MyRatesPage;
