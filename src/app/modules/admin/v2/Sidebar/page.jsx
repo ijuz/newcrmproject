@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import '../Dashboard/dashboard.css';
 import { useNavigate } from "react-router-dom";
 import {
@@ -15,6 +15,7 @@ import {
   DocumentCurrencyBangladeshiIcon,
 
 } from "@heroicons/react/24/outline";
+import LogoutButton from "../auth/logOut/page";
 
 
 const Topbar = () => {
@@ -37,8 +38,8 @@ const Topbar = () => {
             <a href="/notification" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Follow Up</a>
             <a href="/sales_email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
             <a href="/sales_Report" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
-            <a href="/sales_message" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
-            <a href="/sales_Assitance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
+            <a href="/admin/leads/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
+            <a href="/admin/leads/assistance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
           </div>
         </div>
 
@@ -49,13 +50,13 @@ const Topbar = () => {
             Sales
           </a>
           <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
-            <a href="/sales_leads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Leads</a>
-            <a href="/sales_customer" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Customers</a>
-            <a href="/sales_followups" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
-            <a href="/sales_email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
-            <a href="/sales_Report" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
-            <a href="/sales_message" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
-            <a href="/sales_Assitance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
+            <a href="/admin/sale/leads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Leads</a>
+            <a href="/admin/sale/customer" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Customers</a>
+            <a href="/admin/sale/followups" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
+            <a href="/admin/sale/email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
+            <a href="/admin/sale/report" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
+            <a href="/admin/sale/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
+            <a href="/admin/sale/assistance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
           </div>
         </div>
 
@@ -66,13 +67,13 @@ const Topbar = () => {
             Carriers
           </a>
           <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
-            <a href="/carrier_Leads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Leads</a>
-            <a href="/carrier_carrier" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Carriers</a>
-            <a href="/carrier_folloup" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
+            <a href="/admin/carrier/leads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Leads</a>
+            <a href="/admin/carrier_carrier" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Carriers</a>
+            <a href="/admin/carrier_folloup" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
             <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Email</a>
             <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
-            <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
-            <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
+            <a href="/admin/carriers/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
+            <a href="/admin/carriers/assistance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
           </div>
         </div>
 
@@ -218,7 +219,7 @@ const Topbar = () => {
             <a href="/admin/account/followup" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
               Followups
             </a>
-            <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+            <a href="/admin/account/assistance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
               Internal Assistance
             </a>
           </div>
@@ -278,7 +279,8 @@ const Topbar = () => {
         {/* Dropdown Menu */}
         <div className="dropdown absolute right-0 hidden group-hover:block mt-2 bg-white border border-gray-200 shadow-lg rounded-lg w-48 z-10">
           <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">ACCOUNT</a>
-          <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">LOGOUT</a>
+          {/* <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">LOGOUT</a> */}
+          <LogoutButton/>
         </div>
       </div>
     </header>

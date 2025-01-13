@@ -1,122 +1,117 @@
 import React, { useState } from 'react';
 import Layout from '../../layout/page';
-import { FaSearch, FaCog, FaComments, FaSnapchat, FaEllipsisV } from 'react-icons/fa';
-import { IoMdChatbubbles } from "react-icons/io"; // Importing the icons
+import { FaReply, FaUserCircle, FaCircle, FaPlus, FaEllipsisV } from 'react-icons/fa';
 
-// Placeholder data for the chat panel
-const chatData = [
-  { id: 1, name: 'John Doe', message: 'Hey, how are you?', time: '10:30 AM', avatar: 'https://i.pinimg.com/736x/03/eb/d6/03ebd625cc0b9d636256ecc44c0ea324.jpg', status: 'online' },
-  { id: 2, name: 'Jane Smith', message: 'Let\'s catch up later.', time: '09:15 AM', avatar: 'https://i.pinimg.com/736x/0f/fe/06/0ffe063ec2dcaf4145f886804e45d0d8.jpg', status: 'offline' },
-  { id: 3, name: 'Sam Wilson', message: 'Good morning!', time: '08:45 AM', avatar: 'https://i.pinimg.com/736x/57/ad/17/57ad1731e21449527950cfe98c68b012.jpg', status: 'online' },
+const contacts = [
+  { id: 1, name: 'John Doe', message: 'Can you provide the latest report?', time: '10:30 AM', avatar: 'https://i.pravatar.cc/100?img=1', online: true },
+  { id: 2, name: 'Jane Smith', message: 'Having trouble with my account.', time: '09:15 AM', avatar: 'https://i.pravatar.cc/100?img=2', online: false },
+  { id: 3, name: 'Sam Wilson', message: 'Need more information on the leads process.', time: '08:45 AM', avatar: 'https://i.pravatar.cc/100?img=3', online: true },
 ];
 
 const ChatPanel = () => {
-  const [selectedChat, setSelectedChat] = useState(chatData[0]); // Default selected chat
-  const [darkMode, setDarkMode] = useState(false); // State to manage dark mode
-  const [searchTerm, setSearchTerm] = useState(""); // State to manage chat search
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  // Toggle dark mode
-  const toggleDarkMode = () => setDarkMode(!darkMode);
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
 
   return (
     <Layout>
-      <div className={`flex h-screen ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-        {/* Left Side: Chat List */}
-        <div className={`w-1/3 bg-off-white text-black shadow-xl`}>
-          <div className="p-6">
-            {/* Settings Bar (Dark Mode and Settings Icon) */}
-            <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold flex items-center">
-  <IoMdChatbubbles className="mr-2 text-4xl text-blue-500 " />
-  Chat
-</h2>
+      <div className="min-h-screen bg-gray-100 py-12">
+        <div className="max-w-7xl mx-auto px-6">
+          <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">Chat Panel</h1>
 
-              <div className="flex space-x-4 items-center">
-                <FaCog className="cursor-pointer text-orange-600 text-2xl" onClick={toggleDarkMode} />
-                <FaEllipsisV className="cursor-pointer text-2xl text-gray-600 hover:text-gray-900 transition duration-300" />
-              </div>
-            </div>
-            {/* Search Bar */}
-            <div className="mb-4">
-            <div className="flex items-center bg-white p-2 rounded-md shadow-lg">
-
-                <FaSearch className="text-gray-500" />
-                <input
-                  type="text"
-                  placeholder="Search chats..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="ml-2 bg-transparent text-gray-500 outline-none"
-                />
-              </div>
-            </div>
-            {/* Chat List */}
-            <ul>
-              {chatData
-                .filter(chat => chat.name.toLowerCase().includes(searchTerm.toLowerCase()))
-                .map((chat) => (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Contacts List */}
+            <div className="bg-white shadow-lg rounded-lg p-6 lg:col-span-1">
+              <h2 className="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+                Contacts
+                <FaPlus className="ml-2 text-blue-500 cursor-pointer" title="Add Contact" />
+              </h2>
+              <ul>
+                {contacts.map((contact) => (
                   <li
-                    key={chat.id}
-                    className="flex items-center py-4 px-3 hover:bg-gray-200 cursor-pointer transition duration-300 ease-in-out transform hover:scale-105"
-                    onClick={() => setSelectedChat(chat)}
+                    key={contact.id}
+                    onClick={() => setSelectedContact(contact)}
+                    className={`p-4 mb-4 bg-gray-50 hover:bg-blue-100 rounded-lg cursor-pointer flex items-center space-x-4 ${selectedContact?.id === contact.id ? 'bg-blue-100' : ''}`}
                   >
-                    <img src={chat.avatar} alt={chat.name} className="w-12 h-12 rounded-full mr-2" />
-                    <div className={`w-3 h-3 rounded-full ${chat.status === 'online' ? 'bg-green-500' : 'bg-gray-500'} mr-4`} />
-                    <div>
-                      <h3 className="font-medium">{chat.name}</h3>
-                      <p className="text-sm text-gray-600">{chat.message}</p>
+                    <div className="relative">
+                      <img src={contact.avatar} alt={contact.name} className="w-16 h-16 rounded-full" />
+                      <FaCircle className={`absolute bottom-0 right-0 text-sm ${contact.online ? 'text-green-500' : 'text-gray-400'}`} />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-medium text-gray-800">{contact.name}</h3>
+                      <p className="text-sm text-gray-600">{contact.message}</p>
+                      <span className="text-xs text-gray-500">{contact.time}</span>
                     </div>
                   </li>
                 ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* Right Side: Chat and Profile */}
-        <div className={`w-2/3 ${darkMode ? 'bg-gray-900' : 'bg-white'} border-l shadow-xl`}>
-          <div className="p-6">
-            {/* Guest Profile */}
-            <div className="flex items-center mb-6 border-b pb-4">
-              <img src={selectedChat.avatar} alt={selectedChat.name} className="w-16 h-16 rounded-full mr-4" />
-              <div>
-                <h3 className="text-xl font-semibold text-gray-800">{selectedChat.name}</h3>
-                <div className="flex items-center">
-                  <div className={`w-3 h-3 rounded-full ${selectedChat.status === 'online' ? 'bg-green-500' : 'bg-gray-500'} mr-2`} />
-                  <p className="text-sm text-gray-500">{selectedChat.status === 'online' ? 'Online' : 'Offline'}</p>
-                </div>
-                <p className="text-sm text-gray-500">Last active: {selectedChat.time}</p>
-              </div>
+              </ul>
             </div>
 
-            {/* Chat Window */}
-            <div className="h-96 overflow-y-auto mb-4">
-              <div className="flex flex-col space-y-4">
-                {/* Example Chat Messages */}
-                <div className="flex items-start">
-                  <div className="w-12 h-12 rounded-full bg-gray-300 mr-4"></div>
-                  <div className="bg-gray-100 p-3 rounded-lg max-w-xs shadow-lg">
-                    <p className="text-sm text-gray-800">Hi! How's everything going?</p>
+            {/* Chat Section */}
+            <div className="bg-white shadow-lg rounded-lg p-6 lg:col-span-2 flex flex-col h-[500px]">
+              {selectedContact ? (
+                <>
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center">
+                      <img src={selectedContact.avatar} alt={selectedContact.name} className="w-20 h-20 rounded-full mr-4" />
+                      <div>
+                        <h2 className="text-2xl font-semibold text-gray-800 flex items-center">
+                          {selectedContact.name}
+                          <FaCircle className={`ml-2 ${selectedContact.online ? 'text-green-500' : 'text-gray-400'}`} />
+                        </h2>
+                        <p className="text-gray-500">{selectedContact.online ? 'Online' : 'Offline'}</p>
+                      </div>
+                    </div>
+                    <div className="relative">
+                      <FaEllipsisV className="text-gray-500 cursor-pointer" onClick={toggleMenu} />
+                      {menuOpen && (
+                        <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg">
+                          <ul className="text-sm text-gray-700">
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Archive</li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Delete</li>
+                            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Pin to Bar</li>
+                          </ul>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-end justify-end">
-                  <div className="bg-teal-500 text-white p-3 rounded-lg max-w-xs shadow-lg">
-                    <p className="text-sm text-gray-100">I'm doing great, thanks! How about you?</p>
-                  </div>
-                  <div className="w-12 h-12 rounded-full bg-teal-300 ml-4"></div>
-                </div>
-              </div>
-            </div>
 
-            {/* Chat Input */}
-            <div className="flex items-center bg-gray-100 p-3 rounded-lg border border-gray-300 shadow-lg">
-              <input
-                type="text"
-                placeholder="Type a message..."
-                className="flex-1 p-2 bg-white rounded-lg text-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500"
-              />
-              <button className="ml-4 bg-teal-500 text-white p-2 rounded-full hover:bg-teal-600 transition duration-300">
-                Send
-              </button>
+                  <div className="flex-1 bg-gray-50 p-4 rounded-lg mb-4 overflow-y-auto">
+                    {/* Chat bubbles */}
+                    <div className="mb-2">
+                      <div className="bg-blue-100 p-3 rounded-lg w-3/4">
+                        <p>Hello! How can I help you?</p>
+                      </div>
+                      <span className="text-xs text-gray-500">10:30 AM</span>
+                    </div>
+                    <div className="mb-2 text-right">
+                      <div className="bg-green-100 p-3 rounded-lg w-3/4 ml-auto">
+                        <p>I need the latest sales report.</p>
+                      </div>
+                      <span className="text-xs text-gray-500">10:32 AM</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-3">
+                    <textarea
+                      rows="2"
+                      placeholder={`Message ${selectedContact.name}...`}
+                      className="flex-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    ></textarea>
+                    <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 flex items-center">
+                      <FaReply className="mr-2" /> Send
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center flex-1 flex items-center justify-center">
+                  <FaUserCircle className="text-gray-300 text-6xl mb-4" />
+                  <p className="text-gray-500">Select a contact to start chatting.</p>
+                </div>
+              )}
             </div>
           </div>
         </div>

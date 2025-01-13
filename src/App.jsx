@@ -1,14 +1,20 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import useAuth from "./app/modules/admin/v2/auth/page.js";
+
+// Public Pages
 import Home from './pages/Home.jsx'
 import About from "./app/about/page.jsx";
 import ContactForm from "./app/contacts/page.jsx";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import CC_Routes from "./app/services/CC-Routes/page.jsx";
 import CLI_Voice_Termination from "./app/services/CLI-Voice-Termination/page.jsx";
 import DID_Voice_Solutions from "./app/services/DID-Voice-Solutions/page.jsx";
 import VoIPRates from "./app/pricing/page.jsx";
 import FAQPage from "./app/faq/page.jsx";
 import LoginFrame from "./app/modules/auth/Base/login/page.jsx";
+import SignUpPage from "./app/modules/auth/signup/page.jsx";   //gh
+
+
 import Dashboard from "./app/modules/customer/pages/home/page.jsx";
 import ProfilePage from "./app/modules/customer/pages/profile-page/page.jsx";
 import PaymentsPage from "./app/modules/customer/pages/payments_page/page.jsx";
@@ -22,6 +28,8 @@ import AdminDahboard from './app/modules/admin/v2/Dashboard/page.jsx'
 import SpecialRates from './app/modules/customer/pages/rates_page/SpecialRates/page.jsx'
 import Newleads from '../src/app/modules/admin/v2/Leads/NewLeads/page'
 import Notification from '../src/./app/modules/admin/v2/Leads/Followups/page'
+
+// adminSale
 import Leads from '../src/app/modules/admin/v2/Sales/Leads/page'
 import Customer from '../src/app/modules/admin/v2/Sales/Customers/page'
 import Followups from '../src/app/modules/admin/v2/Sales/Followups/page'
@@ -29,13 +37,16 @@ import Emails from '../src/app/modules/admin/v2/Sales/Emails/page'
 import Report from '../src/app/modules/admin/v2/Sales/Reports/page'
 import Message from '../src/app/modules/admin/v2/Sales/Messages/page'
 import Assistance from '../src/app/modules/admin/v2/Sales/internalAssistance/page'
+import SaleLead from "./app/modules/admin/v2/Sales/Leads/[customerId]/page.jsx";
+import SaleCustomerLeadDetails from "./app/modules/admin/v2/Sales/Customers/[customerId]/page.jsx";
+import SalesDetailsFollowUp from "../src/app/modules/admin/v2/Sales/Followups/[id]/page.jsx";
+
 import Carrier from '../src/app/modules/admin/v2/Carriers/Leads/page'
 import Carriers from '../src/app/modules/admin/v2/Carriers/Carriers/page'
 import CFollowups from '../src/app/modules/admin/v2/Carriers/Followups/page'
 import CnewLeads from '../src/app/modules/admin/v2/Leads/NewLeads/[customerId]/page.jsx'
 import AddLead from '../src/app/modules/admin/v2/Leads/NewLeads/AddLead/page'
 import LeadDetails from "./app/modules/admin/v2/Carriers/Leads/[customerId]/page.jsx";
-import SaleLead from "./app/modules/admin/v2/Sales/Leads/[customerId]/page.jsx";
 import CustomersPage from "./app/modules/admin/v2/CustomerManagement/page.jsx";
 import SettingsPage from "./app/modules/admin/v2/Settings/page.jsx";
 import RatesPage from "./app/modules/admin/v2/Rates/CCRates/page.jsx";
@@ -53,7 +64,6 @@ import RateTableCli from "./app/clirates/page.jsx";
 import RateTableSpecial from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
 import RateTableAdd from "./app/modules/customer/pages/rates_page/Rates/page.jsx";
 import TechnicalInfo from "./app/modules/auth/signup/TechnicalInfo.jsx";
-import SignUpPage from "./app/modules/auth/signup/page.jsx";   //gh
 
 import AddTicket from './app/modules/customer/pages/trouble_page/Addfollowup/page.jsx'
 
@@ -62,7 +72,6 @@ import Dashcli from './app/modules/customer/pages/dashclirates/page.jsx';
 import DashSpecial from './app/modules/customer/pages/dashspecialrate/page.jsx'
 import CCRateTable from "./app/components/CCRates.jsx";
 import CLIRatesPage from "./app/modules/customer/pages/rates_page/CLIRates/page.jsx";
-import SalesDetailsFollowUp from "../src/app/modules/admin/v2/Sales/Followups/[id]/page.jsx";
 import CarrierDetailsFollowup from "../src/app/modules/admin/v2/Carriers/Followups/[id]/page.jsx";
 import FollowUpDetailsLeads from "./app/modules/admin/v2/Leads/Followups/[id]/page.jsx";
 import MyTickets from "./app/modules/admin/v2/Support/MyTicket/page.jsx";
@@ -73,20 +82,54 @@ import VendorRequestPage from "./app/modules/admin/v2/Requests/Vendorpayment/pag
 import RechargePage from "./app/modules/admin/v2/Accounts/Recharge/page.jsx";
 import TargetedRatePage from "./app/modules/admin/v2/Rates/PrivateRates/page.jsx";
 import SpecialRatePage from "./app/modules/admin/v2/Rates/SpecialRates/page.jsx";
-import SaleCustomerLeadDetails from "./app/modules/admin/v2/Sales/Customers/[customerId]/page.jsx";
 import PrivateRateRequestPage from "./app/modules/admin/v2/Requests/PrivaterateRequest/page.jsx";
 import EnquiryPage from "./app/modules/admin/v2/Communication/Enquiries/page.jsx";
 import Didnumberenquiery from "./app/modules/admin/v2/Communication/DIDEnquiries/page.jsx";
 import ChatPanel from "./app/modules/admin/v2/Communication/ChatBot/page.jsx";
+import CreateAdminForm from "./app/modules/admin/v2/auth/login/page.jsx";
+import InternalAssistance from "./app/modules/admin/v2/Leads/InternalAssistance/page.jsx";
+import MessagesDashboard from "./app/modules/admin/v2/Leads/messages/page.jsx";
+import SaleMessagesDashboard from "../src/app/modules/admin/v2/Sales/Messages/page";
+import SaleInternalAssistance from "../src/app/modules/admin/v2/Sales/internalAssistance/page";
+import CarriersInternalAssistance from "./app/modules/admin/v2/Carriers/InternalAssistance/page.jsx";
+import CarriersMessagesDashboard from "./app/modules/admin/v2/Carriers/Messages/page.jsx";
+import AccountsInternalAssistance from "./app/modules/admin/v2/Accounts/InternalAssistance/page.jsx";
+import SupportInternalAssistance from "./app/modules/admin/v2/Support/InternalAssistance/page.jsx";
+import SupportMessagesDashboard from "./app/modules/admin/v2/Support/Messages/page.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
   return token ? children : <Navigate to="/signIn" />;
 }
 
+
+const IsAuthenticate = ({ children }) => {
+
+  const isValidToken = useAuth()
+  console.log("isValidToken", isValidToken);
+  if (isValidToken == null) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  if (!isValidToken) {
+    return <Navigate to="/admin/signin" replace />
+  }
+
+  return children;
+};
+
+console.log("sadas ", useAuth);
+
+
 function App() {
   return (
     <Routes>
+
+      {/* Public Routes */}
       <Route path="/" element={<Home />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<ContactForm />} />
@@ -97,8 +140,69 @@ function App() {
       <Route path="/faq" element={<FAQPage />} />
       <Route path="/Registers" element={<SignUpPage />} />
       <Route path="/signIn" element={<LoginFrame />} />
-      <Route path="/notification" element={<Notification />} />
-      <Route path="/admin_dashboard" element={<AdminDahboard />} />
+
+      {/* Admin Routes */}
+      <Route path="/admin/*" element={
+        // <IsAuthenticate>
+        <Routes>
+          <Route path="/dashboard" element={<AdminDahboard />} />
+
+          {/* Leads */}
+          <Route path="/leads/assistance" element={<InternalAssistance />} />
+          <Route path="/leads/messages" element={<MessagesDashboard />} />
+
+          {/* Accounts */}
+          <Route path="/recharge" element={<RechargePage />} />
+          <Route path="/clirates" element={<AdminCli />} />
+          <Route path="/ccrates" element={<RatesPage />} />
+          <Route path="/targetedrates" element={<TargetedRatePage />} />
+          <Route path="/specialrates" element={<SpecialRatePage />} />
+          <Route path="/recharge_requests" element={<RechargerequestPage />} />
+          <Route path="/vendorpayment" element={<VendorRequestPage />} />
+          <Route path="/overdraft_requests" element={<OverdraftRequestPage />} />
+          <Route path="/privaterate_requests" element={<PrivateRateRequestPage />} />
+          <Route path="/account/followup" element={<AccountsFollowUp />} />
+          <Route path="/account/assistance" element={<AccountsInternalAssistance />} />
+
+          {/* AdminSale */}
+          <Route path="/sale/leads" element={<Leads />} />
+          <Route path="/sale/customer" element={<Customer />} />
+          <Route path="/sale/followups" element={<Followups />} />
+          <Route path="/sale/email" element={<Emails />} />
+          <Route path="/sale/report" element={<Report />} />
+          <Route path="/sale/messages" element={<SaleMessagesDashboard />} />
+          <Route path="/sale/assistance" element={<SaleInternalAssistance />} />
+          <Route path="/SaleLead/:customerId" element={<SaleLead />} />
+          <Route path="/SaleLead/customer/:customerId" element={<SaleCustomerLeadDetails />} />
+          <Route path="/sales/detailfollowp/:followupId" element={<SalesDetailsFollowUp />} />
+
+          {/* AdminCarrier */}
+          <Route path="/carrier/leads" element={<Carrier />} />
+          <Route path="/carrier/carrier" element={<Carriers />} />
+          <Route path="/carrier/folloup" element={<CFollowups />} />
+          <Route path="/carrier/detailfollowp/:followUpId" element={<CarrierDetailsFollowup />} />
+          <Route path="/carriers/messages" element={<CarriersMessagesDashboard />} />
+          <Route path="/carriers/assistance" element={<CarriersInternalAssistance />} />
+
+          {/* support */}
+          <Route path="/support/troubleTickets" element={<TroubleTickets />} />
+          <Route path="/support/myTickets" element={<MyTickets />} />
+          <Route path="/support/followups" element={<AdminFollowUp />} />
+          <Route path="/support/testing" element={<TestingPage />} />
+          <Route path="/support/task" element={<Admintask />} />
+          <Route path="/support/messages" element={<SupportMessagesDashboard />} />
+          <Route path="/support/internalassistence" element={<SupportInternalAssistance />} />
+
+        </Routes>
+        // </IsAuthenticate>
+      }
+      />
+
+      <Route path="/admin/signin" element={<CreateAdminForm />} />
+      <Route path="/cliratestable" element={<RateTableCli />} />
+
+
+      {/* Customer Routes */}
       <Route path="/*" element={
         // <PrivateRoute>
         <Routes>
@@ -116,49 +220,19 @@ function App() {
 
           <Route path="/newLeads" element={<Newleads />} />
 
-          <Route path="/sales_leads" element={<Leads />} />
-          <Route path="/sales_customer" element={<Customer />} />
-          <Route path="/sales_followups" element={<Followups />} />
-          <Route path="/sales_email" element={<Emails />} />
-          <Route path="/sales_Report" element={<Report />} />
-          <Route path="/sales_message" element={<Message />} />
-          <Route path="/sales_Assitance" element={<Assistance />} />
-          <Route path="/carrier_Leads" element={<Carrier />} />
-          <Route path="/carrier_carrier" element={<Carriers />} />
-          <Route path="/carrier_folloup" element={<CFollowups />} />
           <Route path="/NewLeads/:customerId" element={<CnewLeads />} />
           <Route path="/Addlead" element={<AddLead />} />
-          <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
-          <Route path="/SaleLead/:customerId" element={<SaleLead />} />
-          <Route path="/SaleLead/customer/:customerId" element={<SaleCustomerLeadDetails />} />
+
           <Route path="/customermanagement" element={<CustomersPage />} />
           <Route path="/settings_page" element={<CSettingsPage />} />
           <Route path="/add-ticket" element={<AddTicket />} />
         </Routes>
-        // </PrivateRoute>
+        //  </PrivateRoute>
       } />
+          <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
 
-      {/* Accounts */}
-      <Route path="/admin/recharge" element={<RechargePage />} />
-      <Route path="/admin/ccrates" element={<RatesPage />} />
-      <Route path="/admin/clirates" element={<AdminCli />} />
-      <Route path="/admin/targetedrates" element={<TargetedRatePage />} />
-      <Route path="/admin/specialrates" element={<SpecialRatePage />} />
-      <Route path="/admin/recharge_requests" element={<RechargerequestPage />} />
-      <Route path="/admin/vendorpayment" element={<VendorRequestPage />} />
-      <Route path="/admin/overdraft_requests" element={<OverdraftRequestPage />} />
-      <Route path="/admin/privaterate_requests" element={<PrivateRateRequestPage />} />
-      <Route path="/admin/account/followup" element={<AccountsFollowUp />} />
+      <Route path="/notification" element={<Notification />} />
 
-      {/* support */}
-      <Route path="/admin/support/troubleTickets" element={<TroubleTickets />} />
-      <Route path="/admin/support/myTickets" element={<MyTickets />} />
-      <Route path="/admin/support/followups" element={<AdminFollowUp />} />
-      <Route path="/admin/support/testing" element={<TestingPage />} />
-      <Route path="/admin/support/task" element={<Admintask />} />
-      <Route path="/admin/support/messages" element={<PageUnderDevelopment />} />
-      <Route path="/admin/support/internalassistence" element={<InternalAssistence />} />
-      <Route path="/cliratestable" element={<RateTableCli />} />
 
       {/* Communications */}
       <Route path="/admin/communication/enquiry" element={<EnquiryPage />} />
@@ -177,11 +251,10 @@ function App() {
       <Route path="/dashspecial" element={<DashSpecial />} />
 
       <Route path="/TechnicalInfo" element={<TechnicalInfo />} />
-      {/* <Route path="/Registers" element={<SignUpPage />} /> */}
-      <Route path="/sales/detailfollowp/:followupId" element={<SalesDetailsFollowUp />} />
-      <Route path="/carrier/detailfollowp/:followUpId" element={<CarrierDetailsFollowup />} />
       <Route path="/detailfollowup/:followupId" element={<FollowUpDetailsLeads />} />
 
+      {/* Fallback Route */}
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
 
   );

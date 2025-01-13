@@ -9,7 +9,7 @@ const messagesData = [
   { id: 3, category: 'Leads', sender: 'Sam Wilson', message: 'Need more information on the leads process.', time: '08:45 AM', avatar: 'https://i.pravatar.cc/100?img=3' },
 ];
 
-const SupportMessagesDashboard = () => {
+const MessagesDashboard = () => {
   const [selectedMessage, setSelectedMessage] = useState(null);
 
   return (
@@ -87,4 +87,4 @@ const SupportMessagesDashboard = () => {
   );
 };
 
-export default SupportMessagesDashboard;
+export default MessagesDashboard;

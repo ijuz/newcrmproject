@@ -1,43 +1,84 @@
 import React, { useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon, ShieldCheckIcon, PlusIcon, PencilIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Layout from '../layout/page';
+import axios from 'axios';
 
 const SettingsPage = () => {
   const [isAccessControlOpen, setIsAccessControlOpen] = useState(false);
   const [users, setUsers] = useState([
-    { id: 1, fullName: 'John Doe', username: 'johndoe', role: 'Accounts' },
-    { id: 2, fullName: 'Jane Smith', username: 'janesmith', role: 'Support' },
+    { id: 1, fullName: 'John Doe', email: 'johndoe@example.com', role: 'account' },
+    { id: 2, fullName: 'Jane Smith', email: 'janesmith@example.com', role: 'Support' },
   ]);
-  const [newUser, setNewUser] = useState({ fullName: '', username: '', password: '', role: 'Accounts' });
+  const [newUser, setNewUser] = useState({ fullName: '', email: '', password: '', role: 'account' });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingUserId, setEditingUserId] = useState(null);
+  const [errors, setErrors] = useState({ fullName: '', email: '', password: '' });
 
   const toggleAccessControl = () => {
     setIsAccessControlOpen(!isAccessControlOpen);
   };
 
+  const validateInputs = () => {
+    const errors = {};
+    // Full name validation
+    if (!newUser.fullName.trim()) {
+      errors.fullName = 'Full name is required.';
+    } else if (newUser.fullName.length < 3) {
+      errors.fullName = 'Full name must be at least 3 characters long.';
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!newUser.email.trim()) {
+      errors.email = 'Email is required.';
+    } else if (!emailRegex.test(newUser.email)) {
+      errors.email = 'Invalid email format.';
+    }
+
+    // Password validation
+    if (!newUser.password.trim()) {
+      errors.password = 'Password is required.';
+    } else if (newUser.password.length < 8) {
+      errors.password = 'Password must be at least 8 characters long.';
+    } else if (!/[0-9]/.test(newUser.password) || !/[!@#$%^&*]/.test(newUser.password)) {
+      errors.password = 'Password must include at least one number and one special character.';
+    }
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleAddUserClick = () => {
-    setNewUser({ fullName: '', username: '', password: '', role: 'Accounts' });
+    setNewUser({ fullName: '', email: '', password: '', role: 'account' });
     setEditingUserId(null);
+    setErrors({});
     setIsModalOpen(true);
   };
 
   const handleEditUserClick = (userId) => {
     const userToEdit = users.find(user => user.id === userId);
     if (userToEdit) {
-      setNewUser({ fullName: userToEdit.fullName, username: userToEdit.username, password: '', role: userToEdit.role });
+      setNewUser({ fullName: userToEdit.fullName, email: userToEdit.email, password: '', role: userToEdit.role });
       setEditingUserId(userId);
+      setErrors({});
       setIsModalOpen(true);
     }
   };
 
-  const handleSaveUser = () => {
+  const handleSaveUser = async () => {
+    if (!validateInputs()) {
+      return;
+    }
+
     if (editingUserId) {
       // Update existing user
       setUsers(users.map(user => (user.id === editingUserId ? { ...user, ...newUser } : user)));
     } else {
       // Add new user
       setUsers([...users, { id: Date.now(), ...newUser }]);
+      const response = await axios.post("http://localhost:5000/v3/api/admin/register", newUser)
+      console.log(response);
+      
     }
     setIsModalOpen(false);
   };
@@ -84,7 +125,7 @@ const SettingsPage = () => {
                     <li key={user.id} className="flex justify-between items-center p-3 bg-gray-200 rounded-lg shadow-sm">
                       <div>
                         <h3 className="font-semibold">{user.fullName}</h3>
-                        <p className="text-sm text-gray-600">Username: {user.username}</p>
+                        <p className="text-sm text-gray-600">Email ID: {user.email}</p>
                         <p className="text-sm text-gray-600">Role: {user.role}</p>
                       </div>
                       <div className="space-x-2">
@@ -132,17 +173,19 @@ const SettingsPage = () => {
                   onChange={(e) => setNewUser({ ...newUser, fullName: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded bg-gray-100 text-gray-900"
                 />
+                {errors.fullName && <p className="text-red-600 text-sm">{errors.fullName}</p>}
               </div>
 
-              {/* Username */}
+              {/* Email */}
               <div className="mb-4">
-                <label className="block mb-1 text-sm font-medium text-gray-700">Username</label>
+                <label className="block mb-1 text-sm font-medium text-gray-700">Email ID</label>
                 <input
-                  type="text"
-                  value={newUser.username}
-                  onChange={(e) => setNewUser({ ...newUser, username: e.target.value })}
+                  type="email"
+                  value={newUser.email}
+                  onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded bg-gray-100 text-gray-900"
                 />
+                {errors.email && <p className="text-red-600 text-sm">{errors.email}</p>}
               </div>
 
               {/* Password */}
@@ -154,6 +197,7 @@ const SettingsPage = () => {
                   onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded bg-gray-100 text-gray-900"
                 />
+                {errors.password && <p className="text-red-600 text-sm">{errors.password}</p>}
               </div>
 
               {/* Role */}
@@ -164,9 +208,10 @@ const SettingsPage = () => {
                   onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded bg-gray-100 text-gray-900"
                 >
-                  <option>Accounts</option>
-                  <option>Support</option>
-                  <option>Sales</option>
+                  <option value="account">Accounts</option>
+                  <option value="support">Support</option>
+                  <option value="carrier">Carrier</option>
+                  <option value="sale">Sales</option>
                 </select>
               </div>
 
