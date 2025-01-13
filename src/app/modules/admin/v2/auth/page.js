@@ -11,7 +11,7 @@ const useAuth = () => {
   const fetchProtected = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/v3/api/admin/adminAuthentication",
+        "https://backend.cloudqlobe.com/v3/api/admin/adminAuthentication",
         { withCredentials: true }
       );
       if (response.data.message === "Route protected") {

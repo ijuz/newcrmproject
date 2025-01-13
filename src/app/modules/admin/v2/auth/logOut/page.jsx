@@ -6,7 +6,7 @@ const LogoutButton = () => {
   const handleLogout = async () => {
     try {
       // Make a request to the backend to clear the session cookie
-      const response = await axios.get("http://localhost:5000/v3/api/admin/adminToken", { withCredentials: true });
+      const response = await axios.get("https://backend.cloudqlobe.com/v3/api/admin/adminToken", { withCredentials: true });
 
       if (response.data.message === "Logged out successfully") {
         // Optionally, redirect to login or home page

@@ -76,7 +76,7 @@ const SettingsPage = () => {
     } else {
       // Add new user
       setUsers([...users, { id: Date.now(), ...newUser }]);
-      const response = await axios.post("http://localhost:5000/v3/api/admin/register", newUser)
+      const response = await axios.post("https://backend.cloudqlobe.com/v3/api/admin/register", newUser)
       console.log(response);
       
     }
