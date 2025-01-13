@@ -60,7 +60,7 @@ const FollowUp = () => {
         </div>
       );
     }
-    const handleRowClick = (followupId) => navigate(`/detailfollowup/${followupId}`);
+    const handleRowClick = (followupId) => navigate(`/admin/detailfollowup/${followupId}`);
 
     return (
       <table className="min-w-full mt-4 bg-white border border-gray-200 shadow-md">

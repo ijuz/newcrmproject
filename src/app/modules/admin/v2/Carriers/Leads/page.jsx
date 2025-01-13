@@ -43,7 +43,7 @@ const CustomersPage = () => {
 
   const handleSearch = (event) => setSearch(event.target.value);
   const handleFilter = (status) => setLeadStatusFilter(status);
-  const handleRowClick = (customerId) => navigate(`/customer/lead-details/${customerId}`);
+  const handleRowClick = (customerId) => navigate(`/admin/customer/lead-details/${customerId}`);
   // Filter customers based on search and lead status
   const filteredCustomers = useMemo(() => {
     return customers.filter((customer) => {

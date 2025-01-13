@@ -34,10 +34,10 @@ const Topbar = () => {
             Leads
           </a>
           <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
-            <a href="/newLeads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">New Leads</a>
-            <a href="/notification" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Follow Up</a>
-            <a href="/sales_email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
-            <a href="/sales_Report" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
+            <a href="/admin/newLeads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">New Leads</a>
+            <a href="/admin/notification" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Follow Up</a>
+            <a href="/admin/sales_email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
+            <a href="/admin/sales_Report" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
             <a href="/admin/leads/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
             <a href="/admin/leads/assistance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
           </div>
@@ -68,8 +68,8 @@ const Topbar = () => {
           </a>
           <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
             <a href="/admin/carrier/leads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Leads</a>
-            <a href="/admin/carrier_carrier" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Carriers</a>
-            <a href="/admin/carrier_folloup" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
+            <a href="/admin/carrier/carrier" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Carriers</a>
+            <a href="/admin/carrier/followup" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
             <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Email</a>
             <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
             <a href="/admin/carriers/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
@@ -265,7 +265,7 @@ const Topbar = () => {
           </a>
           <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
             <a href="/admin/settings_page" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">User Management</a>
-            <a href="/customermanagement" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CRM Management</a>
+            <a href="/admin/customermanagement" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CRM Management</a>
           </div>
         </div>
       </nav>

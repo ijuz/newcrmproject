@@ -122,8 +122,6 @@ const IsAuthenticate = ({ children }) => {
   return children;
 };
 
-console.log("sadas ", useAuth);
-
 
 function App() {
   return (
@@ -141,15 +139,24 @@ function App() {
       <Route path="/Registers" element={<SignUpPage />} />
       <Route path="/signIn" element={<LoginFrame />} />
 
+
       {/* Admin Routes */}
+      <Route path="/admin/signin" element={<CreateAdminForm />} />
+
       <Route path="/admin/*" element={
         // <IsAuthenticate>
         <Routes>
+
           <Route path="/dashboard" element={<AdminDahboard />} />
 
           {/* Leads */}
           <Route path="/leads/assistance" element={<InternalAssistance />} />
           <Route path="/leads/messages" element={<MessagesDashboard />} />
+          <Route path="/notification" element={<Notification />} />
+          <Route path="/newLeads" element={<Newleads />} />
+          <Route path="/NewLeads/:customerId" element={<CnewLeads />} />
+          <Route path="/Addlead" element={<AddLead />} />
+          <Route path="/detailfollowup/:followupId" element={<FollowUpDetailsLeads />} />
 
           {/* Accounts */}
           <Route path="/recharge" element={<RechargePage />} />
@@ -179,10 +186,12 @@ function App() {
           {/* AdminCarrier */}
           <Route path="/carrier/leads" element={<Carrier />} />
           <Route path="/carrier/carrier" element={<Carriers />} />
-          <Route path="/carrier/folloup" element={<CFollowups />} />
+          <Route path="/carrier/followup" element={<CFollowups />} />
           <Route path="/carrier/detailfollowp/:followUpId" element={<CarrierDetailsFollowup />} />
           <Route path="/carriers/messages" element={<CarriersMessagesDashboard />} />
           <Route path="/carriers/assistance" element={<CarriersInternalAssistance />} />
+          <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
+
 
           {/* support */}
           <Route path="/support/troubleTickets" element={<TroubleTickets />} />
@@ -193,14 +202,19 @@ function App() {
           <Route path="/support/messages" element={<SupportMessagesDashboard />} />
           <Route path="/support/internalassistence" element={<SupportInternalAssistance />} />
 
+          {/* Communications */}
+          <Route path="/communication/enquiry" element={<EnquiryPage />} />
+          <Route path="/communication/didEnquiry" element={<Didnumberenquiery />} />
+          <Route path="/communication/chatpanel" element={<ChatPanel />} />
+
+          {/* otherRouter */}
+          <Route path="/settings_page" element={<SettingsPage />} />
+          <Route path="/customermanagement" element={<CustomersPage />} />
+
         </Routes>
         // </IsAuthenticate>
       }
       />
-
-      <Route path="/admin/signin" element={<CreateAdminForm />} />
-      <Route path="/cliratestable" element={<RateTableCli />} />
-
 
       {/* Customer Routes */}
       <Route path="/*" element={
@@ -211,47 +225,29 @@ function App() {
           <Route path="/Payment_page" element={<PaymentsPage />} />
           <Route path="/Home_page" element={<HomePage />} />
           <Route path="/Support_page" element={<FollowUp />} />
-          <Route path="/admin/settings_page" element={<SettingsPage />} />
           <Route path="/CCRates_page" element={<NormalRatesPage />} />
           <Route path="/MyRates_page" element={<MyRates />} />
           <Route path="/PrivateRate_page" element={<PrivateRates />} />
           <Route path="/CliRates_page" element={<CliRates />} />
           <Route path="/SpecilaRate_page" element={<SpecialRates />} />
+          <Route path="/cliratestable" element={<RateTableCli />} />
 
-          <Route path="/newLeads" element={<Newleads />} />
+          {/* CLIRatesPage */}
+          <Route path="/specialrates" element={<RateTableSpecial />} />
+          <Route path="/clirates" element={<CLIRatesPage />} />
+          <Route path="/addrates" element={<RateTableAdd />} />
 
-          <Route path="/NewLeads/:customerId" element={<CnewLeads />} />
-          <Route path="/Addlead" element={<AddLead />} />
-
-          <Route path="/customermanagement" element={<CustomersPage />} />
           <Route path="/settings_page" element={<CSettingsPage />} />
           <Route path="/add-ticket" element={<AddTicket />} />
+          <Route path='/dashboardccrates' element={<Dashccrates />} />
+          <Route path='/dashclirates' element={<Dashcli />} />
+          <Route path="/dashspecial" element={<DashSpecial />} />
         </Routes>
         //  </PrivateRoute>
       } />
-          <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
 
-      <Route path="/notification" element={<Notification />} />
-
-
-      {/* Communications */}
-      <Route path="/admin/communication/enquiry" element={<EnquiryPage />} />
-      <Route path="/admin/communication/didEnquiry" element={<Didnumberenquiery />} />
-      <Route path="/admin/communication/chatpanel" element={<ChatPanel />} />
-
-
-      {/* CLIRatesPage */}
-      <Route path="/specialrates" element={<RateTableSpecial />} />
-      <Route path="/clirates" element={<CLIRatesPage />} />
-
-      <Route path="/addrates" element={<RateTableAdd />} />
-
-      <Route path='/dashboardccrates' element={<Dashccrates />} />
-      <Route path='/dashclirates' element={<Dashcli />} />
-      <Route path="/dashspecial" element={<DashSpecial />} />
 
       <Route path="/TechnicalInfo" element={<TechnicalInfo />} />
-      <Route path="/detailfollowup/:followupId" element={<FollowUpDetailsLeads />} />
 
       {/* Fallback Route */}
       <Route path="*" element={<Navigate to="/" />} />
