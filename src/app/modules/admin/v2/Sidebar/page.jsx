@@ -7,7 +7,7 @@ import {
   ChartBarIcon,
   UserGroupIcon,
   CurrencyDollarIcon,
-  ChevronDownIcon,
+  ChevronRightIcon,
   LifebuoyIcon,
   EnvelopeIcon,
   Cog6ToothIcon,
@@ -36,8 +36,8 @@ const Topbar = () => {
           <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
             <a href="/admin/newLeads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">New Leads</a>
             <a href="/admin/notification" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Follow Up</a>
-            <a href="/admin/sales_email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
-            <a href="/admin/sales_Report" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
+            <a href="/admin/leads/email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
+            <a href="/admin/leads/report" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
             <a href="/admin/leads/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
             <a href="/admin/leads/assistance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
           </div>
@@ -70,10 +70,10 @@ const Topbar = () => {
             <a href="/admin/carrier/leads" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Leads</a>
             <a href="/admin/carrier/carrier" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Carriers</a>
             <a href="/admin/carrier/followup" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
-            <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Email</a>
-            <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
-            <a href="/admin/carriers/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
-            <a href="/admin/carriers/assistance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
+            <a href="/admin/carrier/email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
+            <a href="/admin/carrier/report" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Reports</a>
+            <a href="/admin/carrier/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
+            <a href="/admin/carrier/assistance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
           </div>
         </div>
 
@@ -89,8 +89,8 @@ const Topbar = () => {
             Accounts
           </a>
           <div className="dropdown absolute left-0 mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10 group-hover:block">
-           
-           
+
+
             {/* Rates Dropdown */}
 
             <div
@@ -109,7 +109,7 @@ const Topbar = () => {
                 style={{ display: "flex", justifyContent: "space-between" }}
               >
                 Rate
-                <ChevronDownIcon className="w-5 h-5 ml-1 text-gray-500" />
+                <ChevronRightIcon className="w-5 h-5 ml-1 text-gray-500" />
               </a>
               <div
                 id="ratesSubMenu"
@@ -170,8 +170,8 @@ const Topbar = () => {
                 style={{ display: "flex", justifyContent: "space-between" }}
               >
                 Requests
-                <ChevronDownIcon className="w-5 h-5 ml-1 text-gray-500" />
-              </a>  
+                <ChevronRightIcon className="w-5 h-5 ml-1 text-gray-500" />
+              </a>
               <div
                 id="requestSubMenu"
                 className="absolute right-0 mt-0 bg-white border border-orange-500 shadow-lg rounded-lg w-56 hidden"
@@ -184,25 +184,25 @@ const Topbar = () => {
                   href="/admin/recharge_requests"
                   className="block px-6 py-3 text-gray-600 hover:bg-gray-100"
                 >
-                  Recharge requests
+                  Recharge Requests
                 </a>
                 <a
                   href="/admin/vendorpayment"
                   className="block px-6 py-3 text-gray-600 hover:bg-gray-100"
                 >
-                  Vendorpayment
+                  Vendor Payment
                 </a>
                 <a
                   href="/admin/overdraft_requests"
                   className="block px-6 py-3 text-gray-600 hover:bg-gray-100"
                 >
-                  Overdraft requests
+                  Over Draft Requests
                 </a>
                 <a
                   href="/admin/privaterate_requests"
                   className="block px-6 py-3 text-gray-600 hover:bg-gray-100"
                 >
-                  Privaterate requests
+                  Private Rate Requests
                 </a>
               </div>
             </div>
@@ -210,14 +210,17 @@ const Topbar = () => {
 
 
 
-            <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+            <a href="/admin/account/report" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
               Reports
             </a>
-            <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
-              Email
+            <a href="/admin/account/email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+              Emails
             </a>
             <a href="/admin/account/followup" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
               Followups
+            </a>
+            <a href="/admin/account/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+              Messages
             </a>
             <a href="/admin/account/assistance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
               Internal Assistance
@@ -238,6 +241,7 @@ const Topbar = () => {
             <a href="/admin/support/followups" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Followups</a>
             <a href="/admin/support/task" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Tasks</a>
             <a href="/admin/support/myTickets" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">My Ticket</a>
+            <a href="/admin/support/email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
             <a href="/admin/support/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Messages</a>
             <a href="/admin/support/internalassistence" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Internal Assistance</a>
           </div>
@@ -252,8 +256,14 @@ const Topbar = () => {
           <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
             <a href="/admin/communication/enquiry" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Enquires</a>
             <a href="/admin/communication/didEnquiry" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">DID Numbers</a>
-            <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
+            <a href="/admin/communication/email" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Emails</a>
             <a href="/admin/communication/chatpanel" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Chat Panel</a>
+            <a href="/admin/communication/messages" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+              Messages
+            </a>
+            <a href="/admin/communication/assistance" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">
+              Internal Assistance
+            </a>
           </div>
         </div>
 
@@ -266,6 +276,7 @@ const Topbar = () => {
           <div className="dropdown absolute left-0 hidden group-hover:block mt-2 bg-white border border-orange-500 shadow-lg rounded-lg w-56 z-10">
             <a href="/admin/settings_page" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">User Management</a>
             <a href="/admin/customermanagement" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">CRM Management</a>
+            <a href="/admin/staffmanagement" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">Staff Management</a>
           </div>
         </div>
       </nav>
@@ -280,7 +291,7 @@ const Topbar = () => {
         <div className="dropdown absolute right-0 hidden group-hover:block mt-2 bg-white border border-gray-200 shadow-lg rounded-lg w-48 z-10">
           <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">ACCOUNT</a>
           {/* <a href="#" className="block px-6 py-3 text-gray-600 hover:bg-gray-100">LOGOUT</a> */}
-          <LogoutButton/>
+          <LogoutButton />
         </div>
       </div>
     </header>

@@ -13,7 +13,7 @@ const categories = [
   { id: 6, name: 'Software Assistance', icon: FaReact, description: 'Queries related to software.' },
 ];
 
-const AccountsInternalAssistance = () => {
+const CommunicationInternalAssistance = () => {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 
   const handleCategoryClick = (category) => {
@@ -69,4 +69,4 @@ const AccountsInternalAssistance = () => {
   );
 };
 
-export default AccountsInternalAssistance;
+export default CommunicationInternalAssistance;

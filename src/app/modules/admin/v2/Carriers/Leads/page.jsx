@@ -144,7 +144,11 @@ const CustomersPage = () => {
         {/* Search Bar and Buttons */}
         <div className="relative flex items-center mt-6 px-6 space-x-4">
           {/* Add Lead Button */}
-        
+          <button className="flex items-center bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 text-sm">
+            <UsersIcon className="w-5 h-5 mr-2" />
+           <Link to="/Addlead"><span className="text-sm">ADD LEAD</span></Link> 
+          </button>
+
           {/* Search Bar */}
           <div className="flex items-center bg-white border border-red-500 rounded-lg px-4 py-2 max-w-lg w-full">
             <ArrowLeftStartOnRectangleIcon className="w-6 h-6 text-blue-500" />

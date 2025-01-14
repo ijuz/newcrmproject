@@ -14,7 +14,7 @@ const categories = [
 ];
 
 const SaleInternalAssistance = () => {
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);

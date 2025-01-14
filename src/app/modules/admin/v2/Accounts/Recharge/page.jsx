@@ -28,7 +28,7 @@ const RechargeForm = () => {
           {/* Left Side Image Section */}
           <div className="w-full lg:w-1/2 bg-offwhite flex items-center justify-center">
             <img
-              src="https://img.freepik.com/free-vector/transfer-money-concept-illustration_114360-4165.jpg?t=st=1736740424~exp=1736744024~hmac=c0a55a184729abfdc4fbce2ef2aa982b22b65fea0deab3208cf8c26daf9c4928&w=740"
+              src="/images/Accountsrecharge.avif"
               alt="Side Image"
               className="w-3/4 h-auto object-cover mt-9" // Added top margin for spacing
             />

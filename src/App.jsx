@@ -47,7 +47,7 @@ import CFollowups from '../src/app/modules/admin/v2/Carriers/Followups/page'
 import CnewLeads from '../src/app/modules/admin/v2/Leads/NewLeads/[customerId]/page.jsx'
 import AddLead from '../src/app/modules/admin/v2/Leads/NewLeads/AddLead/page'
 import LeadDetails from "./app/modules/admin/v2/Carriers/Leads/[customerId]/page.jsx";
-import CustomersPage from "./app/modules/admin/v2/CustomerManagement/page.jsx";
+import CustomersPage from "./app/modules/admin/v2/Settings/CustomerManagement/page.jsx";
 import SettingsPage from "./app/modules/admin/v2/Settings/page.jsx";
 import RatesPage from "./app/modules/admin/v2/Rates/CCRates/page.jsx";
 import AdminCli from "./app/modules/admin/v2/Rates/CLIRates/page.jsx";
@@ -83,9 +83,13 @@ import RechargePage from "./app/modules/admin/v2/Accounts/Recharge/page.jsx";
 import TargetedRatePage from "./app/modules/admin/v2/Rates/PrivateRates/page.jsx";
 import SpecialRatePage from "./app/modules/admin/v2/Rates/SpecialRates/page.jsx";
 import PrivateRateRequestPage from "./app/modules/admin/v2/Requests/PrivaterateRequest/page.jsx";
+// Communications
 import EnquiryPage from "./app/modules/admin/v2/Communication/Enquiries/page.jsx";
 import Didnumberenquiery from "./app/modules/admin/v2/Communication/DIDEnquiries/page.jsx";
 import ChatPanel from "./app/modules/admin/v2/Communication/ChatBot/page.jsx";
+import CommunicationMessagesDashboard from "./app/modules/admin/v2/Communication/Messages/page.jsx";
+import CommunicationInternalAssistance from "./app/modules/admin/v2/Communication/InternalAssistance/page.jsx";
+// Communications
 import CreateAdminForm from "./app/modules/admin/v2/auth/login/page.jsx";
 import InternalAssistance from "./app/modules/admin/v2/Leads/InternalAssistance/page.jsx";
 import MessagesDashboard from "./app/modules/admin/v2/Leads/messages/page.jsx";
@@ -94,8 +98,18 @@ import SaleInternalAssistance from "../src/app/modules/admin/v2/Sales/internalAs
 import CarriersInternalAssistance from "./app/modules/admin/v2/Carriers/InternalAssistance/page.jsx";
 import CarriersMessagesDashboard from "./app/modules/admin/v2/Carriers/Messages/page.jsx";
 import AccountsInternalAssistance from "./app/modules/admin/v2/Accounts/InternalAssistance/page.jsx";
+import AccountsMessagesDashboard from "./app/modules/admin/v2/Accounts/Messages/page.jsx";
 import SupportInternalAssistance from "./app/modules/admin/v2/Support/InternalAssistance/page.jsx";
 import SupportMessagesDashboard from "./app/modules/admin/v2/Support/Messages/page.jsx";
+import StaffPageUnderDevelopment from "./app/modules/admin/v2/Settings/StaffManagement/page.jsx";
+import LeadEmail from "./app/modules/admin/v2/Leads/Emails/page.jsx";
+import LeadReport from "./app/modules/admin/v2/Leads/Reports/page.jsx";
+import CarrierEmail from "./app/modules/admin/v2/Carriers/Email/page.jsx";
+import CarrierReport from "./app/modules/admin/v2/Carriers/Reports/page.jsx";
+import AccountsEmail from "./app/modules/admin/v2/Accounts/Emails/page.jsx";
+import AccountsReport from "./app/modules/admin/v2/Accounts/Reports/page.jsx";
+import SupportEmail from "./app/modules/admin/v2/Support/Emails/page.jsx";
+import CommunicationEmail from "./app/modules/admin/v2/Communication/Email/page.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -157,6 +171,8 @@ function App() {
           <Route path="/NewLeads/:customerId" element={<CnewLeads />} />
           <Route path="/Addlead" element={<AddLead />} />
           <Route path="/detailfollowup/:followupId" element={<FollowUpDetailsLeads />} />
+          <Route path="/leads/email" element={<LeadEmail />} />
+          <Route path="/leads/report" element={<LeadReport />} />
 
           {/* Accounts */}
           <Route path="/recharge" element={<RechargePage />} />
@@ -169,7 +185,10 @@ function App() {
           <Route path="/overdraft_requests" element={<OverdraftRequestPage />} />
           <Route path="/privaterate_requests" element={<PrivateRateRequestPage />} />
           <Route path="/account/followup" element={<AccountsFollowUp />} />
+          <Route path="/account/messages" element={<AccountsMessagesDashboard />} />
           <Route path="/account/assistance" element={<AccountsInternalAssistance />} />
+          <Route path="/account/email" element={<AccountsEmail />} />
+          <Route path="/account/report" element={<AccountsReport />} />
 
           {/* AdminSale */}
           <Route path="/sale/leads" element={<Leads />} />
@@ -188,10 +207,11 @@ function App() {
           <Route path="/carrier/carrier" element={<Carriers />} />
           <Route path="/carrier/followup" element={<CFollowups />} />
           <Route path="/carrier/detailfollowp/:followUpId" element={<CarrierDetailsFollowup />} />
-          <Route path="/carriers/messages" element={<CarriersMessagesDashboard />} />
-          <Route path="/carriers/assistance" element={<CarriersInternalAssistance />} />
+          <Route path="/carrier/messages" element={<CarriersMessagesDashboard />} />
+          <Route path="/carrier/assistance" element={<CarriersInternalAssistance />} />
           <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
-
+          <Route path="/carrier/email" element={<CarrierEmail />} />
+          <Route path="/carrier/report" element={<CarrierReport />} />
 
           {/* support */}
           <Route path="/support/troubleTickets" element={<TroubleTickets />} />
@@ -199,6 +219,7 @@ function App() {
           <Route path="/support/followups" element={<AdminFollowUp />} />
           <Route path="/support/testing" element={<TestingPage />} />
           <Route path="/support/task" element={<Admintask />} />
+          <Route path="/support/email" element={<SupportEmail />} />
           <Route path="/support/messages" element={<SupportMessagesDashboard />} />
           <Route path="/support/internalassistence" element={<SupportInternalAssistance />} />
 
@@ -206,11 +227,14 @@ function App() {
           <Route path="/communication/enquiry" element={<EnquiryPage />} />
           <Route path="/communication/didEnquiry" element={<Didnumberenquiery />} />
           <Route path="/communication/chatpanel" element={<ChatPanel />} />
+          <Route path="/communication/email" element={<CommunicationEmail />} />
+          <Route path="/communication/messages" element={<CommunicationMessagesDashboard />} />
+          <Route path="/communication/assistance" element={<CommunicationInternalAssistance />} />
 
-          {/* otherRouter */}
+          {/* Settings */}
           <Route path="/settings_page" element={<SettingsPage />} />
           <Route path="/customermanagement" element={<CustomersPage />} />
-
+          <Route path="/staffmanagement" element={<StaffPageUnderDevelopment />} />
         </Routes>
         // </IsAuthenticate>
       }

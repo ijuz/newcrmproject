@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from '../../layout/page';
 
-const PageUnderDevelopment = () => {
+const CarrierEmail = () => {
   return (
     <Layout>
       <div className="min-h-screen flex items-center justify-center">
@@ -11,4 +11,4 @@ const PageUnderDevelopment = () => {
   );
 };
 
-export default PageUnderDevelopment;
+export default CarrierEmail;

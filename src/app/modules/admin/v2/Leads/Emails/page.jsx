@@ -1,7 +1,7 @@
 import React from 'react';
 import Layout from '../../layout/page';
 
-const AccountsEmail = () => {
+const LeadEmail = () => {
   return (
     <Layout>
       <div className="min-h-screen flex items-center justify-center">
@@ -11,4 +11,4 @@ const AccountsEmail = () => {
   );
 };
 
-export default AccountsEmail;
+export default LeadEmail;
