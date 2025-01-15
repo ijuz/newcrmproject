@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 // import Supreadmin from "./../../../../../rb_5425.png";
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import { FaGoogle } from "react-icons/fa";
 import axios from "axios";
+import adminContext from "../../../../../../context/page";
 
 
 const CreateAdminForm = () => {
@@ -16,7 +17,7 @@ const CreateAdminForm = () => {
     selectDepartment: "",
   });
 
-
+  const { setAdminDetails } = useContext(adminContext)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -26,21 +27,23 @@ const CreateAdminForm = () => {
   };
 
 
-  
+
   const handleSubmit = async (e) => {
     if (!formData.username || !formData.password || !formData.selectDepartment) {
-        return toast.error('Please fill in all fields');
-      }
+      return toast.error('Please fill in all fields');
+    }
     e.preventDefault();
     try {
-      const response = await axios.post('https://backend.cloudqlobe.com/v3/api/admin/login', formData, {withCredentials:true});
-
+      const response = await axios.post('https://backend.cloudqlobe.com/v3/api/admin/login', formData, { withCredentials: true });
+      console.log(response.data);
+      sessionStorage.setItem("adminData",JSON.stringify(response.data.adminData))
+      setAdminDetails(response.data.adminData)
       setFormData({
         username: "",
         password: "",
         selectDepartment: "",
       })
-      
+
       navigate('/admin/dashboard')
       toast.success('Successfully SuperAdmin Login');
     } catch (error) {
@@ -59,7 +62,7 @@ const CreateAdminForm = () => {
       }
     }
   };
-  
+
   return (
     <div>
       <div class="font-[sans-serif] bg-gray-50">
@@ -177,10 +180,10 @@ const CreateAdminForm = () => {
                 <option value="" disabled>
                   -- Select a Department --
                 </option>
-                  <option value="support">Support Engineer</option>
-                  <option value="account">Accounts Manager</option>
-                  <option value="sale">Sales Team</option>
-                  <option value="carrier">Carriers</option>
+                <option value="support">Support Engineer</option>
+                <option value="account">Accounts Manager</option>
+                <option value="sale">Sales Team</option>
+                <option value="carrier">Carriers</option>
               </select>
               <div className="mt-1 text-sm text-red-600 hidden">
                 Please select a department.
@@ -212,12 +215,12 @@ const CreateAdminForm = () => {
               </button>
             </div>
 
-        
-           
+
+
           </form>
         </div>
       </div>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };

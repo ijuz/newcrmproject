@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import Layout from '../../layout/page';
-import { FaPlusCircle, FaFilter } from 'react-icons/fa';
-import { MdAccountCircle, MdPerson, MdCategory, MdCheckCircle, MdClose } from 'react-icons/md';
+import { FaPlusCircle, FaFilter, FaTimes } from 'react-icons/fa';
+import { MdAccountCircle, MdPerson, MdCategory, MdCheckCircle } from 'react-icons/md';
 import { SiContributorcovenant } from 'react-icons/si';
-import { FaTimes } from 'react-icons/fa';
-
 
 const VendorRequestPage = () => {
   const initialRequests = [
@@ -14,6 +12,7 @@ const VendorRequestPage = () => {
       accountManager: 'Manager 1',
       serviceCategory: 'CC Route',
       accountAssociate: 'Associate 1',
+      carriertype: 'Postpaid',
       status: 'Pending',
       countryCode: 'IN',
       countryName: 'India',
@@ -28,6 +27,7 @@ const VendorRequestPage = () => {
       accountManager: 'Manager 2',
       serviceCategory: 'CLI Route',
       accountAssociate: 'Associate 2',
+      carriertype: 'Postpaid',
       status: 'Approved',
       countryCode: 'US',
       countryName: 'USA',
@@ -42,6 +42,7 @@ const VendorRequestPage = () => {
       accountManager: 'Manager 3',
       serviceCategory: 'CC Route',
       accountAssociate: 'Associate 3',
+      carriertype: 'Postpaid',
       status: 'Denied',
       countryCode: 'UK',
       countryName: 'United Kingdom',
@@ -160,17 +161,17 @@ const VendorRequestPage = () => {
         </div>
 
         <table className="min-w-full border-collapse mb-6">
-        <thead className="bg-[#005F73] text-white">
-  <tr>
-    <th className="p-2">Carrier ID</th>
-    <th className="p-2">Account Manager</th>
-    <th className="p-2">Service Category</th>
-    <th className="p-2">Account Associate</th>
-    <th className="p-2">Status</th>
-    <th className="p-2">Action</th>
-  </tr>
-</thead>
-
+          <thead className="bg-[#005F73] text-white">
+            <tr>
+              <th className="p-2">Carrier ID</th>
+              <th className="p-2">Account Manager</th>
+              <th className="p-2">Service Category</th>
+              <th className="p-2">Account Associate</th>
+              <th className="p-2">Carrier Type</th>
+              <th className="p-2">Status</th>
+              <th className="p-2">Action</th>
+            </tr>
+          </thead>
           <tbody>
             {filteredRequests.map((request, index) => (
               <tr key={request.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
@@ -178,22 +179,16 @@ const VendorRequestPage = () => {
                 <td className="p-2 text-center">{request.accountManager}</td>
                 <td className="p-2 text-center">{request.serviceCategory}</td>
                 <td className="p-2">{request.accountAssociate}</td>
+                <td className="p-2">{request.carriertype}</td>
                 <td className="p-2">{request.status}</td>
                 <td className="p-2 text-right flex justify-end space-x-2">
-  <button
-    onClick={() => handlePickupClick(request)}
-    className="px-4 py-2 bg-blue-500 text-white flex items-center rounded-md"
-  >
-    Pickup
-  </button>
-  <button
-    onClick={() => handleViewClick(request)}
-    className="px-4 py-2 bg-yellow-500 text-white flex items-center rounded-md"
-  >
-    View
-  </button>
-</td>
-
+                  <button
+                    onClick={() => handlePickupClick(request)}
+                    className="px-4 py-2 bg-blue-500 text-white flex items-center rounded-md"
+                  >
+                    Pickup
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -222,6 +217,17 @@ const VendorRequestPage = () => {
                   value={formValues.accountManager}
                   onChange={handleInputChange}
                   placeholder="Account Manager"
+                  className="p-2 border rounded-md w-full"
+                />
+              </div>
+              <div className="mb-4 flex items-center">
+                <MdPerson className="mr-2 text-gray-600" />
+                <input
+                  type="text"
+                  name="accountManager"
+                  value={formValues.carriertype}
+                  onChange={handleInputChange}
+                  placeholder="Carrier Type"
                   className="p-2 border rounded-md w-full"
                 />
               </div>
@@ -278,54 +284,6 @@ const VendorRequestPage = () => {
             </div>
           </div>
         )}
-
-{showViewModal && (
-  <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center">
-    <div className="bg-white rounded-md p-6 w-2/3 relative">
-      {/* Close Button */}
-      <button
-        onClick={handleCancel}
-        className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
-      >
-        <FaTimes className="text-2xl" />
-      </button>
-
-      <h3 className="text-lg font-default mb-4">Vendor Details</h3>
-      <table className="w-full border-collapse">
-        <thead className="bg-yellow-500 text-white">
-          <tr>
-            <th className="p-2">Country Code</th>
-            <th className="p-2">Country Name</th>
-            <th className="p-2">Quality Description</th>
-            <th className="p-2">Rate</th>
-            <th className="p-2">Targeted Rate</th>
-            <th className="p-2">Rate Category</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr className="bg-white">
-            <td className="p-2">{selectedRequest.countryCode}</td>
-            <td className="p-2">{selectedRequest.countryName}</td>
-            <td className="p-2">{selectedRequest.qualityDescription}</td>
-            <td className="p-2">{selectedRequest.rate}</td>
-            <td className="p-2">{selectedRequest.targetedRate}</td>
-            <td className="p-2">{selectedRequest.rateCategory}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div className="flex justify-between mt-4">
-        <button
-          onClick={handleCancel}
-          className="px-4 py-2 bg-gray-300 text-black rounded-md"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
-)}
-
-
       </div>
     </Layout>
   );

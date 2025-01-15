@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaCalendarAlt, FaMoneyBillAlt, FaFileUpload, FaUserCircle } from 'react-icons/fa';
-import Layout from '../../layout/page'; // Import the Layout component
+import Layout from '../../../layout/page'; // Import the Layout component
 
 const RechargeForm = () => {
   const [amount, setAmount] = useState('');

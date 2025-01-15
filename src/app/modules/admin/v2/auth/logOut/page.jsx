@@ -9,6 +9,7 @@ const LogoutButton = () => {
       const response = await axios.get("https://backend.cloudqlobe.com/v3/api/admin/adminToken", { withCredentials: true });
 
       if (response.data.message === "Logged out successfully") {
+        // sessionStorage.removeItem("adminData")
         // Optionally, redirect to login or home page
         window.location.href = "/admin/signin"; // or use react-router-dom to navigate
         toast.success("Logged out successfully", { position: "top-right" });

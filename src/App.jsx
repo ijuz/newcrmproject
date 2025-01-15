@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import useAuth from "./app/modules/admin/v2/auth/page.js";
 
@@ -79,7 +79,7 @@ import AccountsFollowUp from "./app/modules/admin/v2/Accounts/FollowUps/page.jsx
 import OverdraftRequestPage from "./app/modules/admin/v2/Requests/OverdraftRequests/page.jsx";
 import RechargerequestPage from "./app/modules/admin/v2/Requests/RechargeRequests/page.jsx";
 import VendorRequestPage from "./app/modules/admin/v2/Requests/Vendorpayment/page.jsx";
-import RechargePage from "./app/modules/admin/v2/Accounts/Recharge/page.jsx";
+import RechargePage from "./app/modules/admin/v2/Accounts/Recharge/RechargeForm/page.jsx";
 import TargetedRatePage from "./app/modules/admin/v2/Rates/PrivateRates/page.jsx";
 import SpecialRatePage from "./app/modules/admin/v2/Rates/SpecialRates/page.jsx";
 import PrivateRateRequestPage from "./app/modules/admin/v2/Requests/PrivaterateRequest/page.jsx";
@@ -110,6 +110,8 @@ import AccountsEmail from "./app/modules/admin/v2/Accounts/Emails/page.jsx";
 import AccountsReport from "./app/modules/admin/v2/Accounts/Reports/page.jsx";
 import SupportEmail from "./app/modules/admin/v2/Support/Emails/page.jsx";
 import CommunicationEmail from "./app/modules/admin/v2/Communication/Email/page.jsx";
+import adminContext from "./context/page.jsx";
+import VendorForm from "./app/modules/admin/v2/Accounts/Recharge/VendorForm/page.jsx";
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem('token');
@@ -138,144 +140,157 @@ const IsAuthenticate = ({ children }) => {
 
 
 function App() {
+  const [adminDetails, setAdminDetails] = useState({
+    username: '',
+    role: 'superAdmin'
+  })
+//   useEffect(() => {
+//   const data =  sessionStorage.getItem("adminData")
+//  setAdminDetails( JSON.parse(data) )
+
+//   },[])
   return (
-    <Routes>
+    <adminContext.Provider value={{ adminDetails, setAdminDetails }} >
 
-      {/* Public Routes */}
-      <Route path="/" element={<Home />} />
-      <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<ContactForm />} />
-      <Route path="/services/CC-Routes" element={<CC_Routes />} />
-      <Route path="/services/CLI-Voice-Termination" element={<CLI_Voice_Termination />} />
-      <Route path="/services/DID-Voice-Solutions" element={<DID_Voice_Solutions />} />
-      <Route path="/pricing" element={<VoIPRates />} />
-      <Route path="/faq" element={<FAQPage />} />
-      <Route path="/Registers" element={<SignUpPage />} />
-      <Route path="/signIn" element={<LoginFrame />} />
+      <Routes>
 
-
-      {/* Admin Routes */}
-      <Route path="/admin/signin" element={<CreateAdminForm />} />
-
-      <Route path="/admin/*" element={
-        // <IsAuthenticate>
-        <Routes>
-
-          <Route path="/dashboard" element={<AdminDahboard />} />
-
-          {/* Leads */}
-          <Route path="/leads/assistance" element={<InternalAssistance />} />
-          <Route path="/leads/messages" element={<MessagesDashboard />} />
-          <Route path="/notification" element={<Notification />} />
-          <Route path="/newLeads" element={<Newleads />} />
-          <Route path="/NewLeads/:customerId" element={<CnewLeads />} />
-          <Route path="/Addlead" element={<AddLead />} />
-          <Route path="/detailfollowup/:followupId" element={<FollowUpDetailsLeads />} />
-          <Route path="/leads/email" element={<LeadEmail />} />
-          <Route path="/leads/report" element={<LeadReport />} />
-
-          {/* Accounts */}
-          <Route path="/recharge" element={<RechargePage />} />
-          <Route path="/clirates" element={<AdminCli />} />
-          <Route path="/ccrates" element={<RatesPage />} />
-          <Route path="/targetedrates" element={<TargetedRatePage />} />
-          <Route path="/specialrates" element={<SpecialRatePage />} />
-          <Route path="/recharge_requests" element={<RechargerequestPage />} />
-          <Route path="/vendorpayment" element={<VendorRequestPage />} />
-          <Route path="/overdraft_requests" element={<OverdraftRequestPage />} />
-          <Route path="/privaterate_requests" element={<PrivateRateRequestPage />} />
-          <Route path="/account/followup" element={<AccountsFollowUp />} />
-          <Route path="/account/messages" element={<AccountsMessagesDashboard />} />
-          <Route path="/account/assistance" element={<AccountsInternalAssistance />} />
-          <Route path="/account/email" element={<AccountsEmail />} />
-          <Route path="/account/report" element={<AccountsReport />} />
-
-          {/* AdminSale */}
-          <Route path="/sale/leads" element={<Leads />} />
-          <Route path="/sale/customer" element={<Customer />} />
-          <Route path="/sale/followups" element={<Followups />} />
-          <Route path="/sale/email" element={<Emails />} />
-          <Route path="/sale/report" element={<Report />} />
-          <Route path="/sale/messages" element={<SaleMessagesDashboard />} />
-          <Route path="/sale/assistance" element={<SaleInternalAssistance />} />
-          <Route path="/SaleLead/:customerId" element={<SaleLead />} />
-          <Route path="/SaleLead/customer/:customerId" element={<SaleCustomerLeadDetails />} />
-          <Route path="/sales/detailfollowp/:followupId" element={<SalesDetailsFollowUp />} />
-
-          {/* AdminCarrier */}
-          <Route path="/carrier/leads" element={<Carrier />} />
-          <Route path="/carrier/carrier" element={<Carriers />} />
-          <Route path="/carrier/followup" element={<CFollowups />} />
-          <Route path="/carrier/detailfollowp/:followUpId" element={<CarrierDetailsFollowup />} />
-          <Route path="/carrier/messages" element={<CarriersMessagesDashboard />} />
-          <Route path="/carrier/assistance" element={<CarriersInternalAssistance />} />
-          <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
-          <Route path="/carrier/email" element={<CarrierEmail />} />
-          <Route path="/carrier/report" element={<CarrierReport />} />
-
-          {/* support */}
-          <Route path="/support/troubleTickets" element={<TroubleTickets />} />
-          <Route path="/support/myTickets" element={<MyTickets />} />
-          <Route path="/support/followups" element={<AdminFollowUp />} />
-          <Route path="/support/testing" element={<TestingPage />} />
-          <Route path="/support/task" element={<Admintask />} />
-          <Route path="/support/email" element={<SupportEmail />} />
-          <Route path="/support/messages" element={<SupportMessagesDashboard />} />
-          <Route path="/support/internalassistence" element={<SupportInternalAssistance />} />
-
-          {/* Communications */}
-          <Route path="/communication/enquiry" element={<EnquiryPage />} />
-          <Route path="/communication/didEnquiry" element={<Didnumberenquiery />} />
-          <Route path="/communication/chatpanel" element={<ChatPanel />} />
-          <Route path="/communication/email" element={<CommunicationEmail />} />
-          <Route path="/communication/messages" element={<CommunicationMessagesDashboard />} />
-          <Route path="/communication/assistance" element={<CommunicationInternalAssistance />} />
-
-          {/* Settings */}
-          <Route path="/settings_page" element={<SettingsPage />} />
-          <Route path="/customermanagement" element={<CustomersPage />} />
-          <Route path="/staffmanagement" element={<StaffPageUnderDevelopment />} />
-        </Routes>
-        // </IsAuthenticate>
-      }
-      />
-
-      {/* Customer Routes */}
-      <Route path="/*" element={
-        // <PrivateRoute>
-        <Routes>
-          <Route path="/dash-board" element={<Dashboard />} />
-          <Route path="/Profile_page" element={<ProfilePage />} />
-          <Route path="/Payment_page" element={<PaymentsPage />} />
-          <Route path="/Home_page" element={<HomePage />} />
-          <Route path="/Support_page" element={<FollowUp />} />
-          <Route path="/CCRates_page" element={<NormalRatesPage />} />
-          <Route path="/MyRates_page" element={<MyRates />} />
-          <Route path="/PrivateRate_page" element={<PrivateRates />} />
-          <Route path="/CliRates_page" element={<CliRates />} />
-          <Route path="/SpecilaRate_page" element={<SpecialRates />} />
-          <Route path="/cliratestable" element={<RateTableCli />} />
-
-          {/* CLIRatesPage */}
-          <Route path="/specialrates" element={<RateTableSpecial />} />
-          <Route path="/clirates" element={<CLIRatesPage />} />
-          <Route path="/addrates" element={<RateTableAdd />} />
-
-          <Route path="/settings_page" element={<CSettingsPage />} />
-          <Route path="/add-ticket" element={<AddTicket />} />
-          <Route path='/dashboardccrates' element={<Dashccrates />} />
-          <Route path='/dashclirates' element={<Dashcli />} />
-          <Route path="/dashspecial" element={<DashSpecial />} />
-        </Routes>
-        //  </PrivateRoute>
-      } />
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<ContactForm />} />
+        <Route path="/services/CC-Routes" element={<CC_Routes />} />
+        <Route path="/services/CLI-Voice-Termination" element={<CLI_Voice_Termination />} />
+        <Route path="/services/DID-Voice-Solutions" element={<DID_Voice_Solutions />} />
+        <Route path="/pricing" element={<VoIPRates />} />
+        <Route path="/faq" element={<FAQPage />} />
+        <Route path="/Registers" element={<SignUpPage />} />
+        <Route path="/signIn" element={<LoginFrame />} />
 
 
-      <Route path="/TechnicalInfo" element={<TechnicalInfo />} />
+        {/* Admin Login */}
+        <Route path="/admin/signin" element={<CreateAdminForm />} />
 
-      {/* Fallback Route */}
-      <Route path="*" element={<Navigate to="/" />} />
-    </Routes>
+        <Route path="/admin/*" element={
+          // <IsAuthenticate>
+          <Routes>
+            <Route path="/dashboard" element={<AdminDahboard />} />
+
+            {/* Leads */}
+            <Route path="/leads/assistance" element={<InternalAssistance />} />
+            <Route path="/leads/messages" element={<MessagesDashboard />} />
+            <Route path="/notification" element={<Notification />} />
+            <Route path="/newLeads" element={<Newleads />} />
+            <Route path="/NewLeads/:customerId" element={<CnewLeads />} />
+            <Route path="/Addlead" element={<AddLead />} />
+            <Route path="/detailfollowup/:followupId" element={<FollowUpDetailsLeads />} />
+            <Route path="/leads/email" element={<LeadEmail />} />
+            <Route path="/leads/report" element={<LeadReport />} />
+
+            {/* Accounts */}
+            <Route path="/recharge" element={<RechargePage />} />
+            <Route path="/clirates" element={<AdminCli />} />
+            <Route path="/ccrates" element={<RatesPage />} />
+            <Route path="/targetedrates" element={<TargetedRatePage />} />
+            <Route path="/specialrates" element={<SpecialRatePage />} />
+            <Route path="/recharge_requests" element={<RechargerequestPage />} />
+            <Route path="/vendorpayment" element={<VendorRequestPage />} />
+            <Route path="/overdraft_requests" element={<OverdraftRequestPage />} />
+            <Route path="/privaterate_requests" element={<PrivateRateRequestPage />} />
+            <Route path="/account/followup" element={<AccountsFollowUp />} />
+            <Route path="/account/messages" element={<AccountsMessagesDashboard />} />
+            <Route path="/account/assistance" element={<AccountsInternalAssistance />} />
+            <Route path="/account/email" element={<AccountsEmail />} />
+            <Route path="/account/report" element={<AccountsReport />} />
+            <Route path="/vendor_form" element={<VendorForm />} />
+
+            {/* AdminSale */}
+            <Route path="/sale/leads" element={<Leads />} />
+            <Route path="/sale/customer" element={<Customer />} />
+            <Route path="/sale/followups" element={<Followups />} />
+            <Route path="/sale/email" element={<Emails />} />
+            <Route path="/sale/report" element={<Report />} />
+            <Route path="/sale/messages" element={<SaleMessagesDashboard />} />
+            <Route path="/sale/assistance" element={<SaleInternalAssistance />} />
+            <Route path="/SaleLead/:customerId" element={<SaleLead />} />
+            <Route path="/SaleLead/customer/:customerId" element={<SaleCustomerLeadDetails />} />
+            <Route path="/sales/detailfollowp/:followupId" element={<SalesDetailsFollowUp />} />
+
+            {/* AdminCarrier */}
+            <Route path="/carrier/leads" element={<Carrier />} />
+            <Route path="/carrier/carrier" element={<Carriers />} />
+            <Route path="/carrier/followup" element={<CFollowups />} />
+            <Route path="/carrier/detailfollowp/:followUpId" element={<CarrierDetailsFollowup />} />
+            <Route path="/carrier/messages" element={<CarriersMessagesDashboard />} />
+            <Route path="/carrier/assistance" element={<CarriersInternalAssistance />} />
+            <Route path="/customer/lead-details/:customerId" element={<LeadDetails />} />
+            <Route path="/carrier/email" element={<CarrierEmail />} />
+            <Route path="/carrier/report" element={<CarrierReport />} />
+
+            {/* support */}
+            <Route path="/support/troubleTickets" element={<TroubleTickets />} />
+            <Route path="/support/myTickets" element={<MyTickets />} />
+            <Route path="/support/followups" element={<AdminFollowUp />} />
+            <Route path="/support/testing" element={<TestingPage />} />
+            <Route path="/support/task" element={<Admintask />} />
+            <Route path="/support/email" element={<SupportEmail />} />
+            <Route path="/support/messages" element={<SupportMessagesDashboard />} />
+            <Route path="/support/internalassistence" element={<SupportInternalAssistance />} />
+
+            {/* Communications */}
+            <Route path="/communication/enquiry" element={<EnquiryPage />} />
+            <Route path="/communication/didEnquiry" element={<Didnumberenquiery />} />
+            <Route path="/communication/chatpanel" element={<ChatPanel />} />
+            <Route path="/communication/email" element={<CommunicationEmail />} />
+            <Route path="/communication/messages" element={<CommunicationMessagesDashboard />} />
+            <Route path="/communication/assistance" element={<CommunicationInternalAssistance />} />
+
+            {/* Settings */}
+            <Route path="/settings_page" element={<SettingsPage />} />
+            <Route path="/customermanagement" element={<CustomersPage />} />
+            <Route path="/staffmanagement" element={<StaffPageUnderDevelopment />} />
+          </Routes>
+          // </IsAuthenticate>
+        }
+        />
+
+        {/* Customer Routes */}
+        <Route path="/*" element={
+          // <PrivateRoute>
+          <Routes>
+            <Route path="/dash-board" element={<Dashboard />} />
+            <Route path="/Profile_page" element={<ProfilePage />} />
+            <Route path="/Payment_page" element={<PaymentsPage />} />
+            <Route path="/Home_page" element={<HomePage />} />
+            <Route path="/Support_page" element={<FollowUp />} />
+            <Route path="/CCRates_page" element={<NormalRatesPage />} />
+            <Route path="/MyRates_page" element={<MyRates />} />
+            <Route path="/PrivateRate_page" element={<PrivateRates />} />
+            <Route path="/CliRates_page" element={<CliRates />} />
+            <Route path="/SpecilaRate_page" element={<SpecialRates />} />
+            <Route path="/cliratestable" element={<RateTableCli />} />
+
+            {/* CLIRatesPage */}
+            <Route path="/specialrates" element={<RateTableSpecial />} />
+            <Route path="/clirates" element={<CLIRatesPage />} />
+            <Route path="/addrates" element={<RateTableAdd />} />
+
+            <Route path="/settings_page" element={<CSettingsPage />} />
+            <Route path="/add-ticket" element={<AddTicket />} />
+            <Route path='/dashboardccrates' element={<Dashccrates />} />
+            <Route path='/dashclirates' element={<Dashcli />} />
+            <Route path="/dashspecial" element={<DashSpecial />} />
+          </Routes>
+          //  </PrivateRoute>
+        } />
+
+
+        <Route path="/TechnicalInfo" element={<TechnicalInfo />} />
+
+        {/* Fallback Route */}
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </adminContext.Provider>
+
 
   );
 }

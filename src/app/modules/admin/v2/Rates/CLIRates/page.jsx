@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axiosInstance from '../../utils/axiosinstance';
 import Layout from '../../layout/page';
 import axios from 'axios';
+import adminContext from '../../../../../../context/page';
 
 const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
   const [newLead, setNewLead] = useState(initialData || {
@@ -100,6 +101,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
 };
 
 const RatesPage = () => {
+  const {adminDetails} = useContext(adminContext)
   const [rateData, setRateData] = useState([]);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('country');
@@ -190,9 +192,12 @@ const RatesPage = () => {
         
         <div className="flex items-center mb-4">
           <input type="text" placeholder="Search by country or quality description" value={search} onChange={(e) => setSearch(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 mr-2" />
+          
+          {['superAdmin', "account"].includes(adminDetails.role) && (
           <button onClick={() => { setIsUpdateMode(false); setModalOpen(true); }} className="bg-blue-500 text-white px-4 py-2 rounded-lg">Add Rate</button>
-        </div>
+          )}
 
+          </div>
         <select onChange={(e) => setSort(e.target.value)} className="border border-gray-300 rounded-lg px-4 py-2 mb-4">
           <option value="country">Sort by Country</option>
           <option value="rate">Sort by Rate</option>

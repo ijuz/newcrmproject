@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axiosInstance from '../../utils/axiosinstance';
 import Layout from '../../layout/page';
 import axios from 'axios';
+import adminContext from '../../../../../../context/page';
 
 const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
   const [newLead, setNewLead] = useState(initialData || {
@@ -173,6 +174,7 @@ const Modal = ({ isOpen, onClose, onSubmit, initialData }) => {
 };
 
 const RatesPage = () => {
+  const { adminDetails } = useContext(adminContext)
   const [rateData, setRateData] = useState([]);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('country');
@@ -267,16 +269,19 @@ const RatesPage = () => {
           </select>
         </div>
 
-        <button
-          className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg"
-          onClick={() => {
-            setIsUpdateMode(false);
-            setCurrentRate(null);
-            setModalOpen(true);
-          }}
-        >
-          Add Rate
-        </button>
+        {['superAdmin', "account"].includes(adminDetails.role) && (
+          <button
+            className="mt-4 bg-green-500 text-white px-4 py-2 rounded-lg"
+            onClick={() => {
+              setIsUpdateMode(false);
+              setCurrentRate(null);
+              setModalOpen(true);
+            }}
+          >
+            Add Rate
+          </button>
+        )}
+
 
         <table className="min-w-full bg-white shadow-lg mt-4">
           <thead>
